@@ -1,0 +1,499 @@
+<template>
+  <div class="login posr">
+    <img class="login-bg posa" :src="require('@assets/logo/login-bg.webp')" alt="">
+    <el-form v-show="modifyPas && forgetShow" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form posr">
+      <h2 class="title">Easy Power Management System</h2>
+      <el-form-item prop="username" label="Account">
+        <el-input
+          v-model="loginForm.username"
+          type="text"
+          auto-complete="off"
+          placeholder="Please enter"
+        >
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="password" label="Password">
+        <el-input
+          v-model="loginForm.password"
+          type="password"
+          auto-complete="off"
+          placeholder="Please enter"
+          show-password
+          @keyup.enter.native="handleLogin"
+        >
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <common-flex justify="space-between">
+        <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0">Remember password</el-checkbox>
+        <span class="forget-pas" @click="forgetShow = false">Forgot your password?</span>
+      </common-flex>
+      <el-form-item style="width:100%;">
+        <el-button
+          :loading="loading"
+          size="medium"
+          type="primary"
+          style="width:100%;"
+          @click.native.prevent="handleLogin"
+        >
+          <span v-if="!loading">Log in</span>
+          <span v-else>logining</span>
+        </el-button>
+        <div style="float: right;" v-if="register">
+          <router-link class="link-type" :to="'/register'">立即注册</router-link>
+        </div>
+      </el-form-item>
+    </el-form>
+<!--    强制修改密码-->
+    <el-form v-if="!modifyPas" ref="modifyForm" :model="modifyForm" :rules="modifyRules" class="login-form posr">
+      <h3 class="title">Login Succeeded!</h3>
+      <p style="font-size: 12px; color: #ec6240">Change the password before use please</p>
+      <el-form-item prop="pass" label="New Password">
+        <el-input
+          v-model="modifyForm.pass"
+          type="text"
+          auto-complete="off"
+          show-password
+          placeholder="Please enter"
+        >
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="checkPass" label="Password Again">
+        <el-input
+          v-model="modifyForm.checkPass"
+          type="password"
+          auto-complete="off"
+          placeholder="Please enter"
+          show-password
+          @keyup.enter.native="handleLogin"
+        >
+        </el-input>
+      </el-form-item>
+      <el-form-item style="width:100%;">
+        <el-button
+          :loading="modifyLoading"
+          size="medium"
+          type="primary"
+          style="width:100%;"
+          @click.native.prevent="handleModify"
+        >
+          <span v-if="!modifyLoading">Submit</span>
+        </el-button>
+      </el-form-item>
+      <el-form-item style="width:100%;">
+        <el-button
+          size="medium"
+          style="width:100%;"
+          @click.native.prevent="cancelModify"
+        >
+          Log out
+        </el-button>
+      </el-form-item>
+    </el-form>
+<!--    忘记密码-->
+    <el-form v-if="!forgetShow" class="login-form posr" :model="forgetForm" ref="forgetForm" :rules="forgetRules">
+      <common-flex class="posr">
+        <i class="el-icon-back posa back-icon" @click="backLogin"></i>
+        <h3 class="title">Reset Password</h3>
+      </common-flex>
+      <el-form-item label="Account" prop="userName">
+        <el-input placeholder="Please enter" v-model="forgetForm.userName"></el-input>
+      </el-form-item>
+      <el-form-item label="Verification Code" class="posr" prop="code">
+        <el-input placeholder="Please enter" v-model="forgetForm.code"></el-input>
+        <el-button class="posa send-btn" type="text" :disabled="hasSend" @click="sendCode">{{ sendText }}</el-button>
+      </el-form-item>
+      <el-form-item label="New Password" prop="password">
+        <el-input placeholder="Please enter" v-model="forgetForm.password"></el-input>
+      </el-form-item>
+      <el-form-item label="Password Again" prop="againPassword">
+        <el-input placeholder="Please enter" v-model="forgetForm.againPassword"></el-input>
+      </el-form-item>
+      <el-form-item label="">
+        <el-button style="width: 100%" type="primary" @click="reset">Reset</el-button>
+      </el-form-item>
+    </el-form>
+    <el-dialog
+      :visible.sync="dialogShow"
+      width="20%"
+      :show-close="false"
+      :before-close="beforeClose"
+      :close-on-click-modal ="false"
+      center>
+      <span style="line-height: 24px">Password changed successfully! Please log in again with the new password! ({{ second }}s return to the login page)</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="beforeClose">OK</el-button>
+  </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { getCodeImg } from "@/api/login";
+import { getToken, setToken, removeToken } from '@/utils/auth'
+import Cookies from "js-cookie";
+import { encrypt, decrypt } from '@/utils/jsencrypt'
+import {resetUserPwd, updateUserPwd, forgetResetPas, sendCode } from "@/api/system/user";
+
+export default {
+  name: "Login",
+  data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter'));
+      } else {
+        const reg = /(?!.*\s)(?!^[\u4e00-\u9fa5]+$)(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,16}$/
+        if (reg.test(value)) {
+          callback()
+        } else callback(new Error('8-16 digital words, at least two of them: letters / numbers / symbols'))
+      }
+    }
+    const validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter again'));
+      } else if (value !== this.modifyForm.pass) {
+        callback(new Error('The two input passwords are inconsistent!'));
+      } else {
+        callback();
+      }
+    }
+    const validatePass3 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter again'));
+      } else if (value !== this.forgetForm.password) {
+        callback(new Error('The two input passwords are inconsistent!'));
+      } else {
+        callback();
+      }
+    }
+    return {
+      countTimer: null,
+      second: 3,
+      dialogShow: false,
+      timer: null,
+      sendText: 'Send',
+      hasSend: false,
+      modifyPas: true,
+      forgetShow: true,
+      token: '',
+      codeUrl: "",
+      loginForm: {
+        username: "",
+        password: "",
+        rememberMe: false,
+        uuid: ""
+      },
+      loginRules: {
+        username: [
+          { required: true, trigger: "blur", message: "Please enter your account" }
+        ],
+        password: [
+          { required: true, trigger: "blur", message: "Please enter your password" }
+        ],
+        // code: [{ required: true, trigger: "blur", message: "Please enter the verification code" }]
+      },
+      loading: false,
+      modifyForm: {
+        pass: '',
+        checkPass: ''
+      },
+      modifyRules: {
+        pass: [
+          { required: true, validator: validatePass, trigger: 'blur'}
+        ],
+        checkPass: [
+          { required: true, validator: validatePass2, trigger: 'blur'}
+        ],
+      },
+      forgetForm: {
+        userName: '',
+        code: '',
+        password: '',
+        againPassword: '',
+      },
+      forgetRules: {
+        userName: [
+          { required: true, message: 'Please enter', trigger: 'blur' },
+          { type: 'email', message: 'The format is incorrect', trigger: ['blur', 'change'] }
+        ],
+        code: [
+          { required: true, message: 'Please enter', trigger: 'blur' },
+        ],
+        password: [
+          { required: true, validator: validatePass, trigger: 'blur'}
+        ],
+        againPassword: [
+          { required: true, validator: validatePass3, trigger: 'blur'}
+        ],
+      },
+      modifyLoading: false,
+      // 验证码开关
+      captchaEnabled: true,
+      // 注册开关
+      register: false,
+      redirect: undefined
+    };
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect;
+        if (this.redirect === '/') this.redirect ='/index'
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // this.getCode()
+    this.getCookie()
+  },
+  methods: {
+    backLogin() {
+      this.forgetShow = true
+      Object.keys(this.forgetForm).forEach(i => {
+        this.forgetForm[i] = ''
+      })
+    },
+    openDialog() {
+      this.dialogShow = true
+      this.second = 3
+      setTimeout(() => {
+        this.second = 2
+      }, 1000)
+      setTimeout(() => {
+        this.second = 1
+      }, 2000)
+      setTimeout(() => {
+        this.second = 0
+        this.beforeClose()
+      }, 3000)
+    },
+    beforeClose() {
+      this.dialogShow = false
+      this.forgetShow = true
+    },
+    reset() {
+      this.$refs.forgetForm.validate(v => {
+        if (v) {
+          forgetResetPas(this.forgetForm).then(res => {
+            if (+res.code === 200) {
+              this.$message({
+                type: 'success',
+                message: 'Succeeded!'
+              })
+              setTimeout(() => {
+                this.openDialog()
+              }, 500)
+            }
+          })
+        }
+      })
+    },
+    // 忘记密码短信验证码
+    sendCode() {
+      this.$refs.forgetForm.validateField('userName', v => {
+        if (!v) {
+          let data = {
+            userName: this.forgetForm.userName
+          }
+          sendCode(data).then(res => {
+            if (+res.code === 200) {
+              this.$message({
+                type: 'success',
+                message: 'Succeeded!'
+              })
+              this.hasSend = true
+              let count = 60
+              clearInterval(this.timer)
+              this.timer = setInterval(() => {
+                count--
+                if (count < 1) {
+                  clearInterval(this.timer)
+                  this.sendText = 'Send'
+                  this.hasSend = false
+                  return
+                }
+                this.sendText = `${count}s`
+              }, 1000)
+            }
+          })
+        }
+      })
+    },
+    // log out
+    cancelModify() {
+      this.modifyPas = true
+      this.getCode()
+      this.loginForm.code = ''
+      this.modifyForm.pass = this.modifyForm.checkPass = ''
+    },
+    getCode() {
+      getCodeImg().then(res => {
+        this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
+        if (this.captchaEnabled) {
+          this.codeUrl = "data:image/gif;base64," + res.img
+          this.loginForm.uuid = res.uuid
+        }
+      });
+    },
+    getCookie() {
+      const username = Cookies.get("username");
+      const password = Cookies.get("password");
+      const rememberMe = Cookies.get('rememberMe')
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password === undefined ? this.loginForm.password : decrypt(password),
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+      };
+    },
+    // 修改验证
+    handleModify() {
+      this.$refs.modifyForm.validate(v => {
+        if (v) {
+          // 修改密码接口
+          this.modifyLoading = true
+          // 修改密码成功后 再 登录一次设置token admin admin123
+          updateUserPwd(this.loginForm.password, this.modifyForm.pass).then(res => {
+            if (+res.code === 200) {
+              this.modifyLoading = false
+              this.$message({
+                type: 'success',
+                message: 'Succeeded!'
+              })
+              if (this.loginForm.rememberMe) {
+                Cookies.set("username", this.loginForm.username, { expires: 30 });
+                Cookies.set("password", encrypt(this.modifyForm.pass), { expires: 30 });
+                Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
+              } else {
+                Cookies.set("username", this.loginForm.username, { expires: 30 });
+                Cookies.remove("password");
+                Cookies.remove('rememberMe');
+              }
+              let data = {
+                username: this.loginForm.username,
+                password: this.modifyForm.pass,
+                rememberMe: this.loginForm.rememberMe
+              }
+              this.$store.dispatch("Login", data).then((res) => {
+                this.$router.push({ path: this.redirect || "/index" })
+              }).catch(() => {
+
+              })
+              // 1111
+            }
+          }).finally(() => {
+            this.modifyLoading = false
+          })
+        }
+      })
+    },
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          if (this.loginForm.rememberMe) {
+            Cookies.set("username", this.loginForm.username, { expires: 30 });
+            Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
+            Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
+          } else {
+            Cookies.set("username", this.loginForm.username, { expires: 30 });
+            Cookies.remove("password");
+            Cookies.remove('rememberMe');
+          }
+          this.$store.dispatch("Login", this.loginForm).then((res) => {
+            if (+res.changePassword === 2) this.modifyPas = false // 未修改过密码，强制修改
+            else this.$router.push({ path: this.redirect || "/index" }).catch(()=>{})
+          }).catch(() => {
+            if (this.captchaEnabled) {
+              this.getCode()
+            }
+          }).finally(() => {
+            this.loading = false
+          })
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style rel="stylesheet/scss" lang="scss">
+.forget-pas {
+  @include nFont(12 #409EFF);
+  cursor: pointer;
+}
+.back-icon {
+  left: 0;
+  top: 0;
+  &:before {
+    font-size: 30px;
+    cursor: pointer;
+  }
+}
+.send-btn {
+  right: 10px;
+  bottom: 0;
+  cursor: pointer;
+}
+.login {
+  padding-right: 3vw;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  background-color: #f5cea1;
+  background-size: cover;
+  &-bg {
+    z-index: 1;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+  }
+  .el-dialog:not(.is-fullscreen) {
+    margin-top: 40vh !important;
+  }
+}
+.title {
+  margin: 0 auto 30px auto;
+  text-align: center;
+  color: #409EFF;
+  //@include nFont(24 #FFB968 700);
+}
+
+.login-form {
+  z-index: 2;
+  border-radius: 6px;
+  background: #ffffff;
+  width: 430px;
+  padding: 25px 25px 5px 25px;
+  .el-input {
+    height: 38px;
+    input {
+      height: 38px;
+    }
+  }
+  .input-icon {
+    height: 39px;
+    width: 14px;
+    margin-left: 2px;
+  }
+}
+.login-tip {
+  font-size: 13px;
+  text-align: center;
+  color: #bfbfbf;
+}
+.login-code {
+  width: 33%;
+  height: 38px;
+  float: right;
+  img {
+    cursor: pointer;
+    vertical-align: middle;
+  }
+}
+.login-code-img {
+  height: 38px;
+}
+</style>
