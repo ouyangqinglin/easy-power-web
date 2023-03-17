@@ -133,7 +133,7 @@
             </common-flex>
             <common-flex class="comp-overview-row-col-card-content" direction="column" justify="space-around">
               <common-flex justify="space-around">
-                <img class="cur-wea-img" :src="weatherImg[weatherData.currentWeather]" alt="">
+                <img class="cur-wea-img" style="width: 80px" :src="weatherImg[weatherData.currentWeather]" alt="">
                 <div style="margin-right: 4.5vw">
                   <div class="comp-overview-row-col-card-content-temperature">{{ weatherData.currentWeather }}<br>
                     {{ weatherData.currentTemp }}°C<br>
@@ -275,6 +275,7 @@ export default {
       },
       weatherImg: {
         'Sunny': require('./img/sun.svg'),
+        'Clear': require('./img/sun.svg'),
         'Rainy': require('./img/rainy.svg'),
         'Clouds': require('./img/cloudy.svg'),
         'Snow': require('./img/snow.svg')

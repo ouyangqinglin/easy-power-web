@@ -95,7 +95,6 @@ import { getTaskInfo } from '@/api/task'
 
 export default {
   name: "pages-task-view",
-  dicts: ['task_type'],
   data() {
     return {
       active: 1,

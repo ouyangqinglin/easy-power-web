@@ -10,42 +10,42 @@
             <div class="remote">
               <div class="set-part">
                 <div class="set-type">System Setting</div>
-                <el-form :model="deviceBase" label-position="top" :rules="rules">
+                <el-form :model="deviceBase" label-position="top" :rules="rules" size="small" hide-required-asterisk>
                   <el-row :gutter="20">
                     <el-col :span="8">
-                      <el-form-item label="Work Mode" prop="1">
-                        <el-select v-model="deviceBase[1]">
-                          <el-option v-for="(i, k) of workOption" :value="i" :label="i" :key="k"></el-option>
+                      <el-form-item label="Work Mode" prop="0">
+                        <el-select v-model="deviceBase[0]">
+                          <el-option v-for="(i, k) of workOption" :value="i.label" :label="i.label" :key="k"></el-option>
                         </el-select>
-                        <el-button type="primary" plain style="margin-left: 10px" @click="setDevice(1)">Set</el-button>
+                        <el-button type="primary" plain style="margin-left: 10px" @click="setDevice(0)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item label="PV input type" prop="14">
                         <el-select v-model="deviceBase[14]">
-                          <el-option v-for="(i, k) of pvTypeOption" :value="i" :label="i" :key="k"></el-option>
+                          <el-option v-for="(i, k) of pvTypeOption" :value="i.label" :label="i.label" :key="k"></el-option>
                         </el-select>
                         <el-button type="primary" plain style="margin-left: 10px" @click="setDevice(14)">Set</el-button>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="8">
-                      <el-form-item label="Modbus Addr" prop="33">
-                        <el-input style="width: auto" v-model="deviceBase[33]" @blur="inputVerify(0, 99, 33)" placeholder="[0,99]"></el-input>
-                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[33]" @click="setDevice(33)">Set</el-button>
-                      </el-form-item>
-                    </el-col>
+                    <!--                    <el-col :span="8">-->
+                    <!--                      <el-form-item label="Modbus Addr" prop="33">-->
+                    <!--                        <el-input style="width: auto" v-model="deviceBase[33]" @blur="inputVerify(0, 99, 33)" placeholder="[0,99]"></el-input>-->
+                    <!--                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[33]" @click="setDevice(33)">Set</el-button>-->
+                    <!--                      </el-form-item>-->
+                    <!--                    </el-col>-->
                   </el-row>
-                  <div class="peak-box" v-if="deviceBase[1] === 'Peak Shaving'">
+                  <div class="peak-box" v-if="deviceBase[0] === 'Peak Shaving'">
                     <span>Peak Shaving</span>
-                    <el-button style="margin-left: 10px" type="primary" plain @click="setTimeList">Set</el-button>
+                    <el-button style="margin-left: 10px" type="primary" plain @click="setTimeList" size="small">Set</el-button>
                     <el-row :gutter="12" style="margin-top: 12px">
                       <el-col :span="8">
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time1</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: peakShaving.chargeE1}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: peakShaving.chargeS1}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -53,9 +53,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time2</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: peakShaving.chargeE2}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: peakShaving.chargeS2}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -63,9 +63,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time3</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: peakShaving.chargeE3}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: peakShaving.chargeS3}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -75,9 +75,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time1</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: peakShaving.dischargeE1}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: peakShaving.dischargeS1}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -85,9 +85,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time2</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: peakShaving.dischargeE2}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: peakShaving.dischargeS2}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -95,9 +95,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time3</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: peakShaving.dischargeE3}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: peakShaving.dischargeS3}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -105,7 +105,7 @@
                   </div>
                   <el-row :gutter="20">
                     <el-col :span="4">
-                      <el-form-item prop="21" label="Backup Enable"><el-switch value="1" v-model="deviceBase[21]" @change="setDevice(21)" /></el-form-item>
+                      <el-form-item prop="21" label="Backup Enable"><el-switch v-model="deviceBase[21]" @change="setDevice(21)" /></el-form-item>
                     </el-col>
                     <el-col :span="4">
                       <el-form-item prop="25" label="Battery awaken"><el-switch v-model="deviceBase[25]" @change="setDevice(25)" /></el-form-item>
@@ -117,32 +117,32 @@
                       <el-form-item prop="31" label="ARC enable"><el-switch v-model="deviceBase[31]" @change="setDevice(31)" /></el-form-item>
                     </el-col>
                     <el-col :span="4">
-                      <el-form-item prop="32" label="On/off enable"><el-switch v-model="deviceBase[32]" @change="setDevice(32)" /></el-form-item>
+                      <el-form-item prop="38" label="On/off enable"><el-switch v-model="deviceBase[38]" @change="setDevice(38)" /></el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
               </div>
               <div class="set-part">
                 <div class="set-type">Battery parameters</div>
-                <el-form :model="deviceBase" label-position="top" :rules="rules">
+                <el-form :model="deviceBase" label-position="top" :rules="rules" size="small" hide-required-asterisk>
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="15" label="Battery type">
                         <el-select v-model="deviceBase[15]">
-                          <el-option v-for="(i, k) of batTypeOption" :value="i" :label="i" :key="k"></el-option>
+                          <el-option v-for="(i, k) of batTypeOption" :value="i.label" :label="i.label" :key="k"></el-option>
                         </el-select>
                         <el-button type="primary" plain style="margin-left: 10px" @click="setDevice(15)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                      <el-form-item prop="2" label="Battery grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(0, 99, 2)" v-model="deviceBase[2]" placeholder="[0,99]"></el-input>
-                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[2]" @click="setDevice(2)">Set</el-button>
+                      <el-form-item prop="1" label="Battery grid DOD(%)">
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 1)" v-model="deviceBase[1]" placeholder="[10,90]"></el-input>
+                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[1]" @click="setDevice(1)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="30" label="Battery Off-grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 99, 30)" v-model="deviceBase[30]" placeholder="[10,99]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 30)" v-model="deviceBase[30]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[30]" @click="setDevice(30)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -150,14 +150,14 @@
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="24" label="Battery EodHyst(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 99, 24)" v-model="deviceBase[24]" placeholder="[10,99]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 24)" v-model="deviceBase[24]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[24]" @click="setDevice(24)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="11" label="Battery communication type">
                         <el-select v-model="deviceBase[11]">
-                          <el-option v-for="(i, k) of batComuTypeOption" :value="i" :label="i" :key="k"></el-option>
+                          <el-option v-for="(i, k) of batComuTypeOption" :value="i.label" :label="i.label" :key="k"></el-option>
                         </el-select>
                         <el-button type="primary" plain style="margin-left: 10px" @click="setDevice(11)">Set</el-button>
                       </el-form-item>
@@ -167,17 +167,17 @@
               </div>
               <div class="set-part">
                 <div class="set-type">Operating parameters</div>
-                <el-form :model="deviceBase" label-position="top" :rules="rules">
+                <el-form :model="deviceBase" label-position="top" :rules="rules" size="small" hide-required-asterisk>
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="3" label="Grid Power(%)">
-                        <el-input @blur="inputVerify(10, 99, 3)" v-model="deviceBase[3]" style="width: auto" placeholder="[10,99]"></el-input>
+                        <el-input @blur="inputVerify(0, 100, 3)" v-model="deviceBase[3]" style="width: auto" placeholder="[0,100]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[3]" @click="setDevice(3)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="4" label="Battery discharge power(%)">
-                        <el-input @blur="inputVerify(10, 99, 4)" v-model="deviceBase[4]" style="width: auto" placeholder="[10,99]"></el-input>
+                        <el-input @blur="inputVerify(0, 100, 4)" v-model="deviceBase[4]" style="width: auto" placeholder="[0,100]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[4]" @click="setDevice(4)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -190,15 +190,15 @@
                   </el-row>
                   <el-row :gutter="20">
                     <el-col :span="8">
-                      <el-form-item prop="8" label="Grid Voltage low(V)">
-                        <el-input @blur="inputVerify(150, 220, 8)" v-model="deviceBase[8]" type="primary" plain style="width: auto" placeholder="[150,220]"></el-input>
-                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[8]" @click="setDevice(8)">Set</el-button>
+                      <el-form-item prop="7" label="Grid Voltage low(V)">
+                        <el-input @blur="inputVerify(150, 220, 7)" v-model="deviceBase[7]" type="primary" plain style="width: auto" placeholder="[150,220]"></el-input>
+                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[7]" @click="setDevice(7)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                      <el-form-item prop="7" label="Grid Voltage high(V)">
-                        <el-input @blur="inputVerify(240, 280, 7)" v-model="deviceBase[7]" type="primary" plain style="width: auto" placeholder="[240,280]"></el-input>
-                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[7]" @click="setDevice(7)">Set</el-button>
+                      <el-form-item prop="8" label="Grid Voltage high(V)">
+                        <el-input @blur="inputVerify(240, 280, 8)" v-model="deviceBase[8]" type="primary" plain style="width: auto" placeholder="[240,280]"></el-input>
+                        <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[8]" @click="setDevice(8)">Set</el-button>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -206,12 +206,12 @@
               </div>
               <div class="set-part">
                 <div class="set-type">Grid Standard</div>
-                <el-form :model="deviceBase" label-position="top" :rules="rules">
+                <el-form :model="deviceBase" label-position="top" :rules="rules" size="small" hide-required-asterisk>
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="19" label="Grid Standard">
                         <el-select v-model="deviceBase[19]">
-                          <el-option v-for="(i, k) of gridOption" :value="i" :label="i" :key="k"></el-option>
+                          <el-option v-for="(i, k) of gridOption" :value="i.label" :label="i.label" :key="k"></el-option>
                         </el-select>
                         <el-button type="primary" plain style="margin-left: 10px" @click="setDevice(19)">Set</el-button>
                       </el-form-item>
@@ -221,11 +221,11 @@
               </div>
               <div class="set-part">
                 <div class="set-type">Clear record</div>
-                <span>Clear record</span><el-button type="primary" plain style="margin-left: 10px" @click="confirmSetDevice(23)">Set</el-button>
+                <span>Clear record</span><el-button size="small" type="primary" plain style="margin-left: 10px" @click="confirmSetDevice(23)">Set</el-button>
               </div>
               <div class="set-part">
                 <div class="set-type">Restore Factory Setting</div>
-                <span>Restore Factory Setting</span><el-button type="primary" plain style="margin-left: 10px" @click="confirmSetDevice(22)">Set</el-button>
+                <span>Restore Factory Setting</span><el-button size="small" type="primary" plain style="margin-left: 10px" @click="confirmSetDevice(22)">Set</el-button>
               </div>
             </div>
           </template>
@@ -363,8 +363,7 @@ export default {
         if (v) {
           this.siteCode = this.$route.query?.siteCode
           this.queryParams.siteCode = this.siteCode
-          this.getSetting()
-          // this.getDeviceSet()
+          this.getDeviceSet()
         }
       },
       immediate: true
@@ -396,35 +395,122 @@ export default {
         dischargeE3: '',
       },
       workOption: [
-        'Self Consume',
-        'Peak Shaving',
-        'Battery Priority',
+        {
+          label: 'Self Consume',
+          value: 0
+        },
+        {
+          label: 'Peak Shaving',
+          value: 1
+        },
+        {
+          label: 'Battery Priority',
+          value: 2
+        }
       ],
       pvTypeOption: [
-        'Independent',
-        'Parallel',
-        'Constant Voltage'
+        {
+          label: 'Independent',
+          value: 0
+        },
+        {
+          label: 'Parallel',
+          value: 1
+        },
+        {
+          label: 'Constant Voltage',
+          value: 2
+        },
       ],
       batTypeOption: [
-        'Lithium',
-        'Lead acid',
-        'DC-source'
+        {
+          label: 'DC-source',
+          value: 0
+        },
+        {
+          label: 'Lead acid',
+          value: 1
+        },
+        {
+          label: 'Lithium',
+          value: 2
+        }
       ],
       batComuTypeOption: [
-        'CAN',
-        '485'
+        {
+          label: 'CAN',
+          value: 1
+        },
+        {
+          label: '485',
+          value: 2
+        }
       ],
       gridOption: [
-        'Australia',
-        'West Australia',
-        'New Zealand',
-        'United Kingdom',
-        'Korea',
-        'The Philippines',
-        'China',
-        'The United States',
-        'Japan',
-        'South Africa'
+        {
+          label: 'Australia',
+          value: 0
+        },
+        {
+          label: 'West Australia',
+          value: 1
+        },
+        {
+          label: 'New Zealand',
+          value: 2
+        },
+        {
+          label: 'United Kingdom',
+          value: 3
+        },
+        {
+          label: 'Pakistan',
+          value: 4
+        },
+        {
+          label: 'Korea',
+          value: 5
+        },
+        {
+          label: 'The Philippines',
+          value: 6
+        },
+        {
+          label: 'China',
+          value: 7
+        },
+        {
+          label: 'The United States',
+          value: 8
+        },
+        {
+          label: 'Thailand',
+          value: 9
+        },
+        {
+          label: 'South Africa',
+          value: 10
+        },
+        {
+          label: 'Custom',
+          value: 11
+        },
+        {
+          label: 'Poland',
+          value: 12
+        },
+        {
+          label: 'EN50549',
+          value: 13
+        },
+        {
+          label: 'VDE4105',
+          value: 14
+        },
+        {
+          label: 'Japan',
+          value: 15
+        },
       ],
       siteCode: '',
       checkOffList: [],
@@ -436,37 +522,40 @@ export default {
       onList: [],
       totalList: [],
       navBar: {
-        // 'Remote Set': '1',
-        // 'Set Record': '2',
+        'Remote Set': '1',
+        'Set Record': '2',
         'Multi-time': '3',
       },
-      active: '3',
+      active: '1',
       setLoading: '',
       deviceBase: {},
       rules: {
+        1: [
+          { required: false, message: '', trigger: ['blur', 'change'] }
+        ],
         2: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         3: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         4: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         7: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         8: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         17: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         24: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         30: [
-          { required: false, message: '', trigger: 'blur' }
+          { required: false, message: '', trigger: ['blur', 'change'] }
         ],
         33: [
           { required: false, message: '', trigger: 'blur' }
@@ -476,7 +565,6 @@ export default {
   },
   methods: {
     inputVerify(min, max, type) {
-
       if (!Number.isInteger(+this.deviceBase[type])) {
         this.deviceBase[type] = ''
         this.rules[+type][0].message = 'Please enter the number'
@@ -501,15 +589,15 @@ export default {
           item.chargeStartTime = this.peakShaving[`chargeS${i}`]
           item.chargeEndTime = this.peakShaving[`chargeE${i}`]
         } else {
-          item.chargeStartTime = '-1:-1'
-          item.chargeEndTime = '-1:-1'
+          item.chargeStartTime = '00:00'
+          item.chargeEndTime = '00:00'
         }
         if (this.peakShaving[`dischargeS${i}`] && this.peakShaving[`dischargeE${i}`]) {
           item.dischargeStartTime = this.peakShaving[`dischargeS${i}`]
           item.dischargeEndTime = this.peakShaving[`dischargeE${i}`]
         } else {
-          item.dischargeStartTime = '-1:-1'
-          item.dischargeEndTime = '-1:-1'
+          item.dischargeStartTime = '00:00'
+          item.dischargeEndTime = '00:00'
         }
         timeList.push(item)
       }
@@ -521,9 +609,10 @@ export default {
       }
       deviceSet(params).then(res => {
         console.log('时间设置', res)
-        this.$modal.msgSuccess('Succeeded!')
-      }).catch(() => {
-        this.$modal.alertError('failed!')
+        if ([1001, 1002, 1003, 1004].includes(+res.code)) this.$modal.alertError(res.data.errorMessage)
+        else this.$modal.msgSuccess('Succeeded!')
+      }).catch((err) => {
+        this.$modal.alertError(err.msg || 'failed!')
       }).finally(() => {
         this.setLoading.close()
         this.getDeviceSet()
@@ -544,12 +633,19 @@ export default {
         type,
         baseParam: this.deviceBase[type]
       }
+      let arr = [13, 21, 25, 31, 38]
+      if (arr.includes(+type)) {
+        if (this.deviceBase[type]) data.baseParam = 1
+        else data.baseParam = 0
+      }
       this.openLoading()
 
       deviceSet(data).then(res => {
-        this.$modal.msgSuccess('Succeeded!')
-      }).catch(() => {
-        this.$modal.alertError('failed!')
+        console.log('res', res)
+        if ([1001, 1002, 1003, 1004].includes(+res.code)) this.$modal.alertError(res.data.errorMessage)
+        else this.$modal.msgSuccess('Succeeded!')
+      }).catch((err) => {
+        this.$modal.alertError(err.msg || 'failed!')
       }).finally(() => {
         this.setLoading.close()
         this.getDeviceSet()
@@ -562,19 +658,19 @@ export default {
       getSettingInfo(data).then(res => {
         let item = {}
         res.data.forEach(i => {
-          let arr = [13, 21, 25, 31, 32]
+          let arr = [13, 21, 25, 31, 38]
           if (arr.includes(+i.type)) {
-            item[i.type] = JSON.parse(i.param)
+            item[+i.type] = +i.param === 1
           } else item[i.type] = i.param
         })
         this.deviceBase = item
         if (this.deviceBase[34]) {
           let timeList = JSON.parse(this.deviceBase[34])
           timeList.forEach((i, index) => {
-            this.peakShaving[`chargeS${index+1}`] = (i.chargeStartTime).includes('-1') ? '' : i.chargeStartTime
-            this.peakShaving[`chargeE${index+1}`] = (i.chargeEndTime).includes('-1') ? '' : i.chargeEndTime
-            this.peakShaving[`dischargeS${index+1}`] = (i.dischargeStartTime).includes('-1') ? '' : i.dischargeStartTime
-            this.peakShaving[`dischargeE${index+1}`] = (i.dischargeEndTime).includes('-1') ? '' : i.dischargeEndTime
+            this.peakShaving[`chargeS${index+1}`] = i.chargeStartTime
+            this.peakShaving[`chargeE${index+1}`] = i.chargeEndTime
+            this.peakShaving[`dischargeS${index+1}`] = i.dischargeStartTime
+            this.peakShaving[`dischargeE${index+1}`] = i.dischargeEndTime
           })
         }
         copyDeviceInfo = JSON.parse(JSON.stringify(this.deviceBase))
@@ -830,6 +926,10 @@ export default {
       margin-right: 48px;
       width: 160px;
       border-right: 1px solid #D8DCE6;
+      @media screen and (max-width: 1334px) {
+        width: 100px;
+        font-size: 12px;
+      }
 
       &-item {
         height: 40px;
@@ -840,7 +940,7 @@ export default {
 
       .opacityTrans {
         color: #fff;
-        background-color: #409EFF;
+        background-color: #409eff;
         opacity: 1;
         transition: all .2s;
       }
@@ -858,6 +958,11 @@ export default {
       width: 100%;
       border-bottom: 1px solid #D8DCE6;
       font-weight: 600;
+    }
+    .el-input__inner {
+      @media screen and (max-width: 1334px) {
+        width: 130px;
+      }
     }
     .peak-box {
       padding: 16px 0 24px 10px;
@@ -882,11 +987,19 @@ export default {
         }
         .el-input {
           width: 80px !important;
+          @media screen and (max-width: 1334px) {
+            width: 50px !important;
+          }
         }
         .el-input__inner {
           width: 80px;
           border: none !important;
           padding: 0 14px;
+          @media screen and (max-width: 1334px) {
+            width: 50px !important;
+            padding: 0 5px;
+            font-size: 12px;
+          }
         }
       }
     }

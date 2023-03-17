@@ -294,6 +294,247 @@ const emphasisStyle = {
     shadowColor: 'rgba(0,0,0,0.3)'
   }
 }
+
+const lineOption = {
+    color: ['#FFB968'],
+    tooltip: {
+      show: true,
+      trigger: 'axis',
+      // formatter (value) {
+      //   console.log(value)
+      //   return value[0].value
+      // }
+    },
+    grid: {
+      left: 50,
+      bottom: 30
+    },
+    xAxis: {
+      type: 'category',
+      data: [],
+      axisLine: {
+        lineStyle: {
+          color: '#E7E7E7'
+        }
+      },
+      axisTick: {
+        alignWithLabel: true
+      },
+      axisLabel: {
+        textStyle: {
+          color: '#000',
+          fontSize: 10
+        }
+      },
+    },
+    yAxis: {
+      name: 'kWh',
+      type: 'value',
+      axisLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false
+      },
+      splitLine: {
+        lineStyle: {
+          type: 'dashed'
+        }
+      },
+      axisLabel: {
+        textStyle: {
+          fontSize: 10,
+        }
+      }
+    },
+    series: [
+      {
+        data: [],
+        // smooth: true,
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0, 0, 0, 1,
+              [
+                {offset: 0, color: '#ffdfba'},
+                {offset: 0.5, color: '#fff2e4'},
+                {offset: 1, color: '#fffcf9'}
+              ]
+            )
+          }
+        },
+        type: 'line'
+      }
+    ]
+  }
+const rankOption = {
+  color: '#68B4FF',
+  tooltip: {
+    show: true,
+    formatter(c) {
+  let unit, v
+  if (c.value < 1) {
+    v = (+c.value * 1000).toFixed(2)
+    unit = 'Wh'
+  } else if (c.value > 1 && c.value < 1000) {
+    v = (+c.value).toFixed(2)
+    unit = 'kWh'
+  } else {
+    v = (+c.value / 1000).toFixed(2)
+    unit = 'MWh'
+  }
+  return `${c.name}: ${v} ${unit}`
+},
+textStyle: {
+  fontSize: 10
+}
+},
+grid: {
+  left: '18%',
+    right: '14%',
+    top: '8%',
+  // bottom: '10%'
+},
+xAxis: {
+  name: 'kWh',
+    type: 'value',
+    boundaryGap: [0, 0.01],
+    splitLine: {
+    lineStyle: {
+      type: 'dashed'
+    }
+  },
+  axisTick: {
+    show: false,
+  },
+  axisLine: {
+    show: false,
+  },
+  axisLabel: {
+    textStyle: {
+      fontSize: 10,
+    }
+  }
+},
+yAxis: {
+  type: 'category',
+    data: [],
+    axisTick: {
+    show: false
+  },
+  axisLine: {
+    lineStyle: {
+      color: '#E7E7E7'
+    }
+  },
+  axisLabel: {
+    textStyle: {
+      fontSize: 10,
+        color: '#000'
+    },
+  },
+},
+series: [
+  {
+    type: 'bar',
+    data: [],
+    itemStyle: {
+      normal: {
+        label: {
+          show: true,
+          position: 'right',
+          formatter(c) {
+            let unit, v
+            if (c.value < 1) {
+              v = (+c.value * 1000).toFixed(2)
+              unit = 'Wh'
+            } else if (c.value > 1 && c.value < 1000) {
+              v = (+c.value).toFixed(2)
+              unit = 'kWh'
+            } else {
+              v = (+c.value / 1000).toFixed(2)
+              unit = 'MWh'
+            }
+            return `${v} ${unit}`
+          },
+          textStyle: {
+            fontSize: 14,
+            color: '#000'
+          }
+        }
+      }
+    },
+    // barWidth: 20
+  },
+]
+}
+const barOption = {
+    color: ['#3daabf', '#8bea91'],
+    legend: {
+      data: ['Export', 'Used'],
+      right: '130',
+    },
+    xAxis: {
+      data: [],
+      splitLine: { show: false },
+      splitArea: { show: false },
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#E7E7E7'
+        }
+      },
+      axisLabel: {
+        textStyle: {
+          fontSize: 10,
+        }
+      }
+    },
+    yAxis: {
+      name: 'kWh',
+      type: 'value',
+      axisLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false
+      },
+      splitLine: {
+        lineStyle: {
+          type: 'dashed'
+        }
+      },
+      axisLabel: {
+        textStyle: {
+          fontSize: 10,
+        }
+      }
+    },
+    grid: {
+      left: 50,
+      bottom: 30
+    },
+    series: [
+      {
+        name: 'Export',
+        type: 'bar',
+        stack: 'one',
+        emphasis: emphasisStyle,
+        data: [],
+        barWidth: 12
+      },
+      {
+        name: 'Used',
+        type: 'bar',
+        stack: 'one',
+        emphasis: emphasisStyle,
+        data: [],
+        barWidth: 12
+      },
+    ]
+  }
 export default {
   name: "Index",
   data() {
@@ -323,246 +564,6 @@ export default {
       rankData: [],
       dateFormat: 'yyyy-M-d',
       displayFormat: 'MM-dd-yyyy',
-      userOption: {
-        color: ['#FFB968'],
-        tooltip: {
-          show: true,
-          trigger: 'axis',
-          // formatter (value) {
-          //   console.log(value)
-          //   return value[0].value
-          // }
-        },
-        grid: {
-          left: 50,
-          bottom: 30
-        },
-        xAxis: {
-          type: 'category',
-          data: [],
-          axisLine: {
-            lineStyle: {
-              color: '#E7E7E7'
-            }
-          },
-          axisTick: {
-            alignWithLabel: true
-          },
-          axisLabel: {
-            textStyle: {
-              color: '#000',
-              fontSize: 10
-            }
-          },
-        },
-        yAxis: {
-          name: 'kWh',
-          type: 'value',
-          axisLine: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'dashed'
-            }
-          },
-          axisLabel: {
-            textStyle: {
-              fontSize: 10,
-            }
-          }
-        },
-        series: [
-          {
-            data: [],
-            smooth: true,
-            areaStyle: {
-              normal: {
-                color: new echarts.graphic.LinearGradient(
-                  0, 0, 0, 1,
-                  [
-                    {offset: 0, color: '#ffdfba'},
-                    {offset: 0.5, color: '#fff2e4'},
-                    {offset: 1, color: '#fffcf9'}
-                  ]
-                )
-              }
-            },
-            type: 'line'
-          }
-        ]
-      },
-      option: {
-        color: ['#3daabf', '#8bea91'],
-        legend: {
-          data: ['Export', 'Used'],
-          right: '130',
-        },
-        xAxis: {
-          data: [],
-          splitLine: { show: false },
-          splitArea: { show: false },
-          axisTick: {
-            alignWithLabel: true,
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#E7E7E7'
-            }
-          },
-          axisLabel: {
-            textStyle: {
-              fontSize: 10,
-            }
-          }
-        },
-        yAxis: {
-          name: 'kWh',
-          type: 'value',
-          axisLine: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'dashed'
-            }
-          },
-          axisLabel: {
-            textStyle: {
-              fontSize: 10,
-            }
-          }
-        },
-        grid: {
-          left: 50,
-          bottom: 30
-        },
-        series: [
-          {
-            name: 'Export',
-            type: 'bar',
-            stack: 'one',
-            emphasis: emphasisStyle,
-            data: [],
-            barWidth: 12
-          },
-          {
-            name: 'Used',
-            type: 'bar',
-            stack: 'one',
-            emphasis: emphasisStyle,
-            data: [],
-            barWidth: 12
-          },
-        ]
-      },
-      rankOption: {
-        color: '#68B4FF',
-        tooltip: {
-          show: true,
-          formatter(c) {
-            let unit, v
-            if (c.value < 1) {
-              v = (+c.value * 1000).toFixed(2)
-              unit = 'Wh'
-            } else if (c.value > 1 && c.value < 1000) {
-              v = (+c.value).toFixed(2)
-              unit = 'kWh'
-            } else {
-              v = (+c.value / 1000).toFixed(2)
-              unit = 'MWh'
-            }
-            return `${c.name}: ${v} ${unit}`
-          },
-          textStyle: {
-            fontSize: 10
-          }
-        },
-        grid: {
-          left: '18%',
-          right: '14%',
-          top: '8%',
-          // bottom: '10%'
-        },
-        xAxis: {
-          name: 'kWh',
-          type: 'value',
-          boundaryGap: [0, 0.01],
-          splitLine: {
-            lineStyle: {
-              type: 'dashed'
-            }
-          },
-          axisTick: {
-            show: false,
-          },
-          axisLine: {
-            show: false,
-          },
-          axisLabel: {
-            textStyle: {
-              fontSize: 10,
-            }
-          }
-        },
-        yAxis: {
-          type: 'category',
-          data: [],
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#E7E7E7'
-            }
-          },
-          axisLabel: {
-            textStyle: {
-              fontSize: 10,
-              color: '#000'
-            },
-          },
-        },
-        series: [
-          {
-            type: 'bar',
-            data: [],
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  position: 'right',
-                  formatter(c) {
-                    let unit, v
-                    if (c.value < 1) {
-                      v = (+c.value * 1000).toFixed(2)
-                      unit = 'Wh'
-                    } else if (c.value > 1 && c.value < 1000) {
-                      v = (+c.value).toFixed(2)
-                      unit = 'kWh'
-                    } else {
-                      v = (+c.value / 1000).toFixed(2)
-                      unit = 'MWh'
-                    }
-                    return `${v} ${unit}`
-                  },
-                  textStyle: {
-                    fontSize: 14,
-                    color: '#000'
-                  }
-                }
-              }
-            },
-            // barWidth: 20
-          },
-        ]
-      },
       params: {
         dataType: 1, // {Number} 数据统计分组方式 1-按小时分组 2-按日分组 3-按月分组 4-按照每15分钟分组
         startTime: '', // {String} 示例值：2022-7-19
@@ -650,23 +651,23 @@ export default {
       console.log('scaleScreen', scaleScreen)
       console.log('innerHeight', innerHeight)
       if (scaleScreen > 100 && innerHeight < 1000) {
-        this.rankOption.yAxis.axisLabel.textStyle.fontSize = this.rankOption.xAxis.axisLabel.textStyle.fontSize = this.userOption.xAxis.axisLabel.textStyle.fontSize = this.userOption.yAxis.axisLabel.textStyle.fontSize = this.option.xAxis.axisLabel.textStyle.fontSize = this.option.yAxis.axisLabel.textStyle.fontSize = 10
-        this.rankOption.series[0].barWidth = 12
-        this.rankOption.series[0].itemStyle.normal.label.textStyle.fontSize = 10
-        this.rankOption.tooltip.textStyle.fontSize = 10
-        this.rankOption.yAxis.axisLabel.formatter = function(value) {
+        rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 10
+        rankOption.series[0].barWidth = 12
+        rankOption.series[0].itemStyle.normal.label.textStyle.fontSize = 10
+        rankOption.tooltip.textStyle.fontSize = 10
+        rankOption.yAxis.axisLabel.formatter = function(value) {
           let label = ''
           if (value.length > 10) label = value.slice(0, 8) + '...'
           else label = value
           return label
         }
       } else {
-        this.rankOption.series[0].barWidth = 20
-        this.rankOption.grid.bottom = '25%'
-        this.rankOption.series[0].itemStyle.normal.label.textStyle.fontSize = 14
-        this.rankOption.tooltip.textStyle.fontSize = 14
-        this.rankOption.yAxis.axisLabel.textStyle.fontSize = this.rankOption.xAxis.axisLabel.textStyle.fontSize = this.userOption.xAxis.axisLabel.textStyle.fontSize = this.userOption.yAxis.axisLabel.textStyle.fontSize = this.option.xAxis.axisLabel.textStyle.fontSize = this.option.yAxis.axisLabel.textStyle.fontSize = 14
-        this.rankOption.yAxis.axisLabel.formatter = function(value) {
+        rankOption.series[0].barWidth = 20
+        rankOption.grid.bottom = '25%'
+        rankOption.series[0].itemStyle.normal.label.textStyle.fontSize = 14
+        rankOption.tooltip.textStyle.fontSize = 14
+        rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 14
+        rankOption.yAxis.axisLabel.formatter = function(value) {
           let label = ''
           if (value.length > 18) label = value.slice(0, 18) + '...'
           else label = value
@@ -715,8 +716,8 @@ export default {
         this.rankData = res.data
         this.rankData.reverse()
         this.rankData.forEach((i, index) => {
-          this.rankOption.yAxis.data.push(i.siteName)
-          this.rankOption.series[0].data.push(i.dayProduce / 1000)
+          rankOption.yAxis.data.push(i.siteName)
+          rankOption.series[0].data.push(i.dayProduce / 1000)
         })
         if (this.rankData.length) {
           if (!this.rankBar) this.$nextTick(() => {
@@ -746,11 +747,11 @@ export default {
           return sum + i.systemProduction
         }, 0)).toFixed(2)
         if (this.dateType === 'date') {
-          this.userOption.xAxis.data = []
-          this.userOption.series[0].data = []
+          lineOption.xAxis.data = []
+          lineOption.series[0].data = []
           lineData.forEach(i => {
-            this.userOption.xAxis.data.push(i.time)
-            this.userOption.series[0].data.push(((+i.pvGenerateEnergy + (+i.storeDischargeEnergy)) / 1000).toFixed(2))
+            lineOption.xAxis.data.push(i.time)
+            lineOption.series[0].data.push(((+i.pvGenerateEnergy + (+i.storeDischargeEnergy)) / 1000).toFixed(2))
           })
           this.initUserChart()
         } else {
@@ -763,19 +764,19 @@ export default {
           if (this.totalPvGenerateEnergy && this.totalPvGenerateEnergy !== '0.00') {
             const exportPercent = ((netDischargeEnergyTotal / (+this.totalPvGenerateEnergy / 1000)) * 100).toFixed(0)
             const userPercent = 100 - exportPercent
-            this.option.legend.formatter = (name) => {
+            barOption.legend.formatter = (name) => {
               return name === 'Used' ? `${name}（${userPercent}%）` : `${name}（${exportPercent}%）`
             }
           } else {
-            this.option.legend.formatter = (name) => {
+            barOption.legend.formatter = (name) => {
               return `${name}（--）`
             }
           }
-          this.option.xAxis.data = xAxisData = []
+          barOption.xAxis.data = xAxisData = []
           data1 = []
           data2 = []
           if (+this.totalPvGenerateEnergy > 1000000) {
-            this.option.yAxis.name = 'MWh'
+            barOption.yAxis.name = 'MWh'
             lineData.forEach((i) => {
               xAxisData.push(i.time)
               data1.push(i.export / 1000000)
@@ -804,25 +805,25 @@ export default {
     initOption() {
       const that = this
       this.bar = echarts.init(document.getElementById('barChart'))
-      this.option.series[0].data = data1
-      this.option.series[1].data = data2
-      this.option.xAxis.data = xAxisData
+      barOption.series[0].data = data1
+      barOption.series[1].data = data2
+      barOption.xAxis.data = xAxisData
       if (this.dateType === 'year') {
-        this.option.xAxis.axisLabel = {
+        barOption.xAxis.axisLabel = {
           interval: 'auto',
           textStyle: {
             color: '#000'
           }
         }
       } else {
-        this.option.xAxis.axisLabel = {
+        barOption.xAxis.axisLabel = {
           interval: 'auto',
           textStyle: {
             color: '#000'
           }
         }
       }
-      this.option.tooltip = {
+      barOption.tooltip = {
         show: true,
         axisPointer: {
           label: {
@@ -888,18 +889,18 @@ export default {
         }
       }
       this.$nextTick(() => {
-        this.bar.setOption(this.option)
+        this.bar.setOption(barOption)
       })
     },
     initUserChart() {
       echarts.init(document.getElementById('userChart')).dispose()
       this.userChart = echarts.init(document.getElementById('userChart'))
       this.$nextTick(() => {
-        this.userChart.setOption(this.userOption)
+        this.userChart.setOption(lineOption)
       })
     },
     initRankOption() {
-      this.rankBar.setOption(this.rankOption)
+      this.rankBar.setOption(rankOption)
     }
   }
 };

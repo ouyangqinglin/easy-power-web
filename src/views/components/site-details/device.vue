@@ -5,7 +5,6 @@
         <div class="title-text">Device Info</div>
         <common-flex auto justify="flex-end">
           <el-button type="primary" @click="addDevice">Add</el-button>
-          <el-button @click="setting" :disabled="setDisabled">Setting</el-button>
           <el-button @click="delShow = true">Delete</el-button>
         </common-flex>
       </common-flex>
@@ -16,7 +15,7 @@
         <div v-if="+active === 2" style="flex-grow: 1">
           <el-tabs v-model="activeBattery">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
-<!--            <el-tab-pane label="Historical Information" name="second"></el-tab-pane>-->
+            <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
           </el-tabs>
           <common-flex auto class="comp-device-card-content-right" v-if="activeBattery === 'first'">
             <common-flex direction="column" align="center">
@@ -107,7 +106,7 @@
         <div v-else-if="+active === 6" style="flex-grow: 1">
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
-<!--            <el-tab-pane label="Historical Information" name="second"></el-tab-pane>-->
+            <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
           </el-tabs>
           <common-flex auto class="comp-device-card-content-right" v-if="activePv === 'first'">
             <common-flex direction="column" align="center">
@@ -315,94 +314,6 @@
         <el-button @click="addShow = false; fillAddDialog(); addSubType = ''">Cancel</el-button>
       </common-flex>
     </el-dialog>
-    <el-dialog v-if="setShow" :visible.sync="setShow" title="Setting"
-               :before-close="beforeClose"
-               :close-on-click-modal ="false"
-               width="66%">
-      <el-form :model="setDialogInfo" :rules="setRules" ref="setForm">
-        <el-row :gutter="24">
-          <el-col :span="12">
-            <el-form-item class="select" label="Inverter Work Mode" prop="workMode">
-              <el-select style="width: 100%" v-model="setDialogInfo.workMode">
-                <el-option v-for="i of setDialogInfo.option"
-                           :label="i.label"
-                           :value="i.value"
-                           :key="i.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item v-if="setDialogInfo.workMode === 'Peak Shaving'" prop="timeRange">
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <common-flex class="time-range" align="center">
-                <div class="time-range-label">Charging time1</div>
-                <common-flex class="time-range-picker" align="center">
-                  <el-time-select v-model="setDialogInfo.chargeS1" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: setDialogInfo.chargeE1}"></el-time-select>
-                  <div>-></div>
-                  <el-time-select v-model="setDialogInfo.chargeE1" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: setDialogInfo.chargeS1}"></el-time-select>
-                </common-flex>
-              </common-flex>
-            </el-col>
-            <el-col :span="12">
-              <common-flex class="time-range" align="center">
-                <div class="time-range-label">Charging time2</div>
-                <common-flex class="time-range-picker" align="center">
-                  <el-time-select v-model="setDialogInfo.chargeS2" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: setDialogInfo.chargeE2}"></el-time-select>
-                  <div>-></div>
-                  <el-time-select v-model="setDialogInfo.chargeE2" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: setDialogInfo.chargeS2}"></el-time-select>
-                </common-flex>
-              </common-flex>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24" style="margin-top: 8px">
-            <el-col :span="12">
-              <common-flex class="time-range" align="center">
-                <div class="time-range-label">Discharge time1</div>
-                <common-flex class="time-range-picker" align="center">
-                  <el-time-select v-model="setDialogInfo.dischargeS1" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: setDialogInfo.dischargeE1}"></el-time-select>
-                  <div>-></div>
-                  <el-time-select v-model="setDialogInfo.dischargeE1" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: setDialogInfo.dischargeS1}"></el-time-select>
-                </common-flex>
-              </common-flex>
-            </el-col>
-            <el-col :span="12">
-              <common-flex class="time-range" align="center">
-                <div class="time-range-label">Discharge time2</div>
-                <common-flex class="time-range-picker" align="center">
-                  <el-time-select v-model="setDialogInfo.dischargeS2" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', maxTime: setDialogInfo.dischargeE2}"></el-time-select>
-                  <div>-></div>
-                  <el-time-select v-model="setDialogInfo.dischargeE2" size="small" :picker-options="{start: '00:00', step: '01:00', end: '23:00', minTime: setDialogInfo.dischargeS2}"></el-time-select>
-                </common-flex>
-              </common-flex>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-row :gutter="24">
-          <el-col :span="12">
-            <el-form-item label="Battery Discharge Lower Limit (%)" prop="dischargeLowerLimit">
-              <el-input @input="onInput" v-model="setDialogInfo.dischargeLowerLimit"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item class="select" label="Grid standards" prop="gridStandards">
-              <el-select style="width: 100%" v-model="setDialogInfo.gridStandards">
-                <el-option v-for="(i, k) of setDialogInfo.standardOption"
-                           :label="i"
-                           :value="i"
-                           :key="k"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <common-flex style="margin-top: 30px" justify="center">
-        <el-button type="primary" @click="setSubmit">Submit</el-button>
-        <el-button @click="cancelSet">Cancel</el-button>
-      </common-flex>
-    </el-dialog>
     <el-dialog v-if="delShow" :visible.sync="delShow" title="Delete Device"
                :before-close="beforeClose"
                :close-on-click-modal ="false"
@@ -450,6 +361,22 @@ const optionBat = {
     trigger: 'axis',
     position: function (pt) {
       return [pt[0] + 20, pt[1] - 10];
+    },
+    formatter(v) {
+      if (optionBat.yAxis.name === 'kW') {
+        let t1, unit1
+        if (v[0].value < 1) {
+          t1 = `${(v[0].value * 1000).toFixed(2)}`
+          unit1 = 'W'
+        } else if (v[0].value > 1 && v[0].value < 1000) {
+          t1 = `${(+v[0].value).toFixed(2)}`
+          unit1 = 'kW'
+        } else {
+          t1 = `${(+v[0].value / 1000).toFixed(2)}`
+          unit1 = 'MW'
+        }
+        return `${v[0].name}<br>${v[0].marker} ${t1}${unit1}`
+      } else return `${v[0].name}<br>${v[0].marker} ${v[0].value}`
     }
   },
   grid: {
@@ -562,6 +489,90 @@ const optionPv = {
     trigger: 'axis',
     position: function (pt) {
       return [pt[0] + 20, pt[1] - 10];
+    },
+    formatter(v) {
+      let v0, v1, v2, v3, t1, t2, t3, t4, res, unit1, unit2, unit3, unit4
+      if (optionPv.yAxis.name === 'kW') {
+        if (v[0]) {
+          if (v[0].value < 1) {
+            t1 = `${(v[0].value * 1000).toFixed(2)}`
+            unit1 = 'W'
+          } else if (v[0].value > 1 && v[0].value < 1000) {
+            t1 = `${(+v[0].value).toFixed(2)}`
+            unit1 = 'kW'
+          } else {
+            t1 = `${(+v[0].value / 1000).toFixed(2)}`
+            unit1 = 'MW'
+          }
+          v0 = `${v[0].marker}${v[0].seriesName}: ${t1}${unit1}`
+        }
+        if (v[1]) {
+          if (v[1].value < 1) {
+            t2 = `${(v[1].value * 1000).toFixed(2)}`
+            unit2 = 'W'
+          } else if (v[1].value > 1 && v[1].value < 1000) {
+            t2 = `${(+v[1].value).toFixed(2)}`
+            unit2 = 'kW'
+          } else {
+            t2 = `${(+v[1].value / 1000).toFixed(2)}`
+            unit2 = 'MW'
+          }
+          v1 = `${v[1].marker}${v[1].seriesName}：${t2}${unit2}`
+        }
+        if (v[2]) {
+          if (v[2].value < 1) {
+            t3 = `${(v[2].value * 1000).toFixed(2)}`
+            unit3 = 'W'
+          } else if (v[2].value > 1 && v[2].value < 1000) {
+            t3 = `${(+v[2].value).toFixed(2)}`
+            unit3 = 'kW'
+          } else {
+            t3 = `${(+v[2].value / 1000).toFixed(2)}`
+            unit3 = 'MW'
+          }
+          v2 = `${v[2].marker}${v[2].seriesName}：${t3}${unit3}`
+        }
+        if (v[3]) {
+          if (v[3].value < 1) {
+            t4 = `${(v[3].value * 1000).toFixed(2)}`
+            unit4 = 'W'
+          } else if (v[3].value > 1 && v[3].value < 1000) {
+            t4 = `${(+v[3].value).toFixed(2)}`
+            unit4 = 'kW'
+          } else {
+            t4 = `${(+v[3].value / 1000).toFixed(2)}`
+            unit4 = 'MW'
+          }
+          v3 = `${v[3].marker}${v[3].seriesName}：${t4}${unit4}`
+        }
+        if (v0) res = `${v0}<br>`
+        if (v1) res += `${v1}<br>`
+        if (v2) res += `${v2}<br>`
+        if (v3) res += `${v3}<br>`
+        return `${v[0].name}<br>${res}`
+      } else {
+        if (v[0]) {
+          t1 = `${(+v[0].value).toFixed(2)}`
+          v0 = `${v[0].marker}${v[0].seriesName}: ${t1}`
+        }
+        if (v[1]) {
+          t2 = `${(+v[1].value).toFixed(2)}`
+          v1 = `${v[1].marker}${v[1].seriesName}: ${t2}`
+        }
+        if (v[2]) {
+          t3 = `${(+v[2].value).toFixed(2)}`
+          v2 = `${v[2].marker}${v[2].seriesName}: ${t3}`
+        }
+        if (v[3]) {
+          t4 = `${(+v[3].value).toFixed(2)}`
+          v3 = `${v[3].marker}${v[3].seriesName}: ${t4}`
+        }
+        if (v0) res = `${v0}<br>`
+        if (v1) res += `${v1}<br>`
+        if (v2) res += `${v2}<br>`
+        if (v3) res += `${v3}<br>`
+        return `${v[0].name}<br>${res}`
+      }
     }
   },
   legend: {
@@ -746,53 +757,6 @@ export default {
       sn: '',
       navBar: {},
       addDialogInfo: {},
-      setRules: {
-        workMode: [
-          { required: true, message: "Please select", trigger: "change" }
-        ],
-        dischargeLowerLimit: [
-          { required: true, message: "Please enter", trigger: "blur" }
-        ],
-        gridStandards: [
-          { required: true, message: "Please select", trigger: "change" }
-        ],
-        timeRange: [
-          { required: false, message: "Please select", trigger: "change" }
-        ]
-      },
-      setDialogInfo: {
-        timeRange: '',
-        chargeS1: '',
-        chargeE1: '',
-        chargeS2: '',
-        chargeE2: '',
-        dischargeS1: '',
-        dischargeE1: '',
-        dischargeS2: '',
-        dischargeE2: '',
-        gridStandards: '',
-        workMode: '',
-        dischargeLowerLimit: '',
-        option: [
-          {
-            label: 'Self Consume',
-            value: 'Self Consume'
-          },
-          {
-            label: 'Peak Shaving',
-            value: 'Peak Shaving'
-          },
-          {
-            label: 'Battery Priority',
-            value: 'Battery Priority'
-          },
-          {
-            label: 'Island',
-            value: 'Island'
-          },
-        ],
-        standardOption: []
-      },
       delDialogInfo: {
         id: '',
         deviceType: '',
@@ -821,7 +785,6 @@ export default {
         ]
       },
       addShow: false,
-      setShow: false,
       delShow: false,
       active: '',
       inverterInfo: {},
@@ -949,6 +912,7 @@ export default {
           { required: false, message: "Please enter the capacity", trigger: ['blur', 'change'] }
         ]
       },
+      waitLoading: ''
     }
   },
   watch: {
@@ -964,6 +928,7 @@ export default {
       if (v === 'second') {
         this.$nextTick(() => {
           batteryInstance = echarts.init(document.getElementById('batteryChart'))
+          this.requestLoading()
           this.getBatHisData()
           window.addEventListener('resize', this.changeSize)
         })
@@ -973,22 +938,11 @@ export default {
       if (v === 'second') {
         this.$nextTick(() => {
           pvInstance = echarts.init(document.getElementById('pvChart'))
+          this.requestLoading()
           this.getPvHisData()
           window.addEventListener('resize', this.changeSize)
         })
       }
-    }
-  },
-  computed: {
-    setDisabled() {
-      let flag = true
-      for(let v in this.navBar) {
-        if (['Stick Logger', 'Inverter'].includes(v)) {
-          flag = false
-          break
-        }
-      }
-      return flag
     }
   },
   beforeDestroy() {
@@ -996,32 +950,45 @@ export default {
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
+    requestLoading() {
+      this.waitLoading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+    },
     changeBatDate() {
       this.getBatHisData()
     },
     changeBatType() {
       arr1 = []
       if (this.batteryHis.batteryType === 'Voltage') {
+        optionBat.yAxis.name = 'V'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].storeVoltage)
+          arr1.push((+batData[i].storeVoltage).toFixed(2))
         }
       }
       if (this.batteryHis.batteryType === 'Current') {
+        optionBat.yAxis.name = 'A'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].storeCurrent)
+          arr1.push((+batData[i].storeCurrent).toFixed(2))
         }
       }
       if (this.batteryHis.batteryType === 'Power') {
+        optionBat.yAxis.name = 'kW'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].storeCurrent)
+          arr1.push((+batData[i].storeChargePower).toFixed(2))
         }
       }
       if (this.batteryHis.batteryType === 'SOC') {
+        optionBat.yAxis.name = '%'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].storeCurrent)
+          arr1.push((+batData[i].storeSoc).toFixed(2))
         }
       }
       if (this.batteryHis.batteryType === 'Temperature') {
+        optionBat.yAxis.name = '℃'
         for(let i = 0; i < batData.length; i++) {
           arr1.push(batData[i].temperature)
         }
@@ -1043,6 +1010,8 @@ export default {
         }
         optionBat.xAxis[0].data = arr5
         this.changeBatType()
+      }).finally(() => {
+        this.waitLoading.close()
       })
     },
     changePvDate() {
@@ -1050,30 +1019,18 @@ export default {
     },
     changePvType() {
       pv1 = pv2 = pv3 = pv4 = []
-      if (this.pvHis.pvType === 'Voltage') {
-        for(let i = 0; i < pvData.length; i++) {
-          pv1.push(pvData[i].pv1Voltage)
-          pv2.push(pvData[i].pv2Voltage)
-          pv3.push(pvData[i].pv3Voltage)
-          pv4.push(pvData[i].pv4Voltage)
-        }
+      for(let i = 0; i < pvData.length; i++) {
+        pv1.push((+pvData[i][`pv1${this.pvHis.pvType}`]).toFixed(2))
+        pv2.push((+pvData[i][`pv2${this.pvHis.pvType}`]).toFixed(2))
+        pv3.push((+pvData[i][`pv3${this.pvHis.pvType}`]).toFixed(2))
+        pv4.push((+pvData[i][`pv4${this.pvHis.pvType}`]).toFixed(2))
       }
-      if (this.pvHis.pvType === 'Current') {
-        for(let i = 0; i < pvData.length; i++) {
-          pv1.push(pvData[i].pv1Current)
-          pv2.push(pvData[i].pv2Current)
-          pv3.push(pvData[i].pv3Current)
-          pv4.push(pvData[i].pv4Current)
-        }
+      const weakMap = {
+        'Voltage' : 'V',
+        'Current' : 'A',
+        'Power' : 'kW',
       }
-      if (this.pvHis.pvType === 'Power') {
-        for(let i = 0; i < pvData.length; i++) {
-          pv1.push(pvData[i].pv1Power)
-          pv2.push(pvData[i].pv2Power)
-          pv3.push(pvData[i].pv3Power)
-          pv4.push(pvData[i].pv4Power)
-        }
-      }
+      optionPv.yAxis.name = weakMap[this.pvHis.pvType]
       optionPv.series[0].data = pv1
       optionPv.series[1].data = pv2
       optionPv.series[2].data = pv3
@@ -1094,6 +1051,8 @@ export default {
         }
         optionPv.xAxis[0].data = arrX2
         this.changePvType()
+      }).finally(() => {
+        this.waitLoading.close()
       })
     },
     changeSize() {
@@ -1137,21 +1096,6 @@ export default {
       this.delDialogInfo.deviceType = ''
       this.delDialogInfo.sn = ''
     },
-    cancelSet() {
-      this.setShow = false
-      this.setDialogInfo.workMode = this.curDevInfo.workMode || ''
-      this.setDialogInfo.dischargeLowerLimit = this.curDevInfo.dischargeLowerLimit || ''
-      this.setDialogInfo.gridStandards = this.curDevInfo.gridStandards || ''
-      this.setDialogInfo.chargeS1 = chargeS1 || ''
-      this.setDialogInfo.chargeS2 = chargeS2 || ''
-      this.setDialogInfo.chargeE1 = chargeE1 || ''
-      this.setDialogInfo.chargeE2 = chargeE2 || ''
-      this.setDialogInfo.dischargeS1 = dischargeS1 || ''
-      this.setDialogInfo.dischargeS2 = dischargeS2 || ''
-      this.setDialogInfo.dischargeE1 = dischargeE1 || ''
-      this.setDialogInfo.dischargeE2 = dischargeE2 || ''
-
-    },
     delDevice() {
       delDevice(this.delDialogInfo.id).then(res => {
         if (+res.code === 200) {
@@ -1192,89 +1136,6 @@ export default {
       // 小数点后面保留2位
       // val = val.replace(/^(\-)*(\d+)\.(\d).*$/, '$1$2.$3');
       this[key].nameplateCapacity = val;
-    },
-    onInput(value) {
-      if(!/^[0-9]+$/.test(value)) this.setDialogInfo.dischargeLowerLimit = value.replace(/\D/g,'')
-      if(value>100) this.setDialogInfo.dischargeLowerLimit = 100
-      if(value<0) this.setDialogInfo.dischargeLowerLimit = null
-    },
-    setSubmit() {
-      let chargeTime1 = [], chargeTime2 = [], dischargeTime1 = [], dischargeTime2 = [], timeList = []
-      this.setRules.timeRange[0].required = 'Peak Shaving' === this.setDialogInfo.workMode
-      if (this.setDialogInfo.workMode === 'Peak Shaving') {
-
-        if (this.setDialogInfo.chargeS1) chargeTime1.push(this.setDialogInfo.chargeS1)
-        if (this.setDialogInfo.chargeE1) chargeTime1.push(this.setDialogInfo.chargeE1)
-        if (this.setDialogInfo.dischargeE1) dischargeTime1.push(this.setDialogInfo.dischargeE1)
-        if (this.setDialogInfo.dischargeS1) dischargeTime1.push(this.setDialogInfo.dischargeS1)
-        if (this.setDialogInfo.chargeS2) chargeTime2.push(this.setDialogInfo.chargeS2)
-        if (this.setDialogInfo.chargeE2) chargeTime2.push(this.setDialogInfo.chargeE2)
-        if (this.setDialogInfo.dischargeE2) dischargeTime2.push(this.setDialogInfo.dischargeE2)
-        if (this.setDialogInfo.dischargeS2) dischargeTime2.push(this.setDialogInfo.dischargeS2)
-        if (chargeTime1.length === 2 && dischargeTime1.length === 2) {
-          this.setDialogInfo.timeRange = 'true'
-          let item = {
-            chargeStartTime: this.setDialogInfo.chargeS1,
-            chargeEndTime: this.setDialogInfo.chargeE1,
-            dischargeStartTime: this.setDialogInfo.dischargeS1,
-            dischargeEndTime: this.setDialogInfo.dischargeE1
-          }
-          timeList.push(item)
-        } else {
-          let item = {
-            chargeStartTime: '-1:-1',
-            chargeEndTime: '-1:-1',
-            dischargeStartTime: '-1:-1',
-            dischargeEndTime: '-1:-1'
-          }
-          timeList.push(item)
-          this.setDialogInfo.timeRange = ''
-        }
-        if (chargeTime2.length === 2 && dischargeTime2.length === 2) {
-          this.setDialogInfo.timeRange = 'true'
-          let item = {
-            chargeStartTime: this.setDialogInfo.chargeS2,
-            chargeEndTime: this.setDialogInfo.chargeE2,
-            dischargeStartTime: this.setDialogInfo.dischargeS2,
-            dischargeEndTime: this.setDialogInfo.dischargeE2
-          }
-          timeList.push(item)
-        } else {
-          let item = {
-            chargeStartTime: '-1:-1',
-            chargeEndTime: '-1:-1',
-            dischargeStartTime: '-1:-1',
-            dischargeEndTime: '-1:-1'
-          }
-          timeList.push(item)
-        }
-
-      }
-      let data = {
-        sn: this.sn,
-        workMode: this.setDialogInfo.workMode,
-        dischargeLowerLimit: +this.setDialogInfo.dischargeLowerLimit,
-        gridStandards: this.setDialogInfo.gridStandards,
-        timeList,
-      }
-
-      this.$nextTick(() => {
-        this.$refs.setForm.validate(v => {
-          if (v) {
-            setDevice(data).then(res => {
-              if (+res.code === 200) {
-                this.$message({
-                  type: 'success',
-                  message: 'Succeeded!'
-                })
-                this.beforeClose()
-                this.getList()
-                this.cancelSet()
-              }
-            })
-          }
-        })
-      })
     },
     submit () {
       let v1, v2
@@ -1349,11 +1210,7 @@ export default {
     beforeClose() {
       this.addShow = false
       this.addSubType = ''
-      this.setShow = false
       this.delShow = false
-    },
-    setting() {
-      this.setShow = true
     },
     fillAddDialog() {
       let haveTypeList = [2, 3, 1, 4, 6]
@@ -1427,10 +1284,6 @@ export default {
         deviceNavInfo[this.sn] = {...res.data, ...this.currentItem}
         this.curDevInfo = deviceNavInfo[this.sn]
         // status 1-充电中 2-已完成
-        this.setDialogInfo.gridStandards = this.curDevInfo.gridStandards
-        this.setDialogInfo.workMode = this.curDevInfo.workMode
-        this.setDialogInfo.dischargeLowerLimit = this.curDevInfo.dischargeLowerLimit
-        this.setDialogInfo.standardOption = this.curDevInfo.gridStandardsList
         if (this.curDevInfo.extInfo) {
           this.curDevInfo.extInfo = JSON.parse(this.curDevInfo.extInfo)
         }
@@ -1701,19 +1554,6 @@ export default {
             this.stickInfo[index]['info'][k.key] = this.curDevInfo[k.value]
           })
         })
-        if (this.curDevInfo.extInfo && this.curDevInfo.extInfo.timeEntityList.length) {
-          let timeList = this.curDevInfo.extInfo.timeEntityList
-          chargeS1 = this.setDialogInfo.chargeS1 = timeList[0].chargeStartTime.includes('-1') ? '' : timeList[0].chargeStartTime
-          chargeE1 = this.setDialogInfo.chargeE1 = timeList[0].chargeEndTime.includes('-1') ? '' : timeList[0].chargeEndTime
-          dischargeS1 = this.setDialogInfo.dischargeS1 = timeList[0].dischargeStartTime.includes('-1') ? '' : timeList[0].dischargeStartTime
-          dischargeE1 = this.setDialogInfo.dischargeE1 = timeList[0].dischargeEndTime.includes('-1') ? '' : timeList[0].dischargeEndTime
-
-          chargeS2 = this.setDialogInfo.chargeS2 = timeList[1].chargeStartTime.includes('-1') ? '' : timeList[1].chargeStartTime
-          chargeE2 = this.setDialogInfo.chargeE2 = timeList[1].chargeEndTime.includes('-1') ? '' : timeList[1].chargeEndTime
-          dischargeS2 = this.setDialogInfo.dischargeS2 = timeList[1].dischargeStartTime.includes('-1') ? '' : timeList[1].dischargeStartTime
-          dischargeE2 = this.setDialogInfo.dischargeE2 = timeList[1].dischargeEndTime.includes('-1') ? '' : timeList[1].dischargeEndTime
-
-        }
       } else if (+this.active === 1) {
         let arr = [
           {
@@ -1807,19 +1647,6 @@ export default {
         resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
         this.inverterInfo = this.curDevInfo
         this.inverterInfo.Lifetime = resStr
-        if (this.curDevInfo.extInfo && this.curDevInfo.extInfo.timeEntityList.length) {
-          let timeList = this.curDevInfo.extInfo.timeEntityList
-          chargeS1 = this.setDialogInfo.chargeS1 = timeList[0].chargeStartTime.includes('-1') ? '' : timeList[0].chargeStartTime
-          chargeE1 = this.setDialogInfo.chargeE1 = timeList[0].chargeEndTime.includes('-1') ? '' : timeList[0].chargeEndTime
-          dischargeS1 = this.setDialogInfo.dischargeS1 = timeList[0].dischargeStartTime.includes('-1') ? '' : timeList[0].dischargeStartTime
-          dischargeE1 = this.setDialogInfo.dischargeE1 = timeList[0].dischargeEndTime.includes('-1') ? '' : timeList[0].dischargeEndTime
-
-          chargeS2 = this.setDialogInfo.chargeS2 = timeList[1].chargeStartTime.includes('-1') ? '' : timeList[1].chargeStartTime
-          chargeE2 = this.setDialogInfo.chargeE2 = timeList[1].chargeEndTime.includes('-1') ? '' : timeList[1].chargeEndTime
-          dischargeS2 = this.setDialogInfo.dischargeS2 = timeList[1].dischargeStartTime.includes('-1') ? '' : timeList[1].dischargeStartTime
-          dischargeE2 = this.setDialogInfo.dischargeE2 = timeList[1].dischargeEndTime.includes('-1') ? '' : timeList[1].dischargeEndTime
-
-        }
       } else if (+this.active === 6) {
         let arr = [
           {

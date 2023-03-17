@@ -13,11 +13,11 @@
         <el-row>
           <el-col :span="8">
             <el-form :rules="rule" :model="base" ref="baseForm" :disabled="edit">
-              <el-form-item label="Address" prop="phone">
-                <el-input v-model="base.phone"></el-input>
-              </el-form-item>
-              <el-form-item label="Support Phone" prop="address">
+              <el-form-item label="Address" prop="address">
                 <el-input v-model="base.address"></el-input>
+              </el-form-item>
+              <el-form-item label="Support Phone" prop="phone">
+                <el-input v-model="base.phone"></el-input>
               </el-form-item>
               <el-form-item label="Support Email" prop="email">
                 <el-input v-model="base.email"></el-input>
@@ -48,10 +48,13 @@ export default {
         id: '',
       },
       rule: {
-        // address: [
-        //   { required: true, message: 'Please enter', trigger: ['blur', 'change']}
-        // ],
+        address: [
+          { required: true, message: 'Please enter', trigger: ['blur', 'change']}
+        ],
         email: [
+          { required: true, message: 'Please enter', trigger: ['blur', 'change']}
+        ],
+        salesEmail: [
           { required: true, message: 'Please enter', trigger: ['blur', 'change']}
         ],
         phone: [

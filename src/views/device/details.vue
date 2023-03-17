@@ -196,9 +196,9 @@ export default {
       if (res.data.province) res.data.region = `${res.data.region}${res.data.province}`
       if (res.data.country) res.data.region = `${res.data.region}${res.data.country}`
       this.queryParams.sn = res.data.sn
-      this.getList()
       this.base = res.data
-      this.currentApk.upgradeTime = this.DATE_FORMAT('M/d/yyyy hh:mm:ss', res.data.upgradeTime)
+      if (+this.base.deviceType === 4) this.getList()
+      if (res.data.upgradeTime) this.currentApk.upgradeTime = this.DATE_FORMAT('M/d/yyyy hh:mm:ss', res.data.upgradeTime)
       this.currentApk.currentVersion = res.data.version
       this.currentApk.hardVersion = res.data.hardVersion
     })
