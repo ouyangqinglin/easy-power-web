@@ -9,7 +9,7 @@
       </el-tabs>
     </el-card>
     <el-card class="pages-user-account-card pane">
-      <el-form :model="queryParams" :inline="true" ref="queryForm" size="small" v-show="showSearch" label-width="160px">
+      <el-form :model="queryParams" :inline="true" ref="queryForm" v-show="showSearch" label-width="160px">
         <common-flex>
           <common-flex wrap="wrap">
             <el-form-item label="User:" prop="userName">
@@ -55,8 +55,8 @@
           </common-flex>
           <common-flex style="flex-grow: 1; flex-shrink: 0" justify="flex-end">
             <el-form-item>
-              <el-button type="primary" size="mini" @click="handleQuery">Query</el-button>
-              <el-button size="mini" @click="resetQuery">Reset</el-button>
+              <el-button type="primary" @click="handleQuery">Query</el-button>
+              <el-button @click="resetQuery">Reset</el-button>
             </el-form-item>
           </common-flex>
         </common-flex>
@@ -66,7 +66,7 @@
       <common-flex justify="space-between">
         <div class="pages-user-account-card-title">User List</div>
         <div>
-          <el-button size="small" type="primary" @click="show = true" v-hasPermi="['ati:user:account:add']">Add</el-button>
+          <el-button type="primary" @click="show = true" v-hasPermi="['ati:user:account:add']">Add</el-button>
         </div>
       </common-flex>
       <el-table v-loading="loading" :data="atiUserList"
@@ -108,13 +108,11 @@
         <el-table-column label="Operat" align="center" fixed="right" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
-              size="mini"
               type="text"
               @click="openModify(scope.row)"
               v-hasPermi="['ati:user:account:edit']"
             >Modify</el-button>
             <el-button
-              size="mini"
               type="text"
               @click="handleDelete(scope.row)"
               v-hasPermi="['ati:user:account:remove']"

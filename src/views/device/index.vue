@@ -10,7 +10,7 @@
       </el-tabs>
     </el-card>
     <el-card style="margin-top: 24px">
-      <el-form :inline="true" :model="queryParams" ref="queryForm" size="small" label-width="200px">
+      <el-form :inline="true" :model="queryParams" ref="queryForm" label-width="200px">
         <common-flex justify="space-between">
           <common-flex style="flex-grow: 4" wrap="wrap">
             <el-form-item label="SN：" prop="serialNumber">
@@ -22,8 +22,8 @@
           </common-flex>
           <common-flex justify="flex-end" style="flex-grow: 1; flex-shrink: 0">
             <el-form-item>
-              <el-button size="mini" type="primary" @click="handleQuery">Query</el-button>
-              <el-button size="mini" @click="resetQuery">Reset</el-button>
+              <el-button type="primary" @click="handleQuery">Query</el-button>
+              <el-button @click="resetQuery">Reset</el-button>
             </el-form-item>
           </common-flex>
         </common-flex>

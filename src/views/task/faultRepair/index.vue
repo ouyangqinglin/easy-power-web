@@ -1,7 +1,7 @@
 <template>
   <div class="app-container pages-fault-repair">
     <el-card class="pages-fault-repair-header" >
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="130px">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="130px">
         <common-flex style="height: 100%" align="center">
           <common-flex style="height: 100%" wrap="wrap" align="center">
             <el-form-item label="Code：" prop="code" class="same-input">
@@ -14,7 +14,6 @@
             </el-form-item>
             <el-form-item label="Creation Time：" prop="createTime" class="same-input">
               <el-date-picker
-                size="small"
                 clearable
                 v-model="queryParams.createTime"
                 type="date"
@@ -42,8 +41,8 @@
           </common-flex>
           <common-flex justify="flex-end" align="center" style="flex-grow: 1; flex-shrink: 0; height: 100%">
             <el-form-item>
-              <el-button type="primary" size="mini" @click="handleQuery">Query</el-button>
-              <el-button size="mini" @click="resetQuery">Reset</el-button>
+              <el-button type="primary" @click="handleQuery">Query</el-button>
+              <el-button @click="resetQuery">Reset</el-button>
             </el-form-item>
           </common-flex>
         </common-flex>
@@ -93,7 +92,7 @@
         <el-table-column label="Last update by" align="center" prop="updateBy" min-width="140" />
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="100">
           <template slot-scope="scope">
-            <el-button size="mini" type="text">
+            <el-button type="text">
               <router-link v-hasPermi="['ati:task:fault:view']" :to="`/task/fault/view/${scope.row.id}`">Detail</router-link>
             </el-button>
           </template>

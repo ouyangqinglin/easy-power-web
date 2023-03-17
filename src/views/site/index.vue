@@ -23,8 +23,8 @@
           </el-form-item>
           <common-flex style="flex: 1" justify="flex-end">
             <el-form-item>
-              <el-button type="primary" size="mini" @click="handleQuery">Query</el-button>
-              <el-button size="mini" @click="resetQuery">Reset</el-button>
+              <el-button type="primary" @click="handleQuery">Query</el-button>
+              <el-button @click="resetQuery">Reset</el-button>
             </el-form-item>
           </common-flex>
         </common-flex>
@@ -113,13 +113,11 @@
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="130">
           <template slot-scope="scope">
             <el-button
-              size="mini"
               type="text"
             >
               <router-link v-hasPermi="['ati:site:view']" :to="`/site/details/${scope.row.id}?siteCode=${scope.row.siteCode}`">Detail</router-link>
             </el-button>
             <el-button
-              size="mini"
               type="text"
               @click="handleDelete(scope.row)"
               v-hasPermi="['ati:site:remove']"

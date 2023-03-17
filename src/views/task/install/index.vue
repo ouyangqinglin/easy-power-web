@@ -1,7 +1,7 @@
 <template>
   <div class="app-container pages-task">
     <el-card class="pages-task-header" >
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="200px">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="200px">
         <common-flex>
           <el-form-item label="Task Code：" prop="code">
             <el-input
@@ -22,8 +22,8 @@
           </el-form-item>
           <common-flex style="flex-grow: 1; flex-shrink: 0" justify="flex-end">
             <el-form-item>
-              <el-button type="primary" size="mini" @click="handleQuery">Query</el-button>
-              <el-button size="mini" @click="resetQuery">Reset</el-button>
+              <el-button type="primary" @click="handleQuery">Query</el-button>
+              <el-button @click="resetQuery">Reset</el-button>
             </el-form-item>
           </common-flex>
         </common-flex>
@@ -49,7 +49,6 @@
         <el-form-item class="second-item" label="Time of Task  Completed：" prop="endTime" style="margin-bottom: 0">
           <el-date-picker
             class="same-input"
-            size="small"
             clearable
             v-model="queryParams.endTime"
             type="date"
@@ -65,7 +64,7 @@
       <common-flex justify="space-between">
         <div class="table-title">Task List</div>
         <div>
-          <el-button @click="openAdd" type="primary" size="mini" v-hasPermi="['ati:task:install:add']">Add</el-button>
+          <el-button @click="openAdd" type="primary" v-hasPermi="['ati:task:install:add']">Add</el-button>
         </div>
       </common-flex>
       <el-table :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
@@ -125,14 +124,12 @@
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="160">
           <template slot-scope="scope">
             <el-button
-              size="mini"
               type="text"
             >
               <router-link v-hasPermi="['ati:task:install:view']" :to="`/task/install/view/${scope.row.id}`">Detail</router-link>
             </el-button>
             <el-button
               :disabled="+scope.row.status > 1"
-              size="mini"
               type="text"
             >
               <router-link v-if="!(+scope.row.status > 1)" v-hasPermi="['ati:task:install:edit']" :to="`/task/install/modify/${scope.row.id}`">Modify</router-link>
@@ -140,7 +137,6 @@
             </el-button>
             <el-button
               :disabled="+scope.row.status > 1"
-              size="mini"
               type="text"
               @click="handleDelete(scope.row)"
               v-hasPermi="['ati:task:install:remove']"

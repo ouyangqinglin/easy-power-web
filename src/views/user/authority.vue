@@ -1,7 +1,7 @@
 <template>
   <div class="pages-authority app-container">
     <el-card>
-      <el-form :inline="true" :model="queryParams" label-width="120px" ref="queryForm" size="small">
+      <el-form :inline="true" :model="queryParams" label-width="120px" ref="queryForm">
         <common-flex>
           <common-flex style="flex-grow: 1">
             <el-form-item label="Role Name：" prop="roleName">
@@ -14,8 +14,8 @@
             </el-form-item>
           </common-flex>
           <el-form-item>
-            <el-button size="small" type="primary" @click="handleQuery">Query</el-button>
-            <el-button size="small" @click="resetQuery">Reset</el-button>
+            <el-button type="primary" @click="handleQuery">Query</el-button>
+            <el-button @click="resetQuery">Reset</el-button>
           </el-form-item>
         </common-flex>
       </el-form>
@@ -23,7 +23,7 @@
     <el-card class="pages-authority-card">
       <common-flex justify="space-between">
         <div class="pages-authority-card-title">Role List</div>
-        <div><el-button size="mini" type="primary" @click="addShow = true" v-hasPermi="['system:role:add']">Add</el-button></div>
+        <div><el-button type="primary" @click="addShow = true" v-hasPermi="['system:role:add']">Add</el-button></div>
       </common-flex>
       <el-table v-loading="loading" :data="dataList"
                 :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}">
@@ -78,8 +78,8 @@
         <el-table-column label="Last updated by" align="center" prop="updateBy" min-width="120" />
         <el-table-column fixed="right" min-width="120" label="Operat">
           <template slot-scope="{ row }" v-if="+row.source === 2">
-            <el-button size="mini" type="text" @click="modifyOpen(row)" v-hasPermi="['system:role:edit']">Modify</el-button>
-            <el-button size="mini" type="text" @click="deleteRole(row.roleId)" v-hasPermi="['system:role:remove']">Delete</el-button>
+            <el-button type="text" @click="modifyOpen(row)" v-hasPermi="['system:role:edit']">Modify</el-button>
+            <el-button type="text" @click="deleteRole(row.roleId)" v-hasPermi="['system:role:remove']">Delete</el-button>
           </template>
         </el-table-column>
       </el-table>

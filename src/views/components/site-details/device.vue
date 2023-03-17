@@ -345,7 +345,6 @@ import * as echarts from 'echarts'
 
 import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData } from '@/api/device'
 let deviceNavInfo = {}
-let chargeS1 = '', chargeE1 = '', chargeS2 = '', chargeE2 = '', dischargeS1 = '', dischargeE1 = '', dischargeS2 = '', dischargeE2 = ''
 let batteryInstance = null
 let pvInstance = null
 let timer = null
@@ -686,7 +685,9 @@ const optionPv = {
       itemStyle: {
         color: '#FFB968'
       },
-      data: []
+      data: [],
+      zlevel: 1,
+      z: 1
     },
     {
       symbol: "none",
@@ -696,7 +697,9 @@ const optionPv = {
       itemStyle: {
         color: '#3DAABF'
       },
-      data: []
+      data: [],
+      zlevel: 2,
+      z: 2
     },
     {
       symbol: "none",
@@ -706,7 +709,9 @@ const optionPv = {
       itemStyle: {
         color: '#8BEA91'
       },
-      data: []
+      data: [],
+      zlevel: 3,
+      z: 3
     },
     {
       symbol: "none",
@@ -716,7 +721,9 @@ const optionPv = {
       itemStyle: {
         color: '#638AE3'
       },
-      data: []
+      data: [],
+      zlevel: 4,
+      z: 4
     }
   ]
 }
@@ -1018,7 +1025,10 @@ export default {
       this.getPvHisData()
     },
     changePvType() {
-      pv1 = pv2 = pv3 = pv4 = []
+      pv1 = []
+      pv2 = []
+      pv3 = []
+      pv4 = []
       for(let i = 0; i < pvData.length; i++) {
         pv1.push((+pvData[i][`pv1${this.pvHis.pvType}`]).toFixed(2))
         pv2.push((+pvData[i][`pv2${this.pvHis.pvType}`]).toFixed(2))
