@@ -38,13 +38,13 @@
           </template>
           <template v-else-if="i.prop === 'region'">
             <el-select filterable class="region-select" :disabled="!region.province" @change="select('city', $event)" v-model="region.city">
-              <el-option v-for="i of cityList" :label="i.name" :value="i.id" :key="i.id"></el-option>
+              <el-option v-for="i of cityList" :label="i.name" :value="i.name" :key="i.id"></el-option>
             </el-select>
             <el-select filterable class="region-select" :disabled="!region.country" @change="select('province', $event)" v-model="region.province">
-              <el-option v-for="i of proList" :label="i.name" :value="i.id" :key="i.id"></el-option>
+              <el-option v-for="i of proList" :label="i.name" :value="i.name" :key="i.id"></el-option>
             </el-select>
             <el-select filterable class="region-select" @change="select('country', $event)" v-model="region.country">
-              <el-option v-for="i of countryList" :label="i.name" :value="i.id" :key="i.id"></el-option>
+              <el-option v-for="i of countryList" :label="i.name" :value="i.name" :key="i.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -101,9 +101,6 @@ export default {
         city: '',
         province: '',
         country: '',
-        cityName: '',
-        countryName: '',
-        proName: '',
       },
       formList: [
         {
@@ -162,13 +159,6 @@ export default {
       },
       immediate: true
     },
-    region: {
-      deep: true,
-      handler(v) {
-        this.$set(this.copyBase, 'region', this.region.city && this.region.province && this.region.country)
-        if (!this.copyBase.region) this.copyBase.region = ''
-      }
-    },
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -176,14 +166,15 @@ export default {
 
   methods: {
     getRegion() {
-      this.region.country = this.region.countryName = this.copyBase.country
-      this.region.city =  this.region.cityName = this.copyBase.city
-      this.region.province =  this.region.proName = this.copyBase.province
+      this.region.country = this.copyBase.country
+      this.region.city = this.copyBase.city
+      this.region.province = this.copyBase.province
+
     },
     select(type, e) {
       if (type === 'country') {
-        let item = this.countryList.find(i => i.id === e)
-        this.region.countryName = item.name
+        let item = this.countryList.find(i => i.name === e)
+        this.region.country = item.name
         this.region.province = this.region.city = ''
         this.proList = item.state
         this.searchMap(item.name).then(res => {
@@ -191,19 +182,19 @@ export default {
         })
       }
       if (type === 'province') {
-        let proItem = this.proList.find(i => i.id === e)
+        let proItem = this.proList.find(i => i.name === e)
         this.cityList = proItem.city
-        this.region.proName = proItem.name
+        this.region.province = proItem.name
         this.region.city = ''
-        let searchText = `${this.region.countryName} ${proItem.name}`
+        let searchText = `${this.region.country} ${proItem.name}`
         this.searchMap(searchText).then(res => {
           this.getDetailsInfo(res, 'select')
         })
       }
       if (type === 'city') {
-        let cityItem = this.cityList.find(i => i.id === e)
-        this.region.cityName = cityItem.name
-        let searchText = `${this.region.countryName}${this.region.proName}${cityItem.name}`
+        let cityItem = this.cityList.find(i => i.name === e)
+        this.region.city = cityItem.name
+        let searchText = `${this.region.country}${this.region.province}${cityItem.name}`
         clearInterval(this.timer)
         this.timer = setTimeout(() => {
           this.searchMap(searchText).then(res => {
@@ -215,6 +206,15 @@ export default {
     modify() {
       this.show = true
       if (!this.google) this.initMap()
+      if (this.region.country) {
+        let item = this.countryList.find(i => i.name === this.region.country)
+        if (item) this.proList = item.state
+      }
+      if (this.region.province) {
+        let item = this.proList.find(i => i.name === this.region.province)
+        if (item) this.cityList = item.city
+      }
+
     },
     beforeClose() {
       this.show = false
@@ -222,33 +222,36 @@ export default {
       this.getRegion()
     },
     submit() {
-      this.$refs.modifyForm.validate(v => {
-        const data = {}
-        this.formList.forEach(i => {
-          data[i.prop] = this.copyBase[i.prop]
-        })
-        data.installTime = this.DATE_FORMAT('yyyy-MM-dd hh:mm:ss', new Date(this.copyBase.installTime))
-        data.id = this.base.id
-        data.lat = this.lat
-        data.lng = this.lng
-        console.log('region', this.region)
-        data.country = this.region.country
-        data.province = this.region.province
-        data.city = this.region.city
-        data.region = `${this.region.city},${this.region.province},${this.region.country}`
-        if (v) {
-          updateSite(data).then(res => {
-            if (+res.code === 200) {
-              this.$message({
-                type: 'success',
-                message: 'Succeeded!'
-              })
-              this.$emit('refresh')
-              this.beforeClose()
-            }
+      if (this.region.city && this.region.province && this.region.country) this.$set(this.copyBase, 'region', true)
+      else this.$set(this.copyBase, 'region', '')
+      this.$nextTick(() => {
+        this.$refs.modifyForm.validate(v => {
+          const data = {}
+          this.formList.forEach(i => {
+            data[i.prop] = this.copyBase[i.prop]
           })
+          data.installTime = this.DATE_FORMAT('yyyy-MM-dd hh:mm:ss', new Date(this.copyBase.installTime))
+          data.id = this.base.id
+          data.lat = this.lat
+          data.lng = this.lng
+          data.country = this.region.country
+          data.province = this.region.province
+          data.city = this.region.city
+          data.region = `${this.region.city},${this.region.province},${this.region.country}`
+          if (v) {
+            updateSite(data).then(res => {
+              if (+res.code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: 'Succeeded!'
+                })
+                this.$emit('refresh')
+                this.beforeClose()
+              }
+            })
 
-        }
+          }
+        })
       })
     },
     getAddressInfo() {
@@ -257,6 +260,7 @@ export default {
       })
     },
     getDetailsInfo(placeId, type) {
+
       const request = {
         placeId,
         fields: ['formatted_address', 'address_components', 'geometry'],
@@ -264,7 +268,6 @@ export default {
       this.service.getDetails(request, (res, status) => {
         if (status === this.google.maps.places.PlacesServiceStatus.OK) {
           console.log('details', res)
-          console.log('type', type)
           this.lat = res.geometry.location.lat()
           this.lng = res.geometry.location.lng()
           this.marker.setPosition(res.geometry.location)
@@ -280,8 +283,6 @@ export default {
               this.copyBase.address = street[0]
             }
           }
-          console.log('region', this.region)
-
         }
       })
     },
@@ -338,9 +339,11 @@ export default {
       clearInterval(this.moveTimer)
       this.moveTimer = setTimeout(() => {
         geocoder.geocode({ location: location }).then(res => {
+          console.log('geocoder', res)
           let result = res.results
           console.log('geocoder', result)
           let firstRes = result[0]
+          console.log('firstRes', firstRes)
           if (firstRes.place_id) this.getDetailsInfo(firstRes.place_id, 'click')
         })
       }, 1000)
@@ -376,8 +379,8 @@ export default {
           this.google.maps.event.addListener(this.map, 'click', this.clickMap)
           this.google.maps.event.addListener(this.map, 'drag', this.drag)
         }).catch((e) => {
-          console.log(e)
-        })
+        console.log(e)
+      })
     },
   }
 }
@@ -388,7 +391,7 @@ export default {
   .mapBox {
     margin: 0 auto;
     width: calc(100% - 100px);
-    height: 46vh;
+    height: 40vh;
     //.gmnoprint {
     //  display: none;
     //}
