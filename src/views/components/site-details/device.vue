@@ -1144,7 +1144,7 @@ export default {
       // 小数只能出现1位
       val = val.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
       // 小数点后面保留2位
-      // val = val.replace(/^(\-)*(\d+)\.(\d).*$/, '$1$2.$3');
+      val = val.replace(/^(\-)*(\d+)\.(\d).*$/, '$1$2.$3');
       this[key].nameplateCapacity = val;
     },
     submit () {

@@ -100,7 +100,7 @@ service.interceptors.response.use(res => {
         type: 'error'
       })
       return Promise.reject(new Error(msg))
-    } else if ([1001, 1002, 1003, 1004].includes(+code)) {
+    } else if ([10030, 10031, 10032, 10033].includes(+code)) {
       return res.data
     } else if (code !== 200) {
       Notification.error({

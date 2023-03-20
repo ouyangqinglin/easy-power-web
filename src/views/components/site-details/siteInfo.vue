@@ -260,7 +260,6 @@ export default {
       })
     },
     getDetailsInfo(placeId, type) {
-
       const request = {
         placeId,
         fields: ['formatted_address', 'address_components', 'geometry'],
