@@ -1133,18 +1133,13 @@ export default {
     validateNum(val, key) {
       val = val.replace(/(^\s*)|(\s*$)/g, "")
       if(!val) {
-        this[key].nameplateCapacity = "";
+        this[key].nameplateCapacity = ""
         return
       }
-      const reg = /[^\d.]/g
-      // 只能是数字和小数点，不能是其他输入
-      val = val.replace(reg, "")
-      // 保证第一位只能是数字，不能是点
-      val = val.replace(/^\./g, "");
-      // 小数只能出现1位
-      val = val.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
-      // 小数点后面保留2位
-      val = val.replace(/^(\-)*(\d+)\.(\d).*$/, '$1$2.$3');
+      const reg = /^\d+(\.\d{0,4})?$/
+      if (!reg.test(val)) {
+        val = val.slice(0, -1)
+      }
       this[key].nameplateCapacity = val;
     },
     submit () {
