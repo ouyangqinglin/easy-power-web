@@ -1136,7 +1136,7 @@ export default {
         this[key].nameplateCapacity = ""
         return
       }
-      const reg = /^\d+(\.\d{0,4})?$/
+      const reg = /^\d+(\.\d{0,3})?$/
       if (!reg.test(val)) {
         val = val.slice(0, -1)
       }
