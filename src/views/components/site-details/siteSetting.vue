@@ -609,7 +609,7 @@ export default {
       }
       deviceSet(params).then(res => {
         console.log('时间设置', res)
-        if ([10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
+        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
         else this.$modal.msgSuccess('Succeeded!')
       }).catch((err) => {
         this.$modal.alertError(err.msg || 'failed!')
@@ -641,7 +641,7 @@ export default {
       this.openLoading()
 
       deviceSet(data).then(res => {
-        if ([10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
+        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
         else this.$modal.msgSuccess('Succeeded!')
       }).catch((err) => {
         this.$modal.alertError(err.msg || 'failed!')

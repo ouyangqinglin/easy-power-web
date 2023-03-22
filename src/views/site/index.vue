@@ -63,6 +63,7 @@
           </el-select>
           <el-select
             v-model="queryParams.country"
+            class="area-select"
             placeholder="Please Select Country/Area"
             clearable
             @keyup.enter.native="handleQuery"
@@ -464,6 +465,11 @@ export default {
   .table-title {
     margin-bottom: 25px;
     font-weight: 700;
+  }
+  .area-select {
+    .el-input__inner {
+      min-width: 240px;
+    }
   }
 }
 </style>

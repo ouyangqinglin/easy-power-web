@@ -276,7 +276,7 @@ export default {
       weatherImg: {
         'Sunny': require('./img/sun.svg'),
         'Clear': require('./img/sun.svg'),
-        'Rainy': require('./img/rainy.svg'),
+        'Rain': require('./img/rainy.svg'),
         'Clouds': require('./img/cloudy.svg'),
         'Snow': require('./img/snow.svg')
       },
