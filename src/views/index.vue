@@ -1025,19 +1025,19 @@ export default {
     width: 100%;
     flex-grow: 1;
     border-bottom: 1px solid #636363;
-    @include cImg();
     &-bg {
       bottom: 0;
       left: 0;
+      width: 100%;
     }
     &-item {
       height: 100%;
       flex-grow: 1;
       .benefit-left {
-        @include wh(54 48);
+        width: 54px;
       }
       .benefit-right {
-        @include wh(36 50);
+        width: 36px;
       }
       .des {
         color: #909399;
