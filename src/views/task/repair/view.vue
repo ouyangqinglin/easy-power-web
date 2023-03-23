@@ -209,7 +209,13 @@ export default {
         color: #909399;
         font-weight: 400;
       }
+      .el-step__main {
+        margin-top: 15px;
+      }
       .el-step__icon {
+        position: absolute;
+        top: 6px;
+        left: 0;
         @include wh(8);
         border-color: #E1E1E1;
         background-color: #E1E1E1;

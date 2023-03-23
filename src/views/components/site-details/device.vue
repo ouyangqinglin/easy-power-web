@@ -1626,13 +1626,7 @@ export default {
             p: ''
           }
         ]
-        let obj = this.curDevInfo.pvEntity, objGrid = this.curDevInfo.gridEntity, objLoad = this.curDevInfo.loadEntity
-        arr.forEach((item, index) => {
-          let prefix = `pv${index + 1}`
-          item.v = obj[`${prefix}Voltage`]
-          item.c = obj[`${prefix}Current`]
-          item.p = obj[`${prefix}Power`]
-        })
+        let objGrid = this.curDevInfo.gridEntity, objLoad = this.curDevInfo.loadEntity
         arrGrid.forEach((item, index) => {
           let prefix = item.pvNum.toLowerCase()
           item.v = objGrid[`${prefix}voltage`]
@@ -1645,7 +1639,6 @@ export default {
           item.c = objLoad[`${prefix}current`]
           item.p = objLoad[`${prefix}power`]
         })
-        this.curDevInfo.pvList = arr
         this.curDevInfo.gridList = arrGrid
         this.curDevInfo.loadList = arrLoad
         let resStr = ''

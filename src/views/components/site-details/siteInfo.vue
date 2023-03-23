@@ -231,7 +231,7 @@ export default {
             data[i.prop] = this.copyBase[i.prop]
           })
           data.installTime = this.DATE_FORMAT('yyyy-MM-dd hh:mm:ss', new Date(this.copyBase.installTime))
-          data.id = this.base.id
+          data.id = this.$route.params.id
           data.lat = this.lat
           data.lng = this.lng
           data.country = this.region.country
