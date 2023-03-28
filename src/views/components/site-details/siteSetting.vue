@@ -136,13 +136,13 @@
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="1" label="Battery grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 90, 1)" v-model="deviceBase[1]" placeholder="[10,90]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 1)" v-model.trim="deviceBase[1]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[1]" @click="setDevice(1)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="30" label="Battery Off-grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 90, 30)" v-model="deviceBase[30]" placeholder="[10,90]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 30)" v-model.trim="deviceBase[30]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[30]" @click="setDevice(30)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -150,7 +150,7 @@
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="24" label="Battery EodHyst(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 90, 24)" v-model="deviceBase[24]" placeholder="[10,90]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 24)" v-model.trim="deviceBase[24]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[24]" @click="setDevice(24)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -171,19 +171,19 @@
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="3" label="Grid Power(%)">
-                        <el-input @blur="inputVerify(0, 100, 3)" v-model="deviceBase[3]" style="width: auto" placeholder="[0,100]"></el-input>
+                        <el-input @blur="inputVerify(0, 100, 3)" v-model.trim="deviceBase[3]" style="width: auto" placeholder="[0,100]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[3]" @click="setDevice(3)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="4" label="Battery discharge power(%)">
-                        <el-input @blur="inputVerify(0, 100, 4)" v-model="deviceBase[4]" style="width: auto" placeholder="[0,100]"></el-input>
+                        <el-input @blur="inputVerify(0, 100, 4)" v-model.trim="deviceBase[4]" style="width: auto" placeholder="[0,100]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[4]" @click="setDevice(4)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="17" label="PV Power(%)">
-                        <el-input @blur="inputVerify(0, 100, 17)" v-model="deviceBase[17]" style="width: auto" placeholder="[0,100]"></el-input>
+                        <el-input @blur="inputVerify(0, 100, 17)" v-model.trim="deviceBase[17]" style="width: auto" placeholder="[0,100]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[17]" @click="setDevice(17)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -191,13 +191,13 @@
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="7" label="Grid Voltage low(V)">
-                        <el-input @blur="inputVerify(150, 220, 7)" v-model="deviceBase[7]" type="primary" plain style="width: auto" placeholder="[150,220]"></el-input>
+                        <el-input @blur="inputVerify(150, 220, 7)" v-model.trim="deviceBase[7]" type="primary" plain style="width: auto" placeholder="[150,220]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[7]" @click="setDevice(7)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="8" label="Grid Voltage high(V)">
-                        <el-input @blur="inputVerify(240, 280, 8)" v-model="deviceBase[8]" type="primary" plain style="width: auto" placeholder="[240,280]"></el-input>
+                        <el-input @blur="inputVerify(240, 280, 8)" v-model.trim="deviceBase[8]" type="primary" plain style="width: auto" placeholder="[240,280]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[8]" @click="setDevice(8)">Set</el-button>
                       </el-form-item>
                     </el-col>

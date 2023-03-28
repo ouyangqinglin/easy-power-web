@@ -241,16 +241,20 @@
                 <img class="benefit-bg posa" :src="require('@img/home/benefit-bg.svg')" alt="">
                 <common-flex direction="column" justify="space-between" align="flex-end" class="benefit-item" style="padding-right: 25px">
                   <common-flex style="height: 100%" direction="column" justify="space-between" align="center">
-                    <div class="des ellipsis" title="CO2 Emission Saved">CO2 Emission Saved</div>
-                    <div class="val">{{ homeData.emissionSaved || '-- ' }}<span>kg</span></div>
+                    <common-flex direction="column" align="center">
+                      <div class="des ellipsis" title="CO2 Emission Saved">CO2 Emission Saved</div>
+                      <div class="val">{{ homeData.emissionSaved || '-- ' }}<span>kg</span></div>
+                    </common-flex>
                     <img class="benefit-left" :src="require('@img/home/benefit-left.svg')" alt="">
                   </common-flex>
                 </common-flex>
                 <div style="width: 1px; height: 16px; background-color: #909399"></div>
                 <common-flex direction="column" align="flex-start" class="benefit-item" style="padding-left: 25px">
                   <common-flex style="height: 100%" direction="column" justify="space-between" align="center">
-                    <div class="des ellipsis" title="Equivalent Trees Planted">Equivalent Trees Planted</div>
-                    <div class="val">{{ homeData.trees || '--' }}</div>
+                    <common-flex direction="column" align="center">
+                      <div class="des ellipsis" title="Equivalent Trees Planted">Equivalent Trees Planted</div>
+                      <div class="val">{{ homeData.trees || '--' }}</div>
+                    </common-flex>
                     <img class="benefit-right" :src="require('@img/home/benefit-right.svg')" alt="">
                   </common-flex>
                 </common-flex>
@@ -1048,6 +1052,7 @@ export default {
         }
       }
       .val {
+        margin-top: 5px;
         @include nFont(18 #000 700);
         @media screen and (max-width: 1334px) {
           font-size: 12px;
