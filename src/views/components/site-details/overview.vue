@@ -280,7 +280,9 @@ export default {
         'Rainy': require('./img/drizzle.svg'),
         'Rain': require('./img/drizzle.svg'),
         'Clouds': require('./img/cloudy.svg'),
-        'Snow': require('./img/snow.svg')
+        'Snow': require('./img/snow.svg'),
+        'Thunderstorm': require('./img/thunderstorm.svg'),
+        'Mist': require('./img/mist.svg')
       },
       weatherData: {},
       flag: false,
