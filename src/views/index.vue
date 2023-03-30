@@ -601,7 +601,7 @@ export default {
           this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
         } else {
           const startStampTime = (new Date(this.dateVal)).getTime() - 6 * 24 * 60 * 60 * 1000
-          this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
+          this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
           this.params.startTime = this.DATE_FORMAT('yyyy-M-d', startStampTime)
           let v1, v2
           v1 = this.DATE_FORMAT('MM-dd-yyyy', this.params.startTime)
@@ -691,16 +691,15 @@ export default {
           this.dateVal = [v1, v2]
         } else if (this.dateType === 'month') {
           const maxMonth = [1, 3, 5, 7, 8, 10, 12]
-          const year = this.DATE_FORMAT('yyyy-M', this.dateVal)
-          const month = this.DATE_FORMAT('M', this.dateVal)
-          const startTime = `${year}-1`
+          const month = this.DATE_FORMAT('M', new Date(this.dateVal))
+          const startTime = `${v}-01`
           let endStampTime
           if (maxMonth.includes(+month)) {
             endStampTime = (new Date(startTime)).getTime() +  30 * 24 * 60 * 60 * 1000
           } else if (+month === 2) endStampTime = (new Date(startTime)).getTime() + 27 * 24 * 60 * 60 * 1000
           else endStampTime = (new Date(startTime)).getTime() + 29 * 24 * 60 * 60 * 1000
           this.params.startTime = startTime
-          this.params.endTime = this.DATE_FORMAT('yyyy-M-d', endStampTime)
+          this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', endStampTime)
         } else {
           this.params.startTime = `${v}-1-1`
           let curYear = this.DATE_FORMAT('yyyy', new Date())

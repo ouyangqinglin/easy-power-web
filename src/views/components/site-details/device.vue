@@ -283,7 +283,7 @@
           <el-input @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
         <el-form-item label="Capacity (kWh)" prop="nameplateCapacity">
-          <el-input @blur="change(2)" @input="validateNum(batteryRequire.nameplateCapacity, 'batteryRequire')" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+          <el-input @blur="change(2)" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[6]" :model="pvRequire" :rules="pvRules" ref="pvForm">
@@ -291,7 +291,7 @@
           <el-input @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
         <el-form-item label="Capacity (kW)" prop="nameplateCapacity">
-          <el-input @blur="change(6)" @input="validateNum(pvRequire.nameplateCapacity, 'pvRequire')" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+          <el-input @blur="change(6)" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[3]">
@@ -739,6 +739,17 @@ export default {
     }
   },
   data() {
+    const validateCapacity = (rule, value, callback) => {
+      if (!rule.required) callback()
+      if (value === '') {
+        callback(new Error('Please enter the capacity'));
+      } else {
+        const reg = /^(?!^\.)(\d*(\.\d{0,3})?)?$/
+        if (reg.test(value)) {
+          callback()
+        } else callback(new Error('At most three significant decimals'))
+      }
+    }
     return {
       batteryHis: {
         batteryType: 'Voltage',
@@ -908,7 +919,7 @@ export default {
       },
       rules: {
         nameplateCapacity: [
-          { required: false, message: "Please enter the capacity", trigger: ['blur', 'change'] }
+          { required: false, validator: validateCapacity, trigger: ['blur', 'change'] }
         ]
       },
       pvRequire: {
@@ -916,7 +927,7 @@ export default {
       },
       pvRules: {
         nameplateCapacity: [
-          { required: false, message: "Please enter the capacity", trigger: ['blur', 'change'] }
+          { required: false, validator: validateCapacity, trigger: ['blur', 'change'] }
         ]
       },
       waitLoading: ''
@@ -1129,18 +1140,6 @@ export default {
         this.delSubType = ''
         this.delDialogInfo.id = ''
       }
-    },
-    validateNum(val, key) {
-      val = val.replace(/(^\s*)|(\s*$)/g, "")
-      if(!val) {
-        this[key].nameplateCapacity = ""
-        return
-      }
-      const reg = /^\d+(\.\d{0,3})?$/
-      if (!reg.test(val)) {
-        val = val.slice(0, -1)
-      }
-      this[key].nameplateCapacity = val;
     },
     submit () {
       let v1, v2
