@@ -47,6 +47,9 @@
               <el-option v-for="i of countryList" :label="i.name" :value="i.name" :key="i.id"></el-option>
             </el-select>
           </template>
+          <template v-else-if="i.prop === 'siteName'">
+            <el-input v-model="copyBase[i.prop]" maxlength="50"></el-input>
+          </template>
           <template v-else>
             <el-input :disabled="index > 0 && index < 5" v-model="copyBase[i.prop]"></el-input>
           </template>

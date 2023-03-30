@@ -71,7 +71,7 @@
         <el-table-column label="Site" prop="siteName" min-width="120" show-overflow-tooltip>
           <template slot-scope="{ row }">
             <span v-if="+row.siteCode === -1">--</span>
-            <span v-else>{{ row.siteName || '--'}}</span>
+            <span style="white-space: pre-wrap" v-else>{{ row.siteName || '--'}}</span>
           </template>
         </el-table-column>
         <el-table-column label="Operator" prop="operator" min-width="120" show-overflow-tooltip />

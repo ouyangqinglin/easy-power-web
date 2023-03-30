@@ -278,6 +278,7 @@ export default {
         'Clear': require('./img/sun.svg'),
         'Drizzle': require('./img/rainy.svg'),
         'Rainy': require('./img/drizzle.svg'),
+        'Rain': require('./img/drizzle.svg'),
         'Clouds': require('./img/cloudy.svg'),
         'Snow': require('./img/snow.svg')
       },

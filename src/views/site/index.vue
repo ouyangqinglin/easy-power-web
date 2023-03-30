@@ -88,7 +88,11 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="Site Name" align="center" prop="siteName" min-width="140" show-overflow-tooltip />
+        <el-table-column label="Site Name" align="center" prop="siteName" min-width="140" show-overflow-tooltip>
+          <template slot-scope="{ row }">
+            <span style="white-space: pre-wrap">{{ row.siteName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="Site Code" align="center" prop="siteCode" min-width="130" />
         <el-table-column label="City" align="center" prop="city" show-overflow-tooltip />
         <el-table-column label="Province" align="center" prop="province" min-width="120" show-overflow-tooltip />

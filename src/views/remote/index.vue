@@ -86,7 +86,7 @@
             </el-col>
           </el-row>
           <el-form-item label="Remarks">
-            <el-input type="textarea" maxLength="800" v-model="base.remark" placeholder="Please enter"></el-input>
+            <el-input type="textarea" maxlength="200" v-model="base.remark" placeholder="Please enter"></el-input>
           </el-form-item>
         </el-form>
         <common-flex justify="center">

@@ -280,7 +280,7 @@
                width="50%">
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[2]" :model="batteryRequire" :rules="rules" ref="ruleForm">
         <el-form-item label="Battery">
-          <el-input @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
+          <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
         <el-form-item label="Capacity (kWh)" prop="nameplateCapacity">
           <el-input @blur="change(2)" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
@@ -288,7 +288,7 @@
       </el-form>
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[6]" :model="pvRequire" :rules="pvRules" ref="pvForm">
         <el-form-item label="Photovoltaic">
-          <el-input @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
+          <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
         <el-form-item label="Capacity (kW)" prop="nameplateCapacity">
           <el-input @blur="change(6)" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
@@ -296,17 +296,17 @@
       </el-form>
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[3]">
         <el-form-item label="EV charger">
-          <el-input @input="change(3)" :disabled="!!navBar['EV charger']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['EV charger']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[1]">
         <el-form-item label="Inverter">
-          <el-input @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[4]">
         <el-form-item label="Stick Logger">
-          <el-input @input="change(4)" :disabled="!!navBar['Stick Logger']" v-model.trim="addDialogInfo['4'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          <el-input maxlength="20" @input="change(4)" :disabled="!!navBar['Stick Logger']" v-model.trim="addDialogInfo['4'].serialNumber" placeholder="Please enter the serial number"></el-input>
         </el-form-item>
       </el-form>
       <common-flex style="margin-top: 30px" justify="center">
