@@ -444,8 +444,8 @@ export default {
     },
     dateType(v) {
       if (v === 'date' || v === 'week') {
+        this.dateVal = new Date()
         if (v === 'date') {
-          this.dateVal = new Date()
           this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
         } else {
           const startStampTime = (new Date(this.dateVal)).getTime() - 6 * 24 * 60 * 60 * 1000
