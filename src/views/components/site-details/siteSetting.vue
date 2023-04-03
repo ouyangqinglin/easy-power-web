@@ -396,7 +396,7 @@ export default {
       },
       workOption: [
         {
-          label: 'Self Consume',
+          label: 'Self Consumption',
           value: 0
         },
         {
