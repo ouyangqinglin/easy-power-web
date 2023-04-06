@@ -32,7 +32,7 @@
         <el-table-column label="Firmware package" prop="name" show-overflow-tooltip>
           <template slot-scope="{ row }">
             <el-link :href="`${baseUrl}${row.path}`" :underline="false" target="_blank">
-              <span style="color: #FFB968">{{ row.name }}</span>
+              <span style="color: #3EBCD4">{{ row.name }}</span>
             </el-link>
           </template>
         </el-table-column>
@@ -71,7 +71,7 @@
             <el-col :span="10">
               <el-form-item label="Firmware package" class="posr" prop="file">
                 <div class="upload-wrap posa"
-                     :style="{cursor: fileName ? 'not-allowed' : 'pointer', backgroundColor: fileName ? 'rgba(255, 185, 104, .6)' : 'rgba(255, 185, 104,1)'}">
+                     :style="{cursor: fileName ? 'not-allowed' : 'pointer', backgroundColor: fileName ? 'rgba(62, 188, 212, .6)' : 'rgba(62, 188, 212, 1)'}">
                   <input @change="changeFile" id="file" class="file-ele" type="file"
                          :style="{display: fileName ? 'none': 'block', cursor: fileName ? 'not-allow' : 'pointer'}">
                   upload
@@ -251,12 +251,12 @@ export default {
       top: 0;
       width: 160px;
       height: 36px;
-      color: #ffb968;
+      color: #3EBCD4;
       text-align: left;
       cursor: default;
       .file-name {
         max-width: 120px;
-        color: #ffb968;
+        color: #3EBCD4;
         opacity: 1;
         cursor: default;
       }

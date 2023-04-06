@@ -365,7 +365,7 @@ export default {
     right: 10px;
     top: 0;
     font-size: 12px;
-    color: #ffbf7b;
+    color: #3EBCD4;
   }
 }
 </style>

@@ -1025,7 +1025,7 @@ export default {
              }
            }
            .middle-right-left {
-             background-color: #FFB968;
+             background-color: #3EBCD4;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1034,7 +1034,7 @@ export default {
              z-index: 1;
            }
            .gridExport {
-             background-color: #FFB968;
+             background-color: #3EBCD4;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1050,11 +1050,11 @@ export default {
                width: 0;
                height: 0;
                border: 6px solid;
-               border-color: transparent #FFB968 transparent transparent;
+               border-color: transparent #3EBCD4 transparent transparent;
              }
            }
            .gridImport {
-             background-color: #FFB968;
+             background-color: #3EBCD4;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1070,13 +1070,13 @@ export default {
                width: 0;
                height: 0;
                border: 6px solid;
-               border-color: transparent transparent transparent #FFB968;
+               border-color: transparent transparent transparent #3EBCD4;
              }
            }
            .circle {
              @include wh(80);
              border-radius: 50%;
-             border: 1px solid #FFB968;
+             border: 1px solid #3EBCD4;
              @media screen and (max-width: 1334px) {
                @include wh(60);
              }

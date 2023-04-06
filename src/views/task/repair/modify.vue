@@ -274,11 +274,11 @@ export default {
         display: none;
       }
       .is-success {
-        color: #FFB968;
-        border-color: #FFB968;
+        color: #3EBCD4;
+        border-color: #3EBCD4;
         .el-step__icon {
-          background-color: #FFB968;
-          border-color: #FFB968;
+          background-color: #3EBCD4;
+          border-color: #3EBCD4;
         }
       }
       .el-step__line {

@@ -363,6 +363,7 @@ export default {
         if (v) {
           this.siteCode = this.$route.query?.siteCode
           this.queryParams.siteCode = this.siteCode
+          this.active = '1'
           this.getDeviceSet()
         }
       },
@@ -695,8 +696,9 @@ export default {
     },
     changeNav(v) {
       this.active = v
-      if (+v === 2 && !this.list.length) this.getList()
-      if (+v === 3 && !this.totalList.length) this.getSetting()
+      if (+v === 1) this.getDeviceSet()
+      if (+v === 2) this.getList()
+      if (+v === 3) this.getSetting()
     },
     whole() {
       let i = 0
@@ -939,7 +941,7 @@ export default {
 
       .opacityTrans {
         color: #fff;
-        background-color: #409eff;
+        background-color: #3EBCD4;
         opacity: 1;
         transition: all .2s;
       }

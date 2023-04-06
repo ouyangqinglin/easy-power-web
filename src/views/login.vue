@@ -2,7 +2,7 @@
   <div class="login posr">
     <img class="login-bg posa" :src="require('@assets/logo/login-bg.webp')" alt="">
     <el-form v-show="modifyPas && forgetShow" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form posr">
-      <h2 class="title">Easy Power Management System</h2>
+      <h2 class="title">EasyPower<br>Management System</h2>
       <el-form-item prop="username" label="Account">
         <el-input
           v-model="loginForm.username"
@@ -122,9 +122,7 @@
       :close-on-click-modal ="false"
       center>
       <span style="line-height: 24px">Password changed successfully! Please log in again with the new password! ({{ second }}s return to the login page)</span>
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="beforeClose">OK</el-button>
-  </span>
+      <span slot="footer" class="dialog-footer"><el-button type="primary" @click="beforeClose">OK</el-button></span>
     </el-dialog>
   </div>
 </template>
@@ -380,7 +378,6 @@ export default {
               }).catch(() => {
 
               })
-              // 1111
             }
           }).finally(() => {
             this.modifyLoading = false
@@ -420,7 +417,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .forget-pas {
-  @include nFont(12 #409EFF);
+  @include nFont(12 #3EBCD4);
   cursor: pointer;
 }
 .back-icon {
@@ -442,7 +439,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
   height: 100%;
-  background-color: #f5cea1;
+  background-color: #3EBCD4;
   background-size: cover;
   &-bg {
     z-index: 1;
@@ -456,9 +453,8 @@ export default {
 }
 .title {
   margin: 0 auto 30px auto;
-  text-align: center;
-  color: #409EFF;
-  //@include nFont(24 #FFB968 700);
+  text-align: left;
+  color: #3EBCD4;
 }
 
 .login-form {
@@ -478,11 +474,6 @@ export default {
     width: 14px;
     margin-left: 2px;
   }
-}
-.login-tip {
-  font-size: 13px;
-  text-align: center;
-  color: #bfbfbf;
 }
 .login-code {
   width: 33%;

@@ -477,7 +477,7 @@ const optionBat = {
       type: 'line',
       smooth: true,
       itemStyle: {
-        color: '#FFB968'
+        color: '#3EBCD4'
       },
       data: []
     }
@@ -946,7 +946,6 @@ export default {
       if (v === 'second') {
         this.$nextTick(() => {
           batteryInstance = echarts.init(document.getElementById('batteryChart'))
-          this.requestLoading()
           this.getBatHisData()
           window.addEventListener('resize', this.changeSize)
         })
@@ -956,7 +955,6 @@ export default {
       if (v === 'second') {
         this.$nextTick(() => {
           pvInstance = echarts.init(document.getElementById('pvChart'))
-          this.requestLoading()
           this.getPvHisData()
           window.addEventListener('resize', this.changeSize)
         })
@@ -1016,6 +1014,7 @@ export default {
       console.log('changeBat')
     },
     getBatHisData() {
+      this.requestLoading()
       let params = {
         siteCode: this.queryParams.siteCode,
         startTime: this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal),
@@ -1060,12 +1059,14 @@ export default {
       console.log('changePv')
     },
     getPvHisData() {
+      this.requestLoading()
       let params = {
         siteCode: this.queryParams.siteCode,
         startTime: this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal),
       }
       pvHistoryData(params).then(res => {
         // console.log('hisPv', res.data)
+        arrX2 = []
         pvData = res.data
         for(let i = 0; i < pvData.length; i++) {
           arrX2.push(res.data[i].timestamp)
@@ -1713,7 +1714,7 @@ export default {
         }
         .opacityTrans {
           color: #fff;
-          background-color: #409EFF;
+          background-color: #3EBCD4;
           opacity: 1;
           transition: all .2s;
         }
@@ -1780,7 +1781,7 @@ export default {
               left: -78px;
               top: 0;
               @include wh(72 24);
-              background: #FFB968;
+              background: #3EBCD4;
               text-indent: 8px;
               @include nFont(14 #fff 600 24)
             }

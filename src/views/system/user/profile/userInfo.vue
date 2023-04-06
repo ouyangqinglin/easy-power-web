@@ -11,7 +11,7 @@
 <!--    </el-form-item>-->
     <el-form-item>
       <el-button type="primary" size="mini" @click="submit">Save</el-button>
-      <el-button type="danger" size="mini" @click="close">Cancel</el-button>
+      <el-button plain type="primary" size="mini" @click="close">Cancel</el-button>
     </el-form-item>
   </el-form>
 </template>
