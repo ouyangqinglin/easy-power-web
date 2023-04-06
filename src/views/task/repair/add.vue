@@ -4,7 +4,7 @@
       <div class="pages-task-repair-card-title">Info</div>
       <el-form class="pages-task-repair-card-form" :model="base" :rules="rule" ref="ruleForm">
         <el-form-item prop="title" label="Fault Title">
-          <el-input v-model="base.title" type="text" placeholder="Please enter" />
+          <el-input maxlength="50" v-model="base.title" type="text" placeholder="Please enter" />
         </el-form-item>
         <el-form-item prop="remark" label="Fault Description">
           <el-input maxlength="200" v-model="base.remark" type="textarea" placeholder="Please enter" />
