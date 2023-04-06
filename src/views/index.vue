@@ -300,7 +300,7 @@ const emphasisStyle = {
 }
 
 const lineOption = {
-    color: ['#FFB968'],
+    color: ['#3EBCD4'],
     tooltip: {
       show: true,
       trigger: 'axis',
@@ -360,9 +360,9 @@ const lineOption = {
             color: new echarts.graphic.LinearGradient(
               0, 0, 0, 1,
               [
-                {offset: 0, color: '#ffdfba'},
-                {offset: 0.5, color: '#fff2e4'},
-                {offset: 1, color: '#fffcf9'}
+                {offset: 0, color: '#6bdaef'},
+                {offset: 0.5, color: '#71cfe1'},
+                {offset: 1, color: '#80ccda'}
               ]
             )
           }
@@ -372,7 +372,7 @@ const lineOption = {
     ]
   }
 const rankOption = {
-  color: '#68B4FF',
+  color: '#3EBCD4',
   tooltip: {
     show: true,
     formatter(c) {
