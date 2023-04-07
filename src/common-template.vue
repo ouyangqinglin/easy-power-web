@@ -1,5 +1,5 @@
 <template>
-  <div class="pages-common-template">
+  <div class="pages-common-template app-container">
     <el-card>
       <el-form :inline="true" :model="queryParams" label-width="100px" ref="queryForm" size="small">
         <common-flex>
@@ -16,8 +16,8 @@
             </el-form-item>
           </common-flex>
           <el-form-item>
-            <el-button size="small" type="primary" @click="handleQuery">Query</el-button>
-            <el-button size="small" @click="resetQuery">Reset</el-button>
+            <el-button type="primary" @click="handleQuery">Query</el-button>
+            <el-button @click="resetQuery">Reset</el-button>
           </el-form-item>
         </common-flex>
       </el-form>

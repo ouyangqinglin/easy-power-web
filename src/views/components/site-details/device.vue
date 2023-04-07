@@ -12,7 +12,40 @@
         <div class="comp-device-card-content-nav">
           <div class="comp-device-card-content-nav-item" @click="changeNav(v)" :class="{ opacityTrans: active === v }" v-for="(v, k) in navBar">{{ k }}</div>
         </div>
-        <div v-if="+active === 2" style="flex-grow: 1">
+        <common-flex auto class="comp-device-card-content-right" v-if="+active === 4">
+          <common-flex direction="column" align="center">
+            <img class="device-battery" :src="require('./img/device-stick.svg')" alt=""><br>
+            <span class="status-tips" v-if="+curDevInfo.net === 1">on-line</span>
+            <span class="status-tips" v-else>off-line</span>
+          </common-flex>
+          <common-flex direction="column" auto class="comp-device-card-content-right-container">
+            <div class="item" v-for="i of stickInfo">
+              <div class="item-title">{{ i.title }}</div>
+              <common-flex class="item-body" wrap="wrap">
+                <div class="item-body-item charge" v-for="(v, k) of i.info">
+                  <div class="item-body-item-key">{{ k }}</div>
+                  <!--                  <div class="item-body-item-value" v-if="k === 'Wifi'">{{ v || '&#45;&#45;' }}<br>-->
+                  <!--                    <span style="color: #828282">Password:</span> {{ stickInfo.wifiPassword || '&#45;&#45;' }}-->
+                  <!--                  </div>-->
+                  <div class="item-body-item-value">{{ v || '--' }}</div>
+                </div>
+              </common-flex>
+            </div>
+          </common-flex>
+        </common-flex>
+        <div v-else-if="+active === 2" style="flex-grow: 1">
+          <common-flex style="padding-left: 32px; border-bottom: 1px solid #D8DCE6" wrap="wrap">
+            <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.sn, k)">
+              <div class="posr">
+                <div class="bat-pile" :id="`batPile${k}`"></div>
+                <div class="posa bat-title">
+                  <div>SOC</div>
+                  <span>50%</span>
+                </div>
+              </div>
+              <div class="bat-sn" :class="{curClick: batCur === k}">{{ i.sn }}</div>
+            </div>
+          </common-flex>
           <el-tabs v-model="activeBattery">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
             <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
@@ -81,28 +114,6 @@
             </div>
           </common-flex>
         </common-flex>
-        <common-flex auto class="comp-device-card-content-right" v-else-if="+active === 4">
-          <common-flex direction="column" align="center">
-            <img class="device-battery" :src="require('./img/device-stick.svg')" alt=""><br>
-            <span class="status-tips" v-if="+curDevInfo.net === 1">on-line</span>
-            <span class="status-tips" v-else>off-line</span>
-          </common-flex>
-          <common-flex direction="column" auto class="comp-device-card-content-right-container">
-            <div class="item" v-for="i of stickInfo">
-              <div class="item-title">{{ i.title }}</div>
-              <common-flex class="item-body" wrap="wrap">
-                <div class="item-body-item charge" v-for="(v, k) of i.info">
-                  <div class="item-body-item-key">{{ k }}</div>
-<!--                  <div class="item-body-item-value" v-if="k === 'Wifi'">{{ v || '&#45;&#45;' }}<br>-->
-<!--                    <span style="color: #828282">Password:</span> {{ stickInfo.wifiPassword || '&#45;&#45;' }}-->
-<!--                  </div>-->
-                  <div class="item-body-item-value">{{ v || '--' }}</div>
-                </div>
-              </common-flex>
-            </div>
-          </common-flex>
-        </common-flex>
-
         <div v-else-if="+active === 6" style="flex-grow: 1">
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
@@ -727,7 +738,22 @@ const optionPv = {
     }
   ]
 }
-
+const optionBatSoc = {
+  color: ['#f3f3f3', '#98e69f'],
+  series: [
+    {
+      type: 'pie',
+      radius: ['70%', '90%'],
+      labelLine: {
+        show: false
+      },
+      data: [
+        { value: 200, name: '' },
+        { value: 300, name: '' }
+      ]
+    }
+  ]
+}
 export default {
   name: "comp-device",
   props: {
@@ -759,6 +785,18 @@ export default {
         pvType: 'Voltage',
         dateVal: new Date()
       },
+      batListInstance: [],
+      batList: [
+        {
+          sn: 'sdasdsd',
+          soc: '65%'
+        },
+        {
+          sn: 'sdasdxhg',
+          soc: '65%'
+        },
+      ],
+      batCur: 0,
       activeBattery: 'first',
       activePv: 'first',
       loading: '',
@@ -966,6 +1004,9 @@ export default {
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
+    changeCurBat(sn, index) {
+      this.batCur = index
+    },
     requestLoading() {
       this.waitLoading = this.$loading({
         lock: true,
@@ -1218,7 +1259,7 @@ export default {
       this.delShow = false
     },
     fillAddDialog() {
-      let haveTypeList = [2, 3, 1, 4, 6]
+      let haveTypeList = [4, 1, 2, 6, 3]
       haveTypeList.forEach(i => {
         let item = this.listDev.find(item => +item.deviceType === i)
         if (item) {
@@ -1251,12 +1292,12 @@ export default {
         let haveInverter = this.listDev.find(i => +i.deviceType === 1)
         let haveStick = this.listDev.find(i => +i.deviceType === 4)
         let havePv = this.listDev.find(i => +i.deviceType === 6)
-        if (haveBattery) this.$set(this.navBar, 'Battery', '2')
-        if (haveCharge) this.$set(this.navBar, 'EV charger', '3')
-        if (haveInverter) this.$set(this.navBar, 'Inverter', '1')
         if (haveStick) this.$set(this.navBar, 'Stick Logger', '4')
+        if (haveInverter) this.$set(this.navBar, 'Inverter', '1')
+        if (haveBattery) this.$set(this.navBar, 'Battery', '2')
         if (havePv) this.$set(this.navBar, 'Photovoltaic', '6')
-        let haveTypeList = [2, 3, 1, 4, 6]
+        if (haveCharge) this.$set(this.navBar, 'EV charger', '3')
+        let haveTypeList = [4, 1, 2, 6, 3]
         this.fillAddDialog()
         let i = 0
         for(i; i < haveTypeList.length; i++) {
@@ -1270,7 +1311,19 @@ export default {
         }
       })
     },
+    initBatInstance() {
+      this.batListInstance = []
+      if (this.batList.length) {
+        for(let i = 0; i < this.batList.length; i++) {
+          this.$nextTick(() => {
+            this.batListInstance.push(echarts.init(document.getElementById(`batPile${i}`)))
+            this.batListInstance[i].setOption(optionBatSoc)
+          })
+        }
+      }
+    },
     changeNav(v) {
+      if (+v === 2 ) this.$nextTick(() => { this.initBatInstance() })
       this.activePv = this.activeBattery = 'first'
       this.active = v
       this.currentItem = this.listDev.find(i => +i.deviceType === +v)
@@ -1851,6 +1904,34 @@ export default {
   }
   .pvChart {
     height: 55vh;
+  }
+  .bat-item {
+    margin-right: 80px;
+    cursor: pointer;
+    .bat-pile {
+      @include wh(120);
+    }
+    .bat-title {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      :nth-child(1) {
+        @include nFont(12 #828282)
+      }
+      :nth-child(2) {
+        @include nFont(12 #000 600)
+      }
+    }
+    .bat-sn {
+      width: 120px;
+      text-align: center;
+      border-bottom: 3px solid #fff;
+    }
+    .curClick {
+      border-bottom: 3px solid #3EBCD4;
+      color: #3EBCD4;
+      transition: all .3s;
+    }
   }
 }
 </style>

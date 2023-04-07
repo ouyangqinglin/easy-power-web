@@ -106,6 +106,19 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
+        path: '/bms/monitoring/:id',
+        component: () => import('@/views/bms/monitoring'),
+        name: 'monitoring-view',
+        meta: { title: 'monitoring', icon: 'site' }
+      }
+    ]
+  },
+  {
+    path: '',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
         path: '/task/install/view/:id',
         component: () => import('@/views/task/install/view'),
         name: 'Installation-view',

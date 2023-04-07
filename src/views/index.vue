@@ -372,7 +372,7 @@ const lineOption = {
     ]
   }
 const rankOption = {
-  color: '#3EBCD4',
+  color: '#68B4FF',
   tooltip: {
     show: true,
     formatter(c) {
