@@ -453,8 +453,8 @@ export default {
 }
 .title {
   margin: 0 auto 30px auto;
-  text-align: left;
-  color: #3EBCD4;
+  text-align: left !important;
+  color: #3EBCD4 !important;
 }
 
 .login-form {
