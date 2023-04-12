@@ -32,12 +32,14 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="Alarm" prop="fault" min-width="260" show-overflow-tooltip>
+        <el-table-column label="Alarm" prop="fault" min-width="180" show-overflow-tooltip>
           <template slot-scope="{ row }">
             <span v-if="row.deviceErrorInfo">{{ row.deviceErrorInfo }}：</span>
             <span>{{ row.fault || '--' }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="Fault code" prop="faultCode"></el-table-column>
+        <el-table-column label="SN" prop="sn"></el-table-column>
         <el-table-column label="Importance" prop="type" width="120">
           <template slot-scope="{ row }"><span>{{ ['--', 'Warning', 'Fault'][+row.type] }}</span></template>
         </el-table-column>

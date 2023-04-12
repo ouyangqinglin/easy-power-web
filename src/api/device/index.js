@@ -98,3 +98,11 @@ export function pvHistoryData(params) {
     params
   })
 }
+
+export function cellData(params) {
+  return request({
+    url: `/device/dataCellInfoStatistics`,
+    method: 'get',
+    params
+  })
+}

@@ -360,9 +360,9 @@ const lineOption = {
             color: new echarts.graphic.LinearGradient(
               0, 0, 0, 1,
               [
-                {offset: 0, color: '#6bdaef'},
-                {offset: 0.5, color: '#71cfe1'},
-                {offset: 1, color: '#80ccda'}
+                {offset: 0, color: '#a8e1ec'},
+                {offset: 0.5, color: '#d9f2f7'},
+                {offset: 1, color: '#f1fafc'}
               ]
             )
           }

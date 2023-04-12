@@ -69,7 +69,7 @@ import countryList from '../../../../public/country.json'
 import { updateSite } from "@/api/site"
 import { Loader } from "@googlemaps/js-api-loader"
 const loader = new Loader({
-  apiKey: "AIzaSyC7PAFSlgXFNvFg5XVT6YjYr-Uw1amyp-o", //之前的key
+  apiKey: "AIzaSyBKQp9U9gHx7dLGYs6XBZiukvXZsM0JpMw", //之前的key
   version: "weekly", //版本
   libraries: ["places"],
 })

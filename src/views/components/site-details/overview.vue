@@ -50,7 +50,7 @@
         <el-card class="comp-overview-row-col-card">
           <common-flex class="comp-overview-row-col-card-title" justify="space-between">
             <div>Real-time power</div>
-<!--            <div>Signal strength of stick logger：Strong</div>-->
+            <el-tag effect="dark">Off line</el-tag>
           </common-flex>
           <common-flex class="circle-container posr" justify="center">
 <!--            <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: +base.pvExist ? '90%' : '80%'}">-->
@@ -647,6 +647,7 @@ export default {
       })
     },
     initConsuOption() {
+      // Import - netBuyEnergy Battery-storeDischargeEnergy Solar-pvUsedEnergy
       this.optionTwo.series[0].data = data3
       this.optionTwo.series[1].data = data4
       this.optionTwo.xAxis.data = xAxisDataConsu
@@ -841,7 +842,6 @@ export default {
            }
          }
          :nth-child(2) {
-           color: #909399;
            @media screen and (max-width: 1334px) {
              font-size: 14px;
            }

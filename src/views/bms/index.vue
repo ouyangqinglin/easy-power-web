@@ -19,7 +19,7 @@
       </el-form>
     </el-card>
     <el-card style="margin-top: 24px">
-      <p>Alarm List</p>
+      <p>List</p>
       <el-table :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
                 v-loading="loading" :data="list"
       >
@@ -28,13 +28,17 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="SN" prop="sn"></el-table-column>
-        <el-table-column label="Capacity(kWh)" prop="capacity"></el-table-column>
-        <el-table-column label="Site" prop="siteName"></el-table-column>
+        <el-table-column label="SN" prop="serialNumber"></el-table-column>
+        <el-table-column label="Capacity(kWh)" prop="nameplateCapacity"></el-table-column>
+        <el-table-column label="Site" prop="siteName">
+          <template slot-scope="{ row }">
+            <span style="white-space: pre-wrap">{{ row.siteName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="100">
           <template slot-scope="scope">
             <el-button type="text">
-              <router-link :to="`/bms/monitoring/${scope.row.id}`">Monitoring</router-link>
+              <router-link :to="{name: 'monitoring-view', params: {id: scope.row.id, info: scope.row.extInfo, sn: scope.row.serialNumber, siteCode: scope.row.siteCode}}">Monitoring</router-link>
             </el-button>
           </template>
         </el-table-column>
@@ -51,6 +55,7 @@
 </template>
 
 <script>
+import { listDevice } from '@/api/device'
 export default {
   name: "pages-Monitoring",
   data() {
@@ -59,6 +64,7 @@ export default {
       loading: false,
       list: [],
       queryParams: {
+        deviceType: '2',
         pageNum: 1,
         pageSize: 10,
         sn: '',
@@ -79,7 +85,11 @@ export default {
       this.handleQuery()
     },
     getList() {
-      // this.loading = true
+      this.loading = true
+      listDevice(this.queryParams).then(res => {
+        this.list = res.rows
+        this.total = res.total
+      }).finally(() => this.loading = false)
     },
   }
 }

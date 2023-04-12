@@ -96,24 +96,30 @@
             <div id="batteryChart" class="batteryChart"></div>
           </common-flex>
         </div>
-        <common-flex auto class="comp-device-card-content-right" v-else-if="+active === 3">
-          <common-flex direction="column" align="center">
-            <img class="device-battery" :src="require('./img/device-discharge.svg')" alt=""><br>
-            <el-button type="primary" size="mini" v-if="+curDevInfo.status === 1" @click="stopCharge">Stop Charging</el-button>
-            <span class="status-tips" v-else>Not connected</span>
+        <div v-else-if="+active === 3" style="width: 100%">
+          <el-tabs v-model="curPile">
+            <el-tab-pane name="1" label="12356"></el-tab-pane>
+            <el-tab-pane name="2" label="22356"></el-tab-pane>
+          </el-tabs>
+          <common-flex auto class="comp-device-card-content-right">
+            <common-flex direction="column" align="center">
+              <img class="device-battery" :src="require('./img/device-discharge.svg')" alt=""><br>
+              <el-button type="primary" size="mini" v-if="+curDevInfo.status === 1" @click="stopCharge">Stop Charging</el-button>
+              <span class="status-tips" v-else>Not connected</span>
+            </common-flex>
+            <common-flex direction="column" auto class="comp-device-card-content-right-container">
+              <div class="item" v-for="i of chargeInfo">
+                <div class="item-title">{{ i.title }}</div>
+                <common-flex class="item-body" wrap="wrap">
+                  <div class="item-body-item charge" v-for="(v, k) of i.info">
+                    <div class="item-body-item-key">{{ k }}</div>
+                    <div class="item-body-item-value">{{ v || '--' }}</div>
+                  </div>
+                </common-flex>
+              </div>
+            </common-flex>
           </common-flex>
-          <common-flex direction="column" auto class="comp-device-card-content-right-container">
-            <div class="item" v-for="i of chargeInfo">
-              <div class="item-title">{{ i.title }}</div>
-              <common-flex class="item-body" wrap="wrap">
-                <div class="item-body-item charge" v-for="(v, k) of i.info">
-                  <div class="item-body-item-key">{{ k }}</div>
-                  <div class="item-body-item-value">{{ v || '--' }}</div>
-                </div>
-              </common-flex>
-            </div>
-          </common-flex>
-        </common-flex>
+        </div>
         <div v-else-if="+active === 6" style="flex-grow: 1">
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
@@ -288,38 +294,87 @@
     <el-dialog v-if="addShow" :visible.sync="addShow" title="Add Device"
                :before-close="beforeClose"
                :close-on-click-modal ="false"
-               width="50%">
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[2]" :model="batteryRequire" :rules="rules" ref="ruleForm">
-        <el-form-item label="Battery">
-          <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
-        <el-form-item label="Capacity (kWh)" prop="nameplateCapacity">
-          <el-input @blur="change(2)" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
-        </el-form-item>
+               width="66%">
+      <el-form @submit.native.prevent v-if="addDialogInfo[4]">
+        <strong>Stick Logger</strong>
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @input="change(4)" :disabled="!!navBar['Stick Logger']" v-model.trim="addDialogInfo['4'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+        </div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[6]" :model="pvRequire" :rules="pvRules" ref="pvForm">
-        <el-form-item label="Photovoltaic">
-          <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
-        <el-form-item label="Capacity (kW)" prop="nameplateCapacity">
-          <el-input @blur="change(6)" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
-        </el-form-item>
+      <el-form @submit.native.prevent v-if="addDialogInfo[1]" style="margin-top: 16px">
+        <strong>Inverter</strong>
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="Rated Power (kW)">
+            <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="New installation or not">
+            <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+        </div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[3]">
-        <el-form-item label="EV charger">
-          <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['EV charger']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
+      <el-form @submit.native.prevent v-if="addDialogInfo[2]" :model="batteryRequire" :rules="rules" ref="ruleForm" style="margin-top: 16px">
+        <common-flex align="center">
+          <strong>Battery</strong>
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeBat}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Bat')">
+        </common-flex>
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="Capacity (kWh)" prop="nameplateCapacity">
+            <el-input @blur="change(2)" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+          </el-form-item>
+          <el-form-item label="New installation or not">
+            <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+        </div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[1]">
-        <el-form-item label="Inverter">
-          <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
+      <el-form @submit.native.prevent v-if="addDialogInfo[3]" style="margin-top: 16px">
+        <common-flex align="center">
+          <strong>EV Charger</strong>
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeCharger}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Charger')">
+        </common-flex>
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['Charge pile']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="New installation or not">
+            <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['Charge pile']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+        </div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[4]">
-        <el-form-item label="Stick Logger">
-          <el-input maxlength="20" @input="change(4)" :disabled="!!navBar['Stick Logger']" v-model.trim="addDialogInfo['4'].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
+      <el-form @submit.native.prevent v-if="addDialogInfo[6]" :model="pvRequire" :rules="pvRules" ref="pvForm" style="margin-top: 16px">
+        <common-flex align="center">
+          <strong>Photovoltaic</strong>
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activePhotovoltaic}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Photovoltaic')">
+        </common-flex>
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="Capacity (kW)" prop="nameplateCapacity">
+            <el-input @blur="change(6)" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+          </el-form-item>
+          <el-form-item label="New installation or not">
+            <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+        </div>
       </el-form>
+
       <common-flex style="margin-top: 30px" justify="center">
         <el-button :type="addSubType" :disabled="!addSubType" @click="submit">Submit</el-button>
         <el-button @click="addShow = false; fillAddDialog(); addSubType = ''">Cancel</el-button>
@@ -340,6 +395,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="SN">
+          <el-input v-model="delDialogInfo.sn"></el-input>
+        </el-form-item>
+        <el-form-item label="Capacity(KWh)">
           <el-input disabled v-model="delDialogInfo.sn"></el-input>
         </el-form-item>
       </el-form>
@@ -777,6 +835,9 @@ export default {
       }
     }
     return {
+      activeBat: false,
+      activeCharger: false,
+      activePhotovoltaic: false,
       batteryHis: {
         batteryType: 'Voltage',
         dateVal: new Date()
@@ -797,6 +858,7 @@ export default {
         },
       ],
       batCur: 0,
+      curPile: '1',
       activeBattery: 'first',
       activePv: 'first',
       loading: '',
@@ -827,7 +889,7 @@ export default {
             value: '2'
           },
           {
-            label: 'EV charger',
+            label: 'Charge pile',
             value: '3'
           },
           {
@@ -926,7 +988,7 @@ export default {
           },
         },
         {
-          'title': 'EV charger Operation Time',
+          'title': 'Charge pile Operation Time',
           'info': {
             'Lifetime': '',
           },
@@ -1004,6 +1066,15 @@ export default {
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
+    findDevice(str) {
+      this.requestLoading()
+      this[`active${str}`] = true
+      setTimeout(() => {
+        this[`active${str}`] = false
+        this.waitLoading.close()
+        this.$modal.alert('Device not found')
+      }, 500)
+    },
     changeCurBat(sn, index) {
       this.batCur = index
     },
@@ -1056,9 +1127,12 @@ export default {
     },
     getBatHisData() {
       this.requestLoading()
+      let format = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
       let params = {
         siteCode: this.queryParams.siteCode,
-        startTime: this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal),
+        sn: this.sn,
+        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
+        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
       }
       batHistoryData(params).then(res => {
         batData = res.data
@@ -1101,9 +1175,12 @@ export default {
     },
     getPvHisData() {
       this.requestLoading()
+      let format = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
       let params = {
         siteCode: this.queryParams.siteCode,
-        startTime: this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal),
+        sn: this.sn,
+        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
+        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
       }
       pvHistoryData(params).then(res => {
         // console.log('hisPv', res.data)
@@ -1296,7 +1373,7 @@ export default {
         if (haveInverter) this.$set(this.navBar, 'Inverter', '1')
         if (haveBattery) this.$set(this.navBar, 'Battery', '2')
         if (havePv) this.$set(this.navBar, 'Photovoltaic', '6')
-        if (haveCharge) this.$set(this.navBar, 'EV charger', '3')
+        if (haveCharge) this.$set(this.navBar, 'Charge pile', '3')
         let haveTypeList = [4, 1, 2, 6, 3]
         this.fillAddDialog()
         let i = 0
@@ -1849,12 +1926,20 @@ export default {
       }
     }
   }
+  .device-plus, .device-refresh {
+    margin-left: 24px;
+    @include wh(16);
+    cursor: pointer;
+  }
+  .device-plus {
+    @include wh(20);
+  }
   .dialog-form {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     .el-form-item {
-      width: calc(100% / 2 - 24px);
+      margin-right: 24px;
+      width: calc(100% / 3 - 24px);
     }
     .select {
       .el-form-item__label{
@@ -1932,6 +2017,13 @@ export default {
       color: #3EBCD4;
       transition: all .3s;
     }
+  }
+  .rotateAni {
+    animation: autoRotate infinite linear .5s;
+  }
+  @keyframes  autoRotate{
+    from { transform: rotate(0) }
+    to { transform: rotate(-360deg) }
   }
 }
 </style>
