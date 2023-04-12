@@ -120,10 +120,10 @@ const option = {
     {
       type: 'category',
       boundaryGap: true,
-      axisTick: {
-        show: true,
-        alignWithLabel: true
-      },
+      // axisTick: {
+      //   show: true,
+      //   alignWithLabel: true
+      // },
       data: arr,
       position: 'bottom',
       axisLine: {
@@ -249,9 +249,7 @@ export default {
   },
   computed: {
     dataList() {
-      let arr = [this.voltageList, this.cellTList, this.envTList, this.mosTList][+this.dataType]
-      if (arr.length) this.$nextTick(() => this.initCanvas())
-      return arr
+      return [this.voltageList, this.cellTList, this.envTList, this.mosTList][+this.dataType]
     }
   },
   mounted() {
@@ -312,6 +310,7 @@ export default {
 
     },
     initCanvas() {
+      console.log('canvas')
       option.series = []
       if (+this.dataType) {
         option.yAxis.name = '℃'

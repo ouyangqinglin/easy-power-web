@@ -52,10 +52,10 @@ const option = {
     {
       type: 'category',
       boundaryGap: true,
-      axisTick: {
-        show: true,
-        alignWithLabel: true
-      },
+      // axisTick: {
+      //   show: true,
+      //   alignWithLabel: true
+      // },
       data: arr,
       position: 'bottom',
       axisLine: {
