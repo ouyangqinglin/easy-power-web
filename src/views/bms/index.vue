@@ -4,8 +4,8 @@
       <el-form :inline="true" :model="queryParams" label-width="100px" ref="queryForm">
         <common-flex>
           <common-flex style="flex-grow: 1">
-            <el-form-item label="SN：" prop="sn">
-              <el-input placeholder="Please enter" v-model="queryParams.sn"></el-input>
+            <el-form-item label="SN：" prop="serialNumber">
+              <el-input placeholder="Please enter" v-model="queryParams.serialNumber"></el-input>
             </el-form-item>
             <el-form-item label="Site：" prop="siteName">
               <el-input placeholder="Please enter" v-model="queryParams.siteName"></el-input>
@@ -67,7 +67,7 @@ export default {
         deviceType: '2',
         pageNum: 1,
         pageSize: 10,
-        sn: '',
+        serialNumber: '',
         siteName: '',
       }
     }

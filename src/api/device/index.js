@@ -106,3 +106,11 @@ export function cellData(params) {
     params
   })
 }
+
+export function netList(params) {
+  return request({
+    url: `/device/netList`,
+    method: 'get',
+    params
+  })
+}

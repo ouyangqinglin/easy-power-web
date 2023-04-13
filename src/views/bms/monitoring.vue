@@ -103,7 +103,10 @@ const option = {
         if (params.length > 12 && viewH < 950) return [pt[0] + 20, offsetTop - 80]
         else return [pt[0] + 20, offsetTop]
       } else return [pt[0] + 20, pt[1] - 30];
-    }
+    },
+    formatter(params) {
+      console.log(params)
+    },
   },
   grid: {
     left: '2%',

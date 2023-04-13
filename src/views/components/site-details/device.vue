@@ -35,15 +35,15 @@
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
           <common-flex style="padding-left: 32px; border-bottom: 1px solid #D8DCE6" wrap="wrap">
-            <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.sn, k)">
+            <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
                 <div class="bat-pile" :id="`batPile${k}`"></div>
                 <div class="posa bat-title">
                   <div>SOC</div>
-                  <span>50%</span>
+                  <div style="text-align: center; line-height: 20px">{{ i.soc }}</div>
                 </div>
               </div>
-              <div class="bat-sn" :class="{curClick: batCur === k}">{{ i.sn }}</div>
+              <div class="bat-sn" :class="{curClick: batCur === i.serialNumber}">{{ i.serialNumber }}</div>
             </div>
           </common-flex>
           <el-tabs v-model="activeBattery">
@@ -97,9 +97,10 @@
           </common-flex>
         </div>
         <div v-else-if="+active === 3" style="width: 100%">
-          <el-tabs v-model="curPile">
-            <el-tab-pane name="1" label="12356"></el-tab-pane>
-            <el-tab-pane name="2" label="22356"></el-tab-pane>
+          <el-tabs v-model="curPile" @tab-click="changeCurPile">
+            <template v-for="i of pileList">
+              <el-tab-pane :name="i.serialNumber" :label="i.serialNumber"></el-tab-pane>
+            </template>
           </el-tabs>
           <common-flex auto class="comp-device-card-content-right">
             <common-flex direction="column" align="center">
@@ -121,6 +122,13 @@
           </common-flex>
         </div>
         <div v-else-if="+active === 6" style="flex-grow: 1">
+          <div style="border-bottom: 1px solid #D8DCE6">
+            <el-tabs v-model="curPv" @tab-click="changeCurPv">
+              <template v-for="i of pvList">
+                <el-tab-pane :name="i.serialNumber" :label="i.serialNumber"></el-tab-pane>
+              </template>
+            </el-tabs>
+          </div>
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
             <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
@@ -299,7 +307,7 @@
         <strong>Stick Logger</strong>
         <div class="dialog-form">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(4)" :disabled="!!navBar['Stick Logger']" v-model.trim="addDialogInfo['4'].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -307,13 +315,15 @@
         <strong>Inverter</strong>
         <div class="dialog-form">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="Rated Power (kW)">
-            <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter"></el-input>
           </el-form-item>
           <el-form-item label="New installation or not">
-            <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-select style="width: 100%" :disabled="addDialogInfo[1].disabled" v-model="addDialogInfo[1].installation" placeholder="Please select">
+              <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+            </el-select>
           </el-form-item>
         </div>
       </el-form>
@@ -325,15 +335,17 @@
           </el-tooltip>
           <img class="device-refresh" :class="{rotateAni: activeBat}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Bat')">
         </common-flex>
-        <div class="dialog-form">
+        <div class="dialog-form" v-for="i of addDialogInfo[2]">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="change(2, $event)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="Capacity (kWh)" prop="nameplateCapacity">
-            <el-input @blur="change(2)" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+            <el-input @blur="change(2)" type="text" :disabled="i.disabled" v-model.trim="i.capacity" placeholder="Please enter the capacity"></el-input>
           </el-form-item>
           <el-form-item label="New installation or not">
-            <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-select style="width: 100%" :disabled="i.disabled" v-model="i.installation" placeholder="Please select">
+              <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+            </el-select>
           </el-form-item>
         </div>
       </el-form>
@@ -345,12 +357,14 @@
           </el-tooltip>
           <img class="device-refresh" :class="{rotateAni: activeCharger}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Charger')">
         </common-flex>
-        <div class="dialog-form">
+        <div class="dialog-form" v-for="i of addDialogInfo[3]">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['Charge pile']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="change(3)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="New installation or not">
-            <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['Charge pile']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-select style="width: 100%" :disabled="i.disabled" v-model="i.installation" placeholder="Please select">
+              <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+            </el-select>
           </el-form-item>
         </div>
       </el-form>
@@ -362,15 +376,17 @@
           </el-tooltip>
           <img class="device-refresh" :class="{rotateAni: activePhotovoltaic}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Photovoltaic')">
         </common-flex>
-        <div class="dialog-form">
+        <div class="dialog-form" v-for="i of addDialogInfo[6]">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="change(6, $event)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="Capacity (kW)" prop="nameplateCapacity">
-            <el-input @blur="change(6)" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+            <el-input @blur="change(6)" type="text" :disabled="i.disabled" v-model.trim="i.capacity" placeholder="Please enter the capacity"></el-input>
           </el-form-item>
           <el-form-item label="New installation or not">
-            <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-select style="width: 100%" :disabled="i.disabled" v-model="i.installation" placeholder="Please select">
+              <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+            </el-select>
           </el-form-item>
         </div>
       </el-form>
@@ -412,7 +428,7 @@
 <script>
 import * as echarts from 'echarts'
 
-import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData } from '@/api/device'
+import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData, netList } from '@/api/device'
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
@@ -806,12 +822,14 @@ const optionBatSoc = {
         show: false
       },
       data: [
-        { value: 200, name: '' },
-        { value: 300, name: '' }
+        { value: 0, name: '' },
+        { value: 0, name: '' }
       ]
     }
   ]
 }
+
+
 export default {
   name: "comp-device",
   props: {
@@ -835,6 +853,16 @@ export default {
       }
     }
     return {
+      installOption: [
+        {
+          label: 'Yes',
+          value: 1
+        },
+        {
+          label: 'No',
+          value: 2
+        }
+      ],
       activeBat: false,
       activeCharger: false,
       activePhotovoltaic: false,
@@ -847,18 +875,12 @@ export default {
         dateVal: new Date()
       },
       batListInstance: [],
-      batList: [
-        {
-          sn: 'sdasdsd',
-          soc: '65%'
-        },
-        {
-          sn: 'sdasdxhg',
-          soc: '65%'
-        },
-      ],
+      batList: [],
+      pvList: [],
+      pileList: [],
       batCur: 0,
-      curPile: '1',
+      curPile: '',
+      curPv: '',
       activeBattery: 'first',
       activePv: 'first',
       loading: '',
@@ -1067,16 +1089,61 @@ export default {
   },
   methods: {
     findDevice(str) {
+      let item = this.listDev.find(i => +i.deviceType === 4)
       this.requestLoading()
       this[`active${str}`] = true
-      setTimeout(() => {
+      if (item && item.serialNumber) {
+        let params = {
+          sn: item.serialNumber
+        }
+        netList(params).then(res => {
+          let findBatList = res.data.batteryList || []
+          let inverList = res.data.inverterSnList || []
+          if (findBatList.length) {
+            let arr = [...findBatList, ...this.addDialogInfo[2]]
+            this.addDialogInfo[2] = Array.from(arr.reduce((acc, cur) => {
+              acc.has(cur.serialNumber) || acc.set(cur.serialNumber, cur)
+              return acc;
+            }, new Map()).values())
+          }
+          if (inverList.length) {
+            this.addDialogInfo[1] = {
+              deviceType: 1,
+              disabled: true,
+              serialNumber: inverList[0].serialNumber,
+            }
+          }
+        }).catch(err => {
+          this.$modal.alert('Device not found')
+        }).finally((res) => {
+          this[`active${str}`] = false
+          this.waitLoading.close()
+        })
+      } else {
         this[`active${str}`] = false
         this.waitLoading.close()
         this.$modal.alert('Device not found')
-      }, 500)
+      }
     },
-    changeCurBat(sn, index) {
-      this.batCur = index
+    changeCurBat(sn) {
+      this.batCur = sn
+      this.sn = sn
+      this.commonStore()
+    },
+    commonStore() {
+      this.currentItem = this.listDev.find(i => i.serialNumber === this.sn)
+      if (deviceNavInfo[this.sn]) {
+        this.curDevInfo = deviceNavInfo[this.sn]
+        this.tempInfo()
+      } else this.getDeviceInfo()
+    },
+    changeCurPv() {
+      this.sn = this.curPv
+      this.commonStore()
+    },
+    changeCurPile() {
+      this.sn = this.curPile
+      this.commonStore()
     },
     requestLoading() {
       this.waitLoading = this.$loading({
@@ -1328,6 +1395,7 @@ export default {
       else this.addSubType = ''
     },
     addDevice() {
+      this.fillAddDialog()
       this.addShow = true
     },
     beforeClose() {
@@ -1337,31 +1405,101 @@ export default {
     },
     fillAddDialog() {
       let haveTypeList = [4, 1, 2, 6, 3]
-      haveTypeList.forEach(i => {
-        let item = this.listDev.find(item => +item.deviceType === i)
-        if (item) {
-          if (i === 2) this.batteryRequire.nameplateCapacity = item.nameplateCapacity
-          if (i === 6) this.pvRequire.nameplateCapacity = item.nameplateCapacity
-          let info = {
-            deviceType: i,
-            serialNumber: item.serialNumber,
-            nameplateCapacity: item.nameplateCapacity
+      let item = {
+        deviceType: 0,
+        capacity: 0,
+        installation: 2,
+        serialNumber: '',
+        disabled: false
+      }
+      for(let i = 0; i < haveTypeList.length; i++) {
+        if (haveTypeList[i] === 2) {
+          this.$set(this.addDialogInfo, 2, [])
+          if (this.batList.length) {
+            this.batList.forEach(i => {
+              item = {
+                deviceType: 2,
+                capacity: i.capacity,
+                installation: 2,
+                serialNumber: i.serialNumber,
+                disabled: true
+              }
+              this.addDialogInfo[2].push(item)
+            })
           }
-          this.$set(this.addDialogInfo, i, info)
-        } else {
-          let info = {
-            deviceType: i,
-            serialNumber: '',
-            nameplateCapacity: ''
-          }
-          this.$set(this.addDialogInfo, i, info)
         }
-      })
-      if (!this.addDialogInfo[2].serialNumber) this.batteryRequire.nameplateCapacity = ''
-      if (!this.addDialogInfo[6].serialNumber) this.pvRequire.nameplateCapacity = ''
+        if (haveTypeList[i] === 3) {
+          this.$set(this.addDialogInfo, 3, [])
+          if (this.pileList.length) {
+            this.pileList.forEach(i => {
+              item = {
+                deviceType: 3,
+                capacity: i.capacity,
+                installation: 2,
+                serialNumber: i.serialNumber,
+                disabled: true
+              }
+              this.addDialogInfo[3].push(item)
+            })
+          }
+        }
+        if (haveTypeList[i] === 6) {
+          this.$set(this.addDialogInfo, 6, [])
+          if (this.pvList.length) {
+            this.pvList.forEach(i => {
+              item.deviceType = 6
+              item.capacity = i.capacity
+              item.installation = 2
+              item.disabled = true
+              item.serialNumber = i.serialNumber
+              this.addDialogInfo[6].push(item)
+            })
+          }
+        }
+        if (haveTypeList[i] === 4) {
+          item = this.listDev.find(item => +item.deviceType === 4)
+          let info = {}
+          if (item) {
+            info = {
+              deviceType: 4,
+              disabled: true,
+              serialNumber: item.serialNumber,
+            }
+          } else {
+            info = {
+              deviceType: 4,
+              disabled: false,
+              serialNumber: '',
+            }
+          }
+          this.$set(this.addDialogInfo, 4, info)
+        }
+        if (haveTypeList[i] === 1) {
+          item = this.listDev.find(item => +item.deviceType === 1)
+          let info = {}
+          if (item) {
+            info = {
+              deviceType: 1,
+              disabled: true,
+              serialNumber: item.serialNumber,
+            }
+          } else {
+            info = {
+              deviceType: 1,
+              disabled: false,
+              serialNumber: '',
+            }
+          }
+          this.$set(this.addDialogInfo, 1, info)
+        }
+      }
+      console.log(this.addDialogInfo)
     },
     getList() {
       this.navBar = {}
+      this.batList = []
+      this.pvList = []
+      this.pileList = []
       listDevice(this.queryParams).then(res => {
         this.listDev = res.rows
         let haveBattery = this.listDev.find(i => +i.deviceType === 2)
@@ -1375,7 +1513,6 @@ export default {
         if (havePv) this.$set(this.navBar, 'Photovoltaic', '6')
         if (haveCharge) this.$set(this.navBar, 'Charge pile', '3')
         let haveTypeList = [4, 1, 2, 6, 3]
-        this.fillAddDialog()
         let i = 0
         for(i; i < haveTypeList.length; i++) {
           if (this.listDev.find(item => +item.deviceType === haveTypeList[i])) break
@@ -1386,24 +1523,46 @@ export default {
           this.active = this.currentItem.deviceType + ''
           this.getDeviceInfo()
         }
+        let list = res.rows
+        for(let i = 0; i < list.length; i++) {
+          if (+list[i]['deviceType'] === 2) this.batList.push(list[i])
+          if (+list[i]['deviceType'] === 6) this.pvList.push(list[i])
+          if (+list[i]['deviceType'] === 3) this.pileList.push(list[i])
+        }
+        if (this.batList.length) this.batCur = this.batList[0].serialNumber
+        if (this.pvList.length) this.curPv = this.pvList[0].serialNumber
+        if (this.pileList.length) this.curPile = this.pileList[0].serialNumber
+        for(let i = 0; i < this.batList.length; i++) {
+          this.batList[i]['soc'] = (+this.batList[i]['curEnergy'] / +this.batList[i]['capacity']) * 100 + '%'
+        }
       })
     },
     initBatInstance() {
       this.batListInstance = []
       if (this.batList.length) {
-        for(let i = 0; i < this.batList.length; i++) {
-          this.$nextTick(() => {
+        this.$nextTick(() => {
+          for(let i = 0; i < this.batList.length; i++) {
             this.batListInstance.push(echarts.init(document.getElementById(`batPile${i}`)))
+            optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy']
+            optionBatSoc.series[0].data[1].value = this.batList[i]['capacity']
+            if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) this.batList[i]['soc'] = 0 + '%'
+            else this.batList[i]['soc'] = (this.batList[i]['curEnergy'] / this.batList[i]['capacity']) * 100 + '%'
             this.batListInstance[i].setOption(optionBatSoc)
-          })
-        }
+          }
+        })
       }
     },
     changeNav(v) {
       if (+v === 2 ) this.$nextTick(() => { this.initBatInstance() })
       this.activePv = this.activeBattery = 'first'
       this.active = v
-      this.currentItem = this.listDev.find(i => +i.deviceType === +v)
+      if ([2, 3, 6].includes(+v)) {
+        let list
+        if (+v === 2) list = this.batList
+        if (+v === 6) list = this.pvList
+        if (+v === 3) list = this.pileList
+        this.currentItem = this.listDev.find(i => i.serialNumber === list[0].serialNumber)
+      } else this.currentItem = this.listDev.find(i => +i.deviceType === +v)
       this.sn = this.currentItem.serialNumber
       if (deviceNavInfo[this.sn]) {
         this.curDevInfo = deviceNavInfo[this.sn]
