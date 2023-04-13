@@ -88,14 +88,20 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="Site" prop="siteCode"></el-table-column>
+        <el-table-column
+          label="Site"
+          prop="siteName"
+          min-width="130"
+        ></el-table-column>
         <el-table-column
           label="Alarm Start Time"
           prop="createTime"
+          min-width="100"
         ></el-table-column>
         <el-table-column
           label="Alarm Recovery Time"
           prop="recoveryTime"
+          min-width="100"
         ></el-table-column>
       </el-table>
       <pagination
@@ -118,31 +124,9 @@ export default {
     return {
       total: 0,
       // 遮罩层
-      loading: false,
+      loading: true,
       // 告警列表
-      alarmList: [
-        {
-          createBy: null,
-          createTime: "2023-04-12 16:02:36",
-          deviceErrorInfo: "Battery Warning",
-          deviceType: null,
-          fault: "Bat Over Volt",
-          faultCode: "警告你呢，林满",
-          groupId: null,
-          id: 143,
-          params: {},
-          recoveryStatus: 0,
-          recoveryTime: null,
-          remark: null,
-          searchValue: null,
-          siteCode: "demo",
-          sn: "YT_Test001",
-          status: 1,
-          type: 1,
-          updateBy: null,
-          updateTime: null,
-        }
-      ],
+      alarmList: [],
       queryParams: {
         pageNum: 1,
         pageSize: 10,
@@ -177,20 +161,16 @@ export default {
     };
   },
   created() {
-    // this.getAlarmList();
-  },
-  mounted() {
-    console.log(this.dicts)
+    this.getAlarmList();
   },
   methods: {
     // 查询告警列表
     getAlarmList() {
       this.loading = true;
       getList(this.queryParams).then((response) => {
-        console.log(response);
         response.rows.forEach((i) => {
           Object.keys(i).forEach((k) => {
-            if (!i[k]) i[k] = "--";
+            if (k !== "recoveryStatus" && !i[k]) i[k] = "--";
           });
         });
         this.alarmList = response.rows;
