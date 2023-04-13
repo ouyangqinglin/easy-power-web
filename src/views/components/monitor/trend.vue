@@ -177,12 +177,14 @@ export default {
       option.yAxis.name = unit[v]
       option.series[0].data = []
       option.xAxis[0].data = []
+      arrY = []
       for(let i = 0; i < dataList.length; i++) {
         arrY.push(dataList[i][dataKeyList[v]])
         option.xAxis[0].data.push(dataList[i].timestamp)
       }
       option.series[0].data = arrY
       this.$nextTick(() => {
+        if (chartIns) chartIns.dispose()
         chartIns = echarts.init(document.getElementById('charts'))
         chartIns.setOption(option)
         window.addEventListener('resize', this.changeSize)
