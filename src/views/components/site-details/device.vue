@@ -426,7 +426,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="SN">
-          <el-select @change="chooseSn" v-model="delDialogInfo.sn">
+          <el-select style="width: 100%" @change="chooseSn" v-model="delDialogInfo.sn">
             <el-option v-for="(i, k) of delDialogInfo.snOption" :value="i" :label="i" :key="k"></el-option>
           </el-select>
         </el-form-item>

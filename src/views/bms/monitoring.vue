@@ -105,12 +105,11 @@ const option = {
       } else return [pt[0] + 20, pt[1] - 30];
     },
     formatter(p) {
-      console.log(p)
       if (p[0].value === '-') return 'No data'
       else {
         let str = ''
         for(let i = 0; i < p.length; i++) {
-          str += `${p[i]['marker']}${p[i]['seriesName']}${p[i]['value']}<br>`
+          str += `${p[i]['marker']}${p[i]['seriesName']}：${p[i]['value']}<br>`
         }
         return str
       }
