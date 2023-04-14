@@ -50,7 +50,7 @@
         <el-card class="comp-overview-row-col-card">
           <common-flex class="comp-overview-row-col-card-title" justify="space-between">
             <div>Real-time power</div>
-            <el-tag effect="dark">Off line</el-tag>
+            <el-tag effect="dark">{{ online ? 'On line' : 'Off line' }}</el-tag>
           </common-flex>
           <common-flex class="circle-container posr" justify="center">
 <!--            <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: +base.pvExist ? '90%' : '80%'}">-->
@@ -213,7 +213,7 @@
 </template>
 
 <script>
-import {getWeather, homeChart} from "@/api/index"
+import {getWeather, homeChart, getNet} from "@/api/index"
 import * as echarts from 'echarts'
 
 function detectZoom() {
@@ -424,23 +424,24 @@ export default {
       barProduction: null,
       barConsumption: null,
       timer: null,
+      online: 0,
     }
   },
   watch: {
     base(v) {
+      this.params.siteCode = this.$route.query?.siteCode
       let params = {
         latitude: v.latitude,
         longitude: v.longitude
       }
       this.getWeatherData(params)
+      this.getOnline()
       if (this.flag) return this.flag = false
       if (this.dateType === 'date') {
-        this.params.siteCode = this.$route.query?.siteCode
         this.$nextTick(() => {
           this.getDataOption()
         })
       } else this.dateType = 'date'
-
     },
     dateType(v) {
       if (v === 'date' || v === 'week') {
@@ -507,6 +508,15 @@ export default {
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
+    getOnline() {
+      let p = {
+        deviceType: 4,
+        siteCode: this.params.siteCode
+      }
+      getNet(p).then(res => {
+        this.online = +res.net
+      })
+    },
     getWeatherData(params) {
       getWeather(params).then(res => {
         this.weatherData = res.data

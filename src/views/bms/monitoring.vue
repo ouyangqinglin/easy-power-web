@@ -73,7 +73,7 @@
             value-format="yyyy-MM-dd"
             v-model="dateVal"
             type="date"
-            @change="getData('loading')"
+            @change="getData()"
           />
         </div>
         <div class="line" id="line"></div>
@@ -104,8 +104,16 @@ const option = {
         else return [pt[0] + 20, offsetTop]
       } else return [pt[0] + 20, pt[1] - 30];
     },
-    formatter(params) {
-      console.log(params)
+    formatter(p) {
+      console.log(p)
+      if (p[0].value === '-') return 'No data'
+      else {
+        let str = ''
+        for(let i = 0; i < p.length; i++) {
+          str += `${p[i]['marker']}${p[i]['seriesName']}${p[i]['value']}<br>`
+        }
+        return str
+      }
     },
   },
   grid: {
@@ -291,8 +299,8 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
     },
-    getData(v) {
-      if(v) this.requestLoading()
+    getData() {
+      this.requestLoading()
       let format = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
       let params = {
         sn: localStorage.getItem('sn'),
@@ -308,7 +316,7 @@ export default {
         }
         this.initCanvas()
       }).finally(() => {
-        if(v) this.loading.close()
+        this.loading.close()
       })
 
     },
