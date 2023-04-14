@@ -415,7 +415,7 @@
                :before-close="beforeClose"
                :close-on-click-modal ="false"
                width="50%">
-      <el-form @submit.native.prevent class="dialog-form">
+      <el-form @submit.native.prevent class="dialog-form" label-position="top">
         <el-form-item class="select" label=" Product Type">
           <el-select @change="watchSelect" style="width: 100%" v-model="delDialogInfo.deviceType" placeholder="Please select">
             <el-option v-for="i of delDialogInfo.option"
@@ -429,7 +429,6 @@
           <el-select @change="chooseSn" v-model="delDialogInfo.sn">
             <el-option v-for="(i, k) of delDialogInfo.snOption" :value="i" :label="i" :key="k"></el-option>
           </el-select>
-
         </el-form-item>
         <el-form-item label="Capacity(KWh)">
           <el-input disabled v-model="delDialogInfo.nameplateCapacity"></el-input>
