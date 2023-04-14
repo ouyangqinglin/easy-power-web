@@ -77,7 +77,7 @@
                 <div v-else>{{ (+base.solarPower / 1000).toFixed(2) }}<br><span>MW</span></div>
               </common-flex>
               <common-flex direction="column" justify="center" align="center" class="circle left posa">
-                <div class="posa soc">85%<br><span style="color: #666">SOC</span></div>
+                <div class="posa soc">{{ base.soc || 0 }}%<br><span style="color: #666">SOC</span></div>
                 <img :src="require('./img/battery.svg')" alt="">
                 <template v-if="+base.storeConnectStatus === 1">
                   <div v-if="+base.storePower < 1000">{{ base.storePower }}<br><span>kW</span></div>
