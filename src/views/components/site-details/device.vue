@@ -34,7 +34,7 @@
           </common-flex>
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
-          <common-flex style="padding-left: 32px; border-bottom: 1px solid #D8DCE6" wrap="wrap">
+          <common-flex style="border-bottom: 1px solid #D8DCE6" wrap="wrap">
             <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
                 <div class="bat-pile" :id="`batPile${k}`"></div>
@@ -478,7 +478,10 @@ const optionBat = {
           unit1 = 'MW'
         }
         return `${v[0].name}<br>${v[0].marker} ${t1}${unit1}`
-      } else return `${v[0].name}<br>${v[0].marker} ${v[0].value}`
+      } else {
+        if (v.length > 1) return `${v[0].name}<br>${v[0].marker}${v[0].seriesName} ${v[0].value}<br>${v[1].marker}${v[1].seriesName} ${v[1].value}`
+        else return `${v[0].name}<br>${v[0].marker} ${v[0].value}`
+      }
     }
   },
   grid: {
@@ -573,18 +576,7 @@ const optionBat = {
         }
     }
   ],
-  series: [
-    {
-      symbol: "none",
-      // name: 'A相',
-      type: 'line',
-      smooth: true,
-      itemStyle: {
-        color: '#3EBCD4'
-      },
-      data: []
-    }
-  ]
+  series: []
 }
 const optionPv = {
   tooltip: {
@@ -1176,6 +1168,7 @@ export default {
     changeCurBat(sn) {
       this.batCur = sn
       this.sn = sn
+      this.activeBattery = 'first'
       this.commonStore()
     },
     commonStore() {
@@ -1187,6 +1180,7 @@ export default {
     },
     changeCurPv() {
       this.sn = this.curPv
+      this.activePv = 'first'
       this.commonStore()
     },
     changeCurPile() {
@@ -1206,6 +1200,8 @@ export default {
     },
     changeBatType() {
       arr1 = []
+      let arr2 = []
+      optionBat.series = []
       if (this.batteryHis.batteryType === 'Voltage') {
         optionBat.yAxis.name = 'V'
         for(let i = 0; i < batData.length; i++) {
@@ -1233,10 +1229,37 @@ export default {
       if (this.batteryHis.batteryType === 'Temperature') {
         optionBat.yAxis.name = '℃'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].temperature)
+          arr1.push(batData[i].maxTemperature)
+          arr2.push(batData[i].minTemperature)
         }
       }
-      optionBat.series[0].data = arr1
+      let itemOne = {
+        symbol: "none",
+        // name: 'A相',
+        type: 'line',
+        smooth: true,
+        itemStyle: {
+          color: '#3EBCD4'
+        },
+        data: arr1
+      }
+      if (this.batteryHis.batteryType === 'Temperature') {
+        let itemTwo = {
+          name: 'minTemperature',
+          symbol: 'none',
+          type: 'line',
+          smooth: true,
+          itemStyle: {
+            color: '#FFB968'
+          },
+          data: arr2
+        }
+        itemOne.name = 'maxTemperature'
+        optionBat.series.push(itemTwo)
+      }
+      optionBat.series.push(itemOne)
+      // if (batteryInstance) batteryInstance.dispose()
+      // batteryInstance = echarts.init(document.getElementById('batteryChart'))
       batteryInstance.setOption(optionBat)
       console.log('changeBat')
     },
