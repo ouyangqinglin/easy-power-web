@@ -2,42 +2,52 @@
   <div class="pages-monitoring app-container">
     <el-card>
       <strong slot="header">Battery Info</strong>
-      <el-row>
-        <el-col :span="6">
-          <div class="label">Serial Number</div>
-          <div class="value">{{ base.sn }}</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="label">Capacity (Wh)</div>
-          <div class="value">{{ base.capacity }}</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="label">SOH(%)</div>
-          <div class="value">{{ base.soc }}</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="label">Cycle Time</div>
-          <div class="value">{{ 1000 }}</div>
-        </el-col>
-      </el-row>
-      <el-row style="margin-top: 12px">
-        <el-col :span="6">
-          <div class="label">Lifetime</div>
-          <div class="value">3 Days   5 Months  1Year</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="label">Hardware version</div>
-          <div class="value">1.1.2</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="label">software version</div>
-          <div class="value">1.2.1</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="label">Status</div>
-          <div class="value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+base.status] }}</div>
-        </el-col>
-      </el-row>
+      <common-flex style="width: 100%">
+        <common-flex align="center" class="left">
+          <div class="container-battery posr">
+            <div class="posa dynamicSoc" :style="{height: base.soc * 68 / 100 + 'px'}"></div>
+            <img class="battery posa" style="z-index: 1" :src="require('@/views/components/site-details/img/device-battery.svg')" alt="">
+          </div>
+        </common-flex>
+        <div style="flex: 1">
+          <el-row>
+            <el-col :span="6">
+              <div class="label">Serial Number</div>
+              <div class="value">{{ base.sn }}</div>
+            </el-col>
+            <el-col :span="6">
+              <div class="label">Capacity (Wh)</div>
+              <div class="value">{{ base.capacity }}</div>
+            </el-col>
+            <el-col :span="6">
+              <div class="label">SOH(%)</div>
+              <div class="value">{{ base.soc }}</div>
+            </el-col>
+            <el-col :span="6">
+              <div class="label">Cycle Time</div>
+              <div class="value">{{ 1000 }}</div>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top: 12px">
+            <el-col :span="6">
+              <div class="label">Lifetime</div>
+              <div class="value">3 Days   5 Months  1Year</div>
+            </el-col>
+            <el-col :span="6">
+              <div class="label">Hardware version</div>
+              <div class="value">{{ base.hardVersion }}</div>
+            </el-col>
+            <el-col :span="6">
+              <div class="label">software version</div>
+              <div class="value">{{ base.version }}</div>
+            </el-col>
+            <el-col :span="6">
+              <div class="label">Status</div>
+              <div class="value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+base.status] }}</div>
+            </el-col>
+          </el-row>
+        </div>
+      </common-flex>
       <common-flex wrap="wrap" style="margin-top: 48px" class="flex-container">
         <common-flex class="item" v-for="(i, k) of infoList"
                      :class="{activeBorder: k === +curItem}"
@@ -109,7 +119,8 @@ const option = {
       else {
         let str = ''
         for(let i = 0; i < p.length; i++) {
-          str += `${p[i]['marker']}${p[i]['seriesName']}：${p[i]['value']}<br>`
+          if (i === 0) str += `${p[i]['name']}<br>${p[i]['marker']}${p[i]['seriesName']}：${p[i]['value']}<br>`
+          else str += `${p[i]['marker']}${p[i]['seriesName']}：${p[i]['value']}<br>`
         }
         return str
       }
@@ -394,11 +405,11 @@ export default {
 .pages-monitoring {
   .label {
     color: #828282;
-    line-height: 36px;
+    line-height: 32px;
   }
   .value {
     color: #000;
-    line-height: 36px;
+    line-height: 32px;
     .trend {
       top: 50%;
       right: 6px;
@@ -459,6 +470,28 @@ export default {
     .line {
       height: 100%;
     }
+  }
+  .left {
+    margin-right: 45px;
+    width: 80px;
+  }
+  .container-battery {
+    @include wh(80);
+  }
+  .battery {
+    bottom: 3px;
+    left: 0;
+    @include wh(80);
+  }
+  .dynamicSoc {
+    z-index: 0;
+    width: 50px;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #8be186;
+    transition: all .3s;
+    border-radius: 4px;
   }
 }
 </style>

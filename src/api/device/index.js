@@ -114,3 +114,11 @@ export function netList(params) {
     params
   })
 }
+
+export function editDevice(data) {
+  return request({
+    url: `/device`,
+    method: 'put',
+    data
+  })
+}

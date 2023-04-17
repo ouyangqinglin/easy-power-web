@@ -10,6 +10,11 @@
             <el-form-item label="Site：" prop="siteName">
               <el-input placeholder="Please enter" v-model="queryParams.siteName"></el-input>
             </el-form-item>
+            <el-form-item label="Follow：" prop="followBms">
+              <el-select v-model="queryParams.followBms" placeholder="Please select">
+                <el-option v-for="i of followOption" :value="i.value" :label="i.label" :key="i.value"></el-option>
+              </el-select>
+            </el-form-item>
           </common-flex>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">Query</el-button>
@@ -35,11 +40,24 @@
             <span style="white-space: pre-wrap">{{ row.siteName }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="100">
+        <el-table-column fixed="right" align="center" class-name="small-padding fixed-width" min-width="100">
+          <common-flex justify="center" align="center" slot="header">
+            <span>Operat</span>
+            <el-tooltip effect="dark" placement="top">
+              <span slot="content">
+                Click 'Follow' to retain historical data<br>of battery cellsCancel the following<br>and historical data will be lost.only<br>real-time data can be viewed.
+              </span>
+              <img style="width: 18px; margin-left: 14px" :src="require('@img/question.svg')" alt="">
+            </el-tooltip>
+          </common-flex>
           <template slot-scope="scope">
-            <el-button type="text">
-              <router-link :to="{name: 'monitoring-view', params: {id: scope.row.id, info: scope.row.extInfo, sn: scope.row.serialNumber, siteCode: scope.row.siteCode}}">Monitoring</router-link>
-            </el-button>
+            <common-flex justify="center" align="center">
+              <el-button type="text">
+                <router-link :to="{name: 'monitoring-view', params: {id: scope.row.id, info: scope.row.extInfo, sn: scope.row.serialNumber, siteCode: scope.row.siteCode}}">Monitoring</router-link>
+              </el-button>
+              <img @click="follow(2, scope.row.id)" v-if="+scope.row.followBms === 1" class="follow" :src="require('@img/followed.svg')" alt="">
+              <img title="Follow" @click="follow(1, scope.row.id)" v-else class="follow" :src="require('@img/follow.svg')" alt="Follow">
+            </common-flex>
           </template>
         </el-table-column>
       </el-table>
@@ -55,7 +73,8 @@
 </template>
 
 <script>
-import { listDevice } from '@/api/device'
+import { listDevice, editDevice } from '@/api/device'
+import {delSite} from "@/api/site";
 export default {
   name: "pages-Monitoring",
   data() {
@@ -69,13 +88,43 @@ export default {
         pageSize: 10,
         serialNumber: '',
         siteName: '',
-      }
+        followBms: null
+      },
+      followOption: [
+        {
+          label: 'All battery',
+          value: '',
+        },
+        {
+          label: 'Battery i followed',
+          value: 1,
+        },
+      ]
     }
   },
   mounted() {
     this.getList()
   },
   methods: {
+    follow(type, id) {
+      let data = {
+        followBms: type,
+        id
+      }
+      if (type === 2) {
+        this.$modal.confirm(`Please confirm whether to cancel`).then(() => {
+          this.changeFollow(data)
+        }).then(() => {
+          this.getList()
+        }).catch(() => {})
+      } else this.changeFollow(data)
+    },
+    changeFollow(data) {
+      editDevice(data).then(res => {
+        console.log(res)
+        this.$modal.msgSuccess("Succeeded!")
+      }).finally(() => this.getList())
+    },
     handleQuery() {
       this.queryParams.pageNum = 1
       this.getList()
@@ -99,6 +148,11 @@ export default {
 .pages-bms {
   p {
     font-weight: 600;
+  }
+  .follow {
+    margin-left: 20px;
+    width: 16px;
+    cursor: pointer;
   }
 }
 </style>
