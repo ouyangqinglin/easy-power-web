@@ -331,7 +331,7 @@ export default {
           }, 200)
         },
       },
-      weatherImg: {
+      weatherImgDay: {
         "sunny": require("./img/weather_day_sunny.png"),
         //多云
         "clounds": require("./img/weather_day_cloud.png"),
@@ -351,6 +351,28 @@ export default {
         "hail": require("./img/weather_day_hail.png"),
         // 雾
         "fog": require("./img/weather_day_fog.png")
+      },
+      weatherImgNight: {
+        // 晴天
+        "sunny": require("./img/weather_night_sunny.png"),
+        //多云
+        "clounds": require("./img/weather_night_cloud.png"),
+        //阴天  assets/png/weather_night_overcast.png
+        "overcast": require("./img/weather_night_overcast.png"),
+        // 小雨
+        "drizzle": require("./img/weather_night_lightrain.png"),
+        // 大雨
+        "heavyRain": require("./img/weather_night_heavyrain.png"),
+        //雷雨
+        "thunderstorm": require("./img/weather_night_thunderstorm.png"),
+        // 小雪
+        "lightSonw": require("./img/weather_night_lightsnow.png"),
+        // 大雪
+        "heavySnow": require("./img/weather_night_heavysnow.png"),
+        // 冰雹
+        "hail": require("./img/weather_night_hail.png"),
+        // 雾
+        "fog": require("./img/weather_night_fog.png")
       },
       weatherData: {},
       flag: false,
@@ -555,6 +577,9 @@ export default {
     },
   },
   computed: {
+    weatherImg() {
+      return +this.weatherData.dayType === 1 ? this.weatherImgDay : this.weatherImgNight
+    },
     timeType() {
       const arr = {
         'date': 'date',
