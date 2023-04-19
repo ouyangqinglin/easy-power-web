@@ -99,7 +99,7 @@ import Trend from '@/views/components/monitor/trend.vue'
 import * as echarts from "echarts"
 let arr = [], chartIns = null, timer = null, dataList = []
 let viewH = window.innerHeight
-for (let i = 1; i < 25; i++) {
+for (let i = 0; i < 24; i++) {
   arr.push(i)
 }
 const color = ['#f47226', '#4498ee', '#44c333', '#f31926', '#9c28e0', '#56e6e5', '#a96e1e', '#f0e140', '#f785f6', '#113464', '#3261e0', '#b1b22f', '#4e8e2f', '#ebb563', '#f78989', '#a6a9ad']
@@ -134,13 +134,11 @@ const option = {
     {
       type: 'category',
       show: false,
-      boundaryGap: true,
       data: [], // 接受接口时间点数组
       position: 'bottom',
     },
     {
       type: 'category',
-      boundaryGap: true,
       // axisTick: {
       //   show: true,
       //   alignWithLabel: true
@@ -266,6 +264,7 @@ export default {
       envTList: [],
       mosTList: [],
       loading: null,
+      flag: true
     }
   },
   computed: {
@@ -293,6 +292,12 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(timer)
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.loading) this.loading.close()
+    this.flag = false
+    clearTimeout(timer)
+    next()
   },
   methods: {
     changeType() {
@@ -331,7 +336,6 @@ export default {
 
     },
     initCanvas() {
-      console.log('canvas')
       option.series = []
       if (+this.dataType) {
         option.yAxis.name = '℃'
@@ -378,9 +382,11 @@ export default {
       timer = setTimeout(() => {
         if(chartIns) chartIns.dispose()
         this.$nextTick(() => {
-          chartIns = echarts.init(document.getElementById('line'))
-          chartIns.setOption(option)
-          window.addEventListener('resize', this.changeSize)
+          if (this.flag) {
+            chartIns = echarts.init(document.getElementById('line'))
+            if(chartIns) chartIns.setOption(option)
+            window.addEventListener('resize', this.changeSize)
+          }
         })
       }, 500)
     },

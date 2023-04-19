@@ -74,7 +74,7 @@
 
 <script>
 import { listDevice, editDevice } from '@/api/device'
-import {delSite} from "@/api/site";
+
 export default {
   name: "pages-Monitoring",
   data() {

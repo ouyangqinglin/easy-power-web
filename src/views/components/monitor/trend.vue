@@ -26,7 +26,7 @@ import { batHistoryData } from '@/api/device'
 
 import * as echarts from "echarts"
 let arr = [], chartIns = null, arrY = [], dataList = []
-for (let i = 1; i < 25; i++) {
+for (let i = 0; i < 24; i++) {
   arr.push(i)
 }
 const dataKeyList = ['storeSoc', 'storeChargePower', 'storeVoltage', 'storeCurrent', 'maxTemperature', 'minTemperature']
@@ -45,13 +45,11 @@ const option = {
     {
       type: 'category',
       show: false,
-      boundaryGap: true,
       data: [], // 接受接口时间点数组
       position: 'bottom',
     },
     {
       type: 'category',
-      boundaryGap: true,
       // axisTick: {
       //   show: true,
       //   alignWithLabel: true
@@ -160,8 +158,8 @@ export default {
     }
   },
   watch: {
-    dataKey(v) {
-      this.initChart(v)
+    show(v) {
+      if(v) this.initChart(this.dataKey)
     }
   },
   mounted() {
