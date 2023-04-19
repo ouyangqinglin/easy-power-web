@@ -134,7 +134,7 @@
             </common-flex>
             <common-flex class="comp-overview-row-col-card-content" direction="column" justify="space-around">
               <common-flex justify="space-around">
-                <img class="cur-wea-img" style="width: 80px" :src="weatherImg[weatherData.currentWeather]" alt="">
+                <img class="cur-wea-img" :src="weatherImg[weatherCodeEnum[weatherData.weatherId]]" alt="">
                 <div style="margin-right: 4.5vw">
                   <div class="comp-overview-row-col-card-content-temperature">{{ weatherData.currentWeather }}<br>
                     {{ weatherData.currentTemp }}°C<br>
@@ -156,7 +156,7 @@
               <common-flex justify="space-around">
                 <common-flex direction="column" align="center" v-for="i of weatherData.futureWeathers" :key="i.dayOfWeek">
                   <div class="comp-overview-row-col-card-content-day">{{ i.dayOfWeek }}</div>
-                  <img class="comp-overview-row-col-card-content-weather-img" :src="weatherImg[i.weather]" alt="">
+                  <img class="comp-overview-row-col-card-content-weather-img" :src="weatherImg[weatherCodeEnum[i.futureWeatherId]]" alt="">
                   <div class="comp-overview-row-col-card-content-random">{{ i.minTemp }}-{{i.maxTemp }}°C</div>
                   <div class="comp-overview-row-col-card-content-cloud">{{ i.weather }}</div>
                 </common-flex>
@@ -248,7 +248,63 @@ let data2 = [];
 
 let xAxisDataConsu = []
 let data3 = [], data4 = []
-
+const weatherCodeEnum = {
+  "200": "thunderstorm", //雷雨
+  "201": "thunderstorm",
+  "202": "thunderstorm",
+  "210": "thunderstorm",
+  "211": "thunderstorm",
+  "212": "thunderstorm",
+  '221': "thunderstorm",
+  '230': "thunderstorm",
+  "231": "thunderstorm",
+  "232": "thunderstorm",
+  "300": "drizzle", //小雨
+  "301": "drizzle",
+  "302": "drizzle",
+  '310': "drizzle",
+  "311": "drizzle",
+  '312': "drizzle",
+  "313": "drizzle",
+  "314": "drizzle",
+  "321": "drizzle",
+  "500": "drizzle",
+  "501": "heavyRain",
+  "502": "heavyRain", //大雨
+  "503": "heavyRain",
+  "504": "heavyRain",
+  "511": "heavyRain",
+  "520": "heavyRain",
+  "521": "heavyRain",
+  "522": "heavyRain",
+  "531": "heavyRain",
+  "600": "lightSonw", //小雪
+  "601": "lightSonw",
+  "602": "heavySnow", //大雪
+  "611": "heavySnow",
+  "612": "heavySnow",
+  '613': "heavySnow",
+  "615": "heavySnow",
+  "616": "heavySnow",
+  "620": "heavySnow",
+  "621": "heavySnow",
+  '622': "heavySnow",
+  "701": "fog", // 雾
+  "711": "fog",
+  "721": "fog",
+  "731": "fog",
+  "741": "fog",
+  "751": "fog",
+  "761": "fog",
+  "762": "fog",
+  "771": "fog",
+  "781": "fog",
+  "800": "sunny", // 晴朗
+  "801": "clounds", // 多云
+  "802": "clounds",
+  "803": "clounds",
+  "804": "overcast", // 阴天
+};
 export default {
   name: "comp-overview",
   props: {
@@ -263,6 +319,7 @@ export default {
     const dateVal = new Date()
     const that = this
     return {
+      weatherCodeEnum,
       closePicker: {
         onPick(a) {
           that.$refs.dataEnd.handleClose()
@@ -275,15 +332,25 @@ export default {
         },
       },
       weatherImg: {
-        'Sunny': require('./img/sun.svg'),
-        'Clear': require('./img/sun.svg'),
-        'Drizzle': require('./img/rainy.svg'),
-        'Rainy': require('./img/drizzle.svg'),
-        'Rain': require('./img/drizzle.svg'),
-        'Clouds': require('./img/cloudy.svg'),
-        'Snow': require('./img/snow.svg'),
-        'Thunderstorm': require('./img/thunderstorm.svg'),
-        'Mist': require('./img/mist.svg')
+        "sunny": require("./img/weather_day_sunny.png"),
+        //多云
+        "clounds": require("./img/weather_day_cloud.png"),
+        //阴天
+        "overcast": require("./img/weather_day_overcast.png"),
+        // 小雨
+        "drizzle": require("./img/weather_day_lightrain.png"),
+        // 大雨
+        "heavyRain": require("./img/weather_day_heavyrain.png"),
+        //雷雨
+        "thunderstorm": require("./img/weather_day_thunderstorm.png"),
+        // 小雪
+        "lightSonw": require("./img/weather_day_lightsnow.png"),
+        // 大雪
+        "heavySnow": require("./img/weather_day_heavysnow.png"),
+        // 冰雹
+        "hail": require("./img/weather_day_hail.png"),
+        // 雾
+        "fog": require("./img/weather_day_fog.png")
       },
       weatherData: {},
       flag: false,
@@ -866,6 +933,10 @@ export default {
              margin-top: 5px;
              transform: scale(0.7);
            }
+         }
+         .cur-wea-img {
+           margin-top: 30px;
+           @include wh(80);
          }
          .num {
            @include nFont(24 700);

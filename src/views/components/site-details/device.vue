@@ -445,7 +445,7 @@
 <script>
 import * as echarts from 'echarts'
 
-import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData, netList } from '@/api/device'
+import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
@@ -1347,25 +1347,29 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
     },
+    getOrderRes() {
+      let data = {
+        sn: this.sn,
+      }
+      let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+      orderRes(data).then(res => {
+        console.log(res)
+        this.$modal.msg(statusList[+res.data])
+      }).finally(() => {
+        this.getList()
+        this.loading.close()
+      })
+    },
     stopCharge() {
-      this.openLoading()
       let data = {
         siteCode: this.queryParams.siteCode
       }
       stopCharge(data).then(res => {
         if (+res.code === 200) {
-          this.$message({
-            type: 'success',
-            message: 'Succeeded!'
-          })
-          this.getList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: 'Not Succeeded!'
-          })
+          this.openLoading()
+          this.getOrderRes()
         }
-      }).finally(() => this.loading.close())
+      })
     },
     cancelDelete() {
       this.delShow = false
@@ -1436,6 +1440,7 @@ export default {
         }
         this.delDialogInfo.snOption = snList
       } else {
+        this.delDialogInfo.snOption = []
         if (item) {
           this.delDialogInfo.sn = item.serialNumber
           this.delDialogInfo.id = item.id

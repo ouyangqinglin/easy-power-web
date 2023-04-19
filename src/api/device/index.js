@@ -60,6 +60,14 @@ export function stopCharge(data) {
   })
 }
 
+export function orderRes(data) {
+  return request({
+    url: `/command/getCommandResult/`,
+    method: 'post',
+    data
+  })
+}
+
 export function setRecodeList(params) {
   return request({
     url: `/siteSettingRecord/list`,
