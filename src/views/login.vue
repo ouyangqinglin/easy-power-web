@@ -16,13 +16,16 @@
       <el-form-item prop="password" label="Password">
         <el-input
           v-model="loginForm.password"
-          type="password"
+          :type="inputType"
           auto-complete="off"
           placeholder="Please enter"
-          show-password
           @keyup.enter.native="handleLogin"
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+          <template #suffix>
+            <svg-icon v-if="eyes" @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
+            <svg-icon v-else @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
+          </template>
         </el-input>
       </el-form-item>
       <common-flex justify="space-between">
@@ -166,6 +169,7 @@ export default {
       }
     }
     return {
+      eyes: true,
       countTimer: null,
       second: 3,
       dialogShow: false,
@@ -240,6 +244,11 @@ export default {
         if (this.redirect === '/') this.redirect ='/index'
       },
       immediate: true
+    }
+  },
+  computed: {
+    inputType() {
+      return this.eyes ? 'password' : 'text'
     }
   },
   created() {
