@@ -1370,6 +1370,8 @@ export default {
           if (+res.data === 3) {
             if(times > 15) {
               clearInterval(timerInter)
+              this.getList()
+              this.loading.close()
               return this.$modal.msgError('timeout')
             }
             this.getOrderRes()
