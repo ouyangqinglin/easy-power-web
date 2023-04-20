@@ -211,7 +211,10 @@
                   v-model="pvHis.dateVal"
                 />
               </common-flex>
-              <div id="pvChart" class="pvChart"></div>
+              <div class="pvChart" v-if="!this.navBar['Inverter']">
+                <no-data />
+              </div>
+              <div v-else id="pvChart" class="pvChart"></div>
             </div>
           </common-flex>
         </div>
@@ -355,6 +358,7 @@
             </div>
           </el-form>
         </template>
+        <div class="empty" v-if="!addDialogInfo[2].length">No data</div>
       </template>
       <el-form @submit.native.prevent v-if="addDialogInfo[3]" style="margin-top: 16px">
         <common-flex align="center">
@@ -375,9 +379,10 @@
           </el-form-item>
           <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(3, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
         </div>
+        <div class="empty" v-if="!addDialogInfo[3].length">No data</div>
       </el-form>
       <template v-if="addDialogInfo[6]">
-        <common-flex align="center">
+        <common-flex align="center" style="margin-top: 16px">
           <strong>Photovoltaic</strong>
           <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
             <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(6)">
@@ -404,6 +409,7 @@
             </div>
           </el-form>
         </template>
+        <div class="empty" v-if="!addDialogInfo[6].length">No data</div>
       </template>
 
       <common-flex style="margin-top: 30px" justify="center">
@@ -1101,6 +1107,7 @@ export default {
     },
     activePv (v) {
       if (v === 'second') {
+        if (!this.navBar['Inverter']) return
         this.$nextTick(() => {
           pvInstance = echarts.init(document.getElementById('pvChart'))
           this.getPvHisData()
@@ -1154,14 +1161,14 @@ export default {
           }
         }).catch(err => {
           this.$modal.alert('Device not found')
-        }).finally((res) => {
+        }).finally(() => {
           this[`active${str}`] = false
           this.waitLoading.close()
         })
       } else {
-        this[`active${str}`] = false
         this.waitLoading.close()
         this.$modal.alert('Device not found')
+        this[`active${str}`] = false
       }
     },
     changeCurBat(sn) {
@@ -1284,9 +1291,11 @@ export default {
       })
     },
     changePvDate() {
+      if (!this.navBar['Inverter']) return
       this.getPvHisData()
     },
     changePvType() {
+      if (!this.navBar['Inverter']) return
       pv1 = []
       pv2 = []
       pv3 = []
@@ -1362,7 +1371,8 @@ export default {
     },
     stopCharge() {
       let data = {
-        siteCode: this.queryParams.siteCode
+        siteCode: this.queryParams.siteCode,
+        sn: this.sn
       }
       stopCharge(data).then(res => {
         if (+res.code === 200) {
@@ -1555,7 +1565,7 @@ export default {
               item = {
                 deviceType: 2,
                 nameplateCapacity: i.nameplateCapacity,
-                installation: 2,
+                installation: i.installation,
                 serialNumber: i.serialNumber,
                 disabled: true
               }
@@ -1570,7 +1580,7 @@ export default {
               item = {
                 deviceType: 3,
                 nameplateCapacity: i.nameplateCapacity,
-                installation: 2,
+                installation: i.installation,
                 serialNumber: i.serialNumber,
                 disabled: true
               }
@@ -1585,7 +1595,7 @@ export default {
               item = {
                 deviceType: 6,
                 nameplateCapacity: i.nameplateCapacity,
-                installation: 2,
+                installation: i.installation,
                 serialNumber: i.serialNumber,
                 disabled: true
               }
@@ -2102,7 +2112,7 @@ export default {
             p: ''
           },
         ]
-        let obj = this.curDevInfo
+        let obj = this.curDevInfo.pvEntity || this.curDevInfo
         arr.forEach((item, index) => {
           let prefix = `pv${index + 1}`
           item.v = obj[`${prefix}Voltage`]
@@ -2111,9 +2121,8 @@ export default {
         })
 
         this.curDevInfo.pvList = arr
-
         let resStr = ''
-        resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+        resStr += `${this.curDevInfo.periodDay} Days ${this.curDevInfo.periodMonth} Months ${this.curDevInfo.periodYear} Year`
         this.pvInfo = this.curDevInfo
         this.pvInfo.Lifetime = resStr
       }
@@ -2241,7 +2250,7 @@ export default {
     .el-form-item {
       position: relative;
       margin-right: 24px;
-      width: calc(100% / 3 - 50px);
+      width: calc(100% / 3 - 40px);
       .err-msg {
         left: 0;
         bottom: -30px;
@@ -2331,6 +2340,14 @@ export default {
   @keyframes  autoRotate{
     from { transform: rotate(0) }
     to { transform: rotate(-360deg) }
+  }
+  .empty {
+    color: #909399;
+    text-indent: 8px;
+    line-height: 40px;
+  }
+  strong {
+    min-width: 120px;
   }
 }
 </style>

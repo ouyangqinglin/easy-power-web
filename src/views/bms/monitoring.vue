@@ -25,13 +25,13 @@
             </el-col>
             <el-col :span="6">
               <div class="label">Cycle Time</div>
-              <div class="value">{{ 1000 }}</div>
+              <div class="value"></div>
             </el-col>
           </el-row>
           <el-row style="margin-top: 12px">
             <el-col :span="6">
               <div class="label">Lifetime</div>
-              <div class="value">3 Days   5 Months  1Year</div>
+              <div class="value"> {{base.periodDay}}Days    {{base.periodMonth}}Months  {{base.periodYear}}Year</div>
             </el-col>
             <el-col :span="6">
               <div class="label">Hardware version</div>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { baseDevice, cellData } from '@/api/device'
+import {cellData, infoDevice} from '@/api/device'
 import Trend from '@/views/components/monitor/trend.vue'
 import * as echarts from "echarts"
 let arr = [], chartIns = null, timer = null, dataList = []
@@ -279,8 +279,11 @@ export default {
     this.cellTList = info.cellTList
     this.envTList = info.envTList
     this.mosTList = info.mOSTList
-
-    baseDevice(this.$route.params.id).then(res => {
+    let params = {
+      sn: localStorage.getItem('sn'),
+      siteCode: localStorage.getItem('siteCode'),
+    }
+    infoDevice(params).then(res => {
       this.base = {...res.data, ...info}
       console.log('base', this.base)
       let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]

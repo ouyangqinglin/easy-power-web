@@ -41,7 +41,7 @@
         <el-table-column label="Fault code" prop="faultCode"></el-table-column>
         <el-table-column label="SN" prop="sn"></el-table-column>
         <el-table-column label="Importance" prop="type" width="120">
-          <template slot-scope="{ row }"><span>{{ ['--', 'Warning', 'Fault'][+row.type] }}</span></template>
+          <template slot-scope="{ row }"><span>{{ ['--', 'Warning', 'Fault', 'Notice'][+row.type] }}</span></template>
         </el-table-column>
         <el-table-column label="Status" prop="recoveryStatus" width="120">
           <template slot-scope="{ row }"><span>{{ ['Open', 'Closed'][+row.recoveryStatus] }}</span></template>
@@ -89,12 +89,16 @@ export default {
       list: [],
       impOptions: [
         {
-          label: 'Warning',
-          value: 1
+          label: "Warning",
+          value: 1,
         },
         {
-          label: 'Fault',
-          value: 2
+          label: "Fault",
+          value: 2,
+        },
+        {
+          label: "Notice",
+          value: 3,
         },
       ],
       statusOptions: [
