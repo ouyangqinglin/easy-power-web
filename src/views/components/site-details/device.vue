@@ -455,7 +455,8 @@ import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharg
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
-let timer = null
+let timer = null, timerInter = null
+let times = 1
 let arr = [], arr1 = [], arr5 = []
 let arrX1 = [], arrX2 = [], pv1 = [], pv2 = [], pv3 = [], pv4 = []
 let batData = [], pvData = []
@@ -1117,7 +1118,8 @@ export default {
     }
   },
   beforeDestroy() {
-    clearInterval(timer)
+    clearInterval(timerInter)
+    clearTimeout(timer)
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
@@ -1342,7 +1344,7 @@ export default {
       })
     },
     changeSize() {
-      clearInterval(timer)
+      clearTimeout(timer)
       timer = setTimeout(() => {
         if (batteryInstance) batteryInstance.resize()
         if (pvInstance) pvInstance.resize()
@@ -1361,13 +1363,26 @@ export default {
         sn: this.sn,
       }
       let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
-      orderRes(data).then(res => {
-        console.log(res)
-        this.$modal.msg(statusList[+res.data])
-      }).finally(() => {
-        this.getList()
-        this.loading.close()
-      })
+      clearInterval(timerInter)
+      timerInter = setInterval(() => {
+        times++
+        orderRes(data).then(res => {
+          if (+res.data === 3) {
+            if(times > 15) {
+              clearInterval(timerInter)
+              return this.$modal.msgError('timeout')
+            }
+            this.getOrderRes()
+          } else {
+            if (+res.data === 1) {
+              this.$modal.msgSuccess('SUCCESS')
+            } else this.$modal.msgError(statusList[+res.data])
+            clearInterval(timerInter)
+            this.getList()
+            this.loading.close()
+          }
+        })
+      }, 1000)
     },
     stopCharge() {
       let data = {
@@ -1375,10 +1390,11 @@ export default {
         sn: this.sn
       }
       stopCharge(data).then(res => {
-        if (+res.code === 200) {
+        let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+        if (+res.data === 3) {
           this.openLoading()
           this.getOrderRes()
-        }
+        } else this.$modal.msg(statusList[+res.data])
       })
     },
     cancelDelete() {
