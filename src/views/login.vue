@@ -105,7 +105,9 @@
       </el-form-item>
       <el-form-item label="Verification Code" class="posr" prop="code">
         <el-input placeholder="Please enter" v-model="forgetForm.code"></el-input>
-        <el-button class="posa send-btn" type="text" :disabled="hasSend" @click="sendCode">{{ sendText }}</el-button>
+        <div class="posa send-btn">
+          <el-button :loading="sendLoading" type="text" :disabled="hasSend" @click="sendCode">{{ sendText }}</el-button>
+        </div>
       </el-form-item>
       <el-form-item label="New Password" prop="password">
         <el-input placeholder="Please enter" v-model="forgetForm.password"></el-input>
@@ -114,7 +116,7 @@
         <el-input placeholder="Please enter" v-model="forgetForm.againPassword"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-button style="width: 100%" type="primary" @click="reset">Reset</el-button>
+        <el-button :loading="loading" style="width: 100%" type="primary" @click="reset">Reset</el-button>
       </el-form-item>
     </el-form>
     <el-dialog
@@ -196,6 +198,7 @@ export default {
         // code: [{ required: true, trigger: "blur", message: "Please enter the verification code" }]
       },
       loading: false,
+      sendLoading: false,
       modifyForm: {
         pass: '',
         checkPass: ''
@@ -283,6 +286,7 @@ export default {
     reset() {
       this.$refs.forgetForm.validate(v => {
         if (v) {
+          this.loading = true
           forgetResetPas(this.forgetForm).then(res => {
             if (+res.code === 200) {
               this.$message({
@@ -293,6 +297,8 @@ export default {
                 this.openDialog()
               }, 500)
             }
+          }).finally(() => {
+            this.loading = false
           })
         }
       })
@@ -301,6 +307,8 @@ export default {
     sendCode() {
       this.$refs.forgetForm.validateField('userName', v => {
         if (!v) {
+          this.hasSend = true
+          this.sendLoading = true
           let data = {
             userName: this.forgetForm.userName
           }
@@ -310,7 +318,7 @@ export default {
                 type: 'success',
                 message: 'Succeeded!'
               })
-              this.hasSend = true
+              this.sendLoading = false
               let count = 60
               clearInterval(this.timer)
               this.timer = setInterval(() => {
@@ -324,7 +332,7 @@ export default {
                 this.sendText = `${count}s`
               }, 1000)
             }
-          })
+          }).catch(() => this.hasSend = true)
         }
       })
     },

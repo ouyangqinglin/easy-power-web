@@ -193,7 +193,7 @@ export default {
     },
     beforeClose() {
       this.$emit('update:show', false)
-
+      window.removeEventListener('resize', this.changeSize)
     },
     requestLoading() {
       this.waitLoading = this.$loading({

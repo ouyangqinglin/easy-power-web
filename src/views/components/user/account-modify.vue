@@ -213,13 +213,13 @@ export default {
     authorityList() {
       const userApp = [
         {
-          label: 'ATI Storage',
+          label: 'EasyPower Storage',
           value: '1'
         }
       ]
       const installApp = [
         {
-          label: 'ATI Install',
+          label: 'EasyPower Install',
           value: '2'
         }
       ]

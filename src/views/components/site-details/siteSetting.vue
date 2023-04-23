@@ -43,9 +43,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time1</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -53,9 +53,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time2</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -63,9 +63,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time3</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -75,9 +75,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time1</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -85,9 +85,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time2</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -95,9 +95,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time3</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>

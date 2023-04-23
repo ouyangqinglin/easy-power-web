@@ -114,7 +114,7 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="Last update by" align="center" prop="updateBy" min-width="140" />
+        <el-table-column label="Last update by" align="center" prop="updateBy" min-width="140" show-overflow-tooltip />
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="130">
           <template slot-scope="scope">
             <el-button

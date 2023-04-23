@@ -294,6 +294,7 @@ export default {
     this.getData()
   },
   beforeDestroy() {
+    window.removeEventListener('resize', this.changeSize)
     clearTimeout(timer)
   },
   beforeRouteLeave(to, from, next) {

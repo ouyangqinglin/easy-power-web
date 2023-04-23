@@ -243,7 +243,7 @@
                   <common-flex style="height: 100%" direction="column" justify="space-between" align="center">
                     <common-flex direction="column" align="center">
                       <div class="des ellipsis" title="CO2 Emission Saved">CO2 Emission Saved</div>
-                      <div class="val">{{ homeData.emissionSaved || '-- ' }}<span>kg</span></div>
+                      <div class="val">{{ homeData.emissionSaved || '-- ' }}<span> kg</span></div>
                     </common-flex>
                     <img class="benefit-left" :src="require('@img/home/benefit-left.svg')" alt="">
                   </common-flex>
@@ -395,8 +395,8 @@ textStyle: {
 },
 grid: {
   left: '18%',
-    right: '14%',
-    top: '8%',
+  right: '14%',
+  top: '8%',
   // bottom: '10%'
 },
 xAxis: {
@@ -652,8 +652,8 @@ export default {
   methods: {
     changeChartSize() {
       let scaleScreen = detectZoom()
-      console.log('scaleScreen', scaleScreen)
-      console.log('innerHeight', innerHeight)
+      // console.log('scaleScreen', scaleScreen)
+      // console.log('innerHeight', innerHeight)
       if (scaleScreen > 100 && innerHeight < 1000) {
         rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 10
         rankOption.series[0].barWidth = 12
