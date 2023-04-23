@@ -5,7 +5,7 @@
         <common-flex>
           <common-flex style="flex-grow: 1">
             <el-form-item label="Version：" prop="versionNum">
-              <el-input placeholder="Please enter" v-model="queryParams.versionNum"></el-input>
+              <el-input clearable placeholder="Please enter" v-model="queryParams.versionNum"></el-input>
             </el-form-item>
           </common-flex>
           <el-form-item>

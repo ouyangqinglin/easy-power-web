@@ -43,6 +43,7 @@
             </el-form-item>
             <el-form-item label="SN：" prop="sn">
               <el-input
+                clearable
                 placeholder="Please enter"
                 v-model="queryParams.sn"
               ></el-input>

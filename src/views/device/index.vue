@@ -14,10 +14,10 @@
         <common-flex justify="space-between">
           <common-flex style="flex-grow: 4" wrap="wrap">
             <el-form-item label="SN：" prop="serialNumber">
-              <el-input @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.serialNumber" placeholder="Please enter SN"></el-input>
+              <el-input clearable @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.serialNumber" placeholder="Please enter SN"></el-input>
             </el-form-item>
             <el-form-item label="Site：" prop="siteName">
-              <el-input @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.siteName" placeholder="Please enter site"></el-input>
+              <el-input clearable @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.siteName" placeholder="Please enter site"></el-input>
             </el-form-item>
           </common-flex>
           <common-flex justify="flex-end" style="flex-grow: 1; flex-shrink: 0">

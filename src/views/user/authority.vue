@@ -5,10 +5,10 @@
         <common-flex>
           <common-flex style="flex-grow: 1">
             <el-form-item label="Role Name：" prop="roleName">
-              <el-input placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.roleName"></el-input>
+              <el-input clearable placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.roleName"></el-input>
             </el-form-item>
             <el-form-item label="Status：" prop="status">
-              <el-select placeholder="All" v-model="queryParams.status">
+              <el-select clearable placeholder="All" v-model="queryParams.status">
                 <el-option v-for="i of statusOptions" :key="i.value" :label="i.label" :value="i.value"></el-option>
               </el-select>
             </el-form-item>
