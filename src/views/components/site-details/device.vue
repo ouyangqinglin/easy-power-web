@@ -310,7 +310,7 @@
         <strong>Stick Logger</strong>
         <div class="dialog-form">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @change="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -318,15 +318,17 @@
         <strong>Inverter</strong>
         <div class="dialog-form">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @change="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="Rated Power (kW)">
-            <el-input maxlength="20" @input="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].nameplateCapacity" placeholder="Please enter"></el-input>
+            <el-input maxlength="20" @input="checkCapacity(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].nameplateCapacity" placeholder="Please enter"></el-input>
+            <div class="err-msg posa">{{ inverterCapacityMsg['msg'] }}</div>
           </el-form-item>
           <el-form-item label="New installation or not">
-            <el-select style="width: 100%" :disabled="addDialogInfo[1].disabled" v-model="addDialogInfo[1].installation" placeholder="Please select">
+            <el-select style="width: 100%" :disabled="addDialogInfo[1].disabled" @change="checkInstall(1)" v-model="addDialogInfo[1].installation" placeholder="Please select">
               <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
             </el-select>
+            <div class="err-msg posa">{{ inverterInstallMsg['msg'] }}</div>
           </el-form-item>
         </div>
       </el-form>
@@ -343,16 +345,17 @@
             <div class="dialog-form">
 <!--              11111-->
               <el-form-item label="SN">
-                <el-input maxlength="20" @input="change(2, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+                <el-input maxlength="20" @change="change(2, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
               </el-form-item>
               <el-form-item label="Capacity (kWh)">
                 <el-input @input="checkCapacity(2, k)" type="text" :disabled="i.disabled" v-model.trim="i.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
-                <div class="err-msg posa">{{ batMsg[k] }}</div>
+                <div class="err-msg posa">{{ batCapacityMsg[k] }}</div>
               </el-form-item>
               <el-form-item label="New installation or not">
-                <el-select style="width: 100%" :disabled="i.disabled" v-model="i.installation" placeholder="Please select">
+                <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(2, k)" v-model="i.installation" placeholder="Please select">
                   <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
                 </el-select>
+                <div class="err-msg posa">{{ batInstallMsg[k] }}</div>
               </el-form-item>
               <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(2, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
             </div>
@@ -370,12 +373,13 @@
         </common-flex>
         <div class="dialog-form" v-for="(i, k) of addDialogInfo[3]">
           <el-form-item label="SN">
-            <el-input maxlength="20" @input="change(3)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @change="change(3, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="New installation or not">
-            <el-select style="width: 100%" :disabled="i.disabled" v-model="i.installation" placeholder="Please select">
+            <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(3, k)" v-model="i.installation" placeholder="Please select">
               <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
             </el-select>
+            <div class="err-msg posa">{{ chargeInstallMsg[k] }}</div>
           </el-form-item>
           <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(3, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
         </div>
@@ -394,16 +398,17 @@
             <div class="dialog-form" >
               <el-form-item label="SN">
                 <!--            1111111-->
-                <el-input maxlength="20" @input="change(6, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+                <el-input maxlength="20" @change="change(6, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
               </el-form-item>
               <el-form-item label="Capacity (kW)">
                 <el-input @input="checkCapacity(6, k)" type="text" :disabled="i.disabled" v-model.trim="i.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
-                <div class="err-msg posa">{{ pvMsg[k] }}</div>
+                <div class="err-msg posa">{{ pvCapacityMsg[k] }}</div>
               </el-form-item>
               <el-form-item label="New installation or not">
-                <el-select style="width: 100%" :disabled="i.disabled" v-model="i.installation" placeholder="Please select">
+                <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(6, k)" v-model="i.installation" placeholder="Please select">
                   <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
                 </el-select>
+                <div class="err-msg posa">{{ pvInstallMsg[k] }}</div>
               </el-form-item>
               <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(6, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
             </div>
@@ -858,8 +863,13 @@ export default {
   },
   data() {
     return {
-      batMsg: {},
-      pvMsg: {},
+      inverterCapacityMsg: {},
+      batCapacityMsg: {},
+      pvCapacityMsg: {},
+      inverterInstallMsg: {},
+      batInstallMsg: {},
+      pvInstallMsg: {},
+      chargeInstallMsg: {},
       installOption: [
         {
           label: 'Yes',
@@ -1043,52 +1053,12 @@ export default {
         },
       ],
       delSubType: '',
-      localChangeList: [],
+      localChangeList: {},
       waitLoading: '',
-      addSubType: '',
+      addSubType: true,
     }
   },
   watch: {
-    batMsg: {
-      handler(v) {
-        let batArr = Object.keys(v)
-        let pvArr = Object.keys(this.pvMsg)
-        if (!batArr.length && !pvArr) return this.addSubType = false
-        else {
-          let i
-          for(i = 0; i < batArr.length; i++) {
-            if (this.batMsg[batArr[i]]) break
-          }
-          let k
-          for(k = 0; k < pvArr.length; k++) {
-            if (this.pvMsg[pvArr[k]]) break
-          }
-          if (i < batArr.length || k < pvArr.length) this.addSubType = true
-          else this.addSubType = false
-        }
-      },
-      deep: true
-    },
-    pvMsg: {
-      handler(v) {
-        let batArr = Object.keys(this.batMsg)
-        let pvArr = Object.keys(v)
-        if (!batArr.length && !pvArr) this.addSubType = false
-        else {
-          let i
-          for(i = 0; i < batArr.length; i++) {
-            if (this.batMsg[batArr[i]]) break
-          }
-          let k
-          for(k = 0; k < pvArr.length; k++) {
-            if (this.pvMsg[pvArr[k]]) break
-          }
-          if (i < batArr.length || k < pvArr.length) this.addSubType = true
-          else this.addSubType = false
-        }
-      },
-      deep: true
-    },
     base: {
       handler(v) {
         deviceNavInfo = {}
@@ -1135,6 +1105,18 @@ export default {
     },
     deleteSn(deviceType, index) {
       this.addDialogInfo[deviceType].splice(index, 1)
+      let mapCapacity = {
+        1: 'inverterCapacityMsg',
+        2: 'batCapacityMsg',
+        6: 'pvCapacityMsg'
+      }
+      let mapInstall = {
+        2: 'batInstallMsg',
+        6: 'pvInstallMsg',
+        3: 'chargeInstallMsg'
+      }
+      if (deviceType !== 3) this.$delete(this[mapCapacity[deviceType]], index)
+      this.$delete(this[mapInstall[deviceType]], index)
     },
     findDevice(str) {
       let item = this.listDev.find(i => +i.deviceType === 4)
@@ -1488,14 +1470,15 @@ export default {
       let deviceList = []
       for (let v in this.addDialogInfo) {
         if ([2, 6, 3].includes(+v)) {
-          this.addDialogInfo[v].forEach(i => {
+          this.addDialogInfo[v].forEach((i, index) => {
             item = {
               deviceType: +i.deviceType,
               serialNumber: i.serialNumber,
               nameplateCapacity: +i.nameplateCapacity,
-              installation: i.installation
+              installation: i.installation,
+              index: index + 1
             }
-            if (i.serialNumber && i.nameplateCapacity) deviceList.push(item)
+            if (i.serialNumber) deviceList.push(item)
           })
         } else if (+v === 1) {
           item = {
@@ -1504,7 +1487,7 @@ export default {
             nameplateCapacity: +this.addDialogInfo[v].nameplateCapacity,
             installation: this.addDialogInfo[v].installation
           }
-          if (this.addDialogInfo[v].serialNumber && +this.addDialogInfo[v].nameplateCapacity) deviceList.push(item)
+          if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
         } else {
           item = {
             deviceType: +v,
@@ -1513,7 +1496,44 @@ export default {
           if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
         }
       }
+      if (!deviceList.length) return
+      let i = 0
+      let mapCapacity = {
+        1: 'inverterCapacityMsg',
+        2: 'batCapacityMsg',
+        6: 'pvCapacityMsg'
+      }
+      let mapInstall = {
+        1: 'inverterInstallMsg',
+        2: 'batInstallMsg',
+        6: 'pvInstallMsg',
+        3: 'chargeInstallMsg'
+      }
+      for (i; i < deviceList.length; i++) {
+        // 先检验容量
+        if ([1, 2, 6].includes(+deviceList[i].deviceType)) {
+          if (!deviceList[i].nameplateCapacity) {
+            if (deviceList[i].index) this.$set(this[mapCapacity[+deviceList[i].deviceType]], deviceList[i].index - 1, 'please enter capacity')
+            else this.$set(this[mapCapacity[+deviceList[i].deviceType]], 'msg', 'please enter rated power')
+          }
+        }
+        // 校验是否选择new installation or not
+        if (+deviceList[i].deviceType !== 4) {
+          if (!deviceList[i].installation) {
+            if (+deviceList[i].deviceType !== 1) this.$set(this[mapInstall[+deviceList[i].deviceType]], deviceList[i].index - 1, 'please select')
+            else this.$set(this[mapInstall[+deviceList[i].deviceType]], 'msg', 'please select')
+          }
+        }
+      }
+      // 1111111111
+      let arrList = ['inverterCapacityMsg', 'batCapacityMsg', 'pvCapacityMsg', 'inverterInstallMsg', 'batInstallMsg', 'pvInstallMsg', 'chargeInstallMsg']
+      for (let p = 0; p < arrList.length; p++) {
+        for (let k in this[arrList[p]]) {
+          if (this[arrList[p]][k]) return
+        }
+      }
       data.deviceList = deviceList
+      this.requestLoading()
       addBatchDevice(data).then(res => {
         if (+res.code === 200) {
           this.$message({
@@ -1523,39 +1543,63 @@ export default {
           this.beforeClose()
           this.getList()
         }
-      })
+      }).finally(() => this.waitLoading.close())
+    },
+    checkInstall(deviceType, index) {
+      let mapInstall = {
+        1: 'inverterInstallMsg',
+        2: 'batInstallMsg',
+        6: 'pvInstallMsg',
+        3: 'chargeInstallMsg'
+      }
+      if (deviceType !== 1) this.$delete(this[mapInstall[deviceType]], index)
+      else this.$delete(this[mapInstall[deviceType]], 'msg')
     },
     checkCapacity(deviceType, index) {
-      let msgType = deviceType === 2 ? 'batMsg' : 'pvMsg'
+      // 1111111111
+      let msgType = deviceType === 1 ? 'inverterCapacityMsg' : deviceType === 2 ? 'batCapacityMsg' : 'pvCapacityMsg'
       const reg = /^(?!^\.)(\d*(\.\d{0,3})?)?$/
       // At most three significant decimals
-      let capacity = this.addDialogInfo[deviceType][index].nameplateCapacity.replace(/\s*/g,"")
-      if (!capacity) this.$set(this[msgType], index, 'please enter capacity')
-      else {
+      let capacity
+      if (deviceType === 1) capacity = this.addDialogInfo[deviceType].nameplateCapacity.replace(/\s*/g,"")
+      else capacity = this.addDialogInfo[deviceType][index].nameplateCapacity.replace(/\s*/g,"")
+
+      if (!capacity) {
+        if (deviceType === 1) this.$set(this[msgType], 'msg', 'please enter rated power')
+        else this.$set(this[msgType], index, 'please enter capacity')
+      } else {
         if (reg.test(capacity)) {
-          this.$set(this[msgType], index, '')
-        } else this.$set(this[msgType], index, 'At most three significant decimals')
+          if (deviceType === 1) this.$set(this[msgType], 'msg', '')
+          else this.$set(this[msgType], index, '')
+        } else {
+          if (deviceType === 1) this.$set(this[msgType], 'msg', 'At most three significant decimals')
+          else this.$set(this[msgType], index, 'At most three significant decimals')
+        }
       }
     },
     change(deviceType, index) {
-      // 1111111
+      // 1111111111
       let sn = ''
-      if ([2, 6].includes(deviceType)) {
+      if ([2, 3, 6].includes(deviceType)) {
         sn = this.addDialogInfo[deviceType][index].serialNumber.replace(/\s*/g,"")
-        if ([2, 6].includes(deviceType)) {
-          let msgType = deviceType === 2 ? 'batMsg' : 'pvMsg'
-          if (sn) {
-            if (!this.addDialogInfo[deviceType][index].nameplateCapacity) this.$set(this[msgType], index, 'please enter capacity')
-          } else this.$set(this[msgType], index, '')
-        }
-      } else sn = this.addDialogInfo[deviceType].serialNumber
-      if (!this.localChangeList.includes(sn)) this.localChangeList.push(sn)
-      let i = 0;
-      for(i; i < this.localChangeList.length; i++) {
-        if (!this.localChangeList[i]) break
+        if (sn) this.$set(this.localChangeList, `${deviceType}${index}`, sn)
+        else this.$delete(this.localChangeList, `${deviceType}${index}`)
+      } else {
+        sn = this.addDialogInfo[deviceType].serialNumber
+        if (sn) this.$set(this.localChangeList, deviceType, sn)
+        else this.$delete(this.localChangeList, deviceType)
       }
-      if (i < this.localChangeList.length) this.addSubType = true
-      else this.addSubType = false
+      if (deviceType === 1 && !sn) {
+        this.inverterInstallMsg = {}
+        this.inverterCapacityMsg = {}
+      }
+      let arr = Object.keys(this.localChangeList)
+      let i = 0;
+      for(i; i < arr.length; i++) {
+        if (arr[i]) break
+      }
+      if (i < arr.length) this.addSubType = false
+      else this.addSubType = true
     },
     addDevice() {
       this.fillAddDialog()
@@ -1647,14 +1691,16 @@ export default {
               deviceType: 1,
               disabled: true,
               serialNumber: item.serialNumber,
-              nameplateCapacity: item.nameplateCapacity
+              nameplateCapacity: item.nameplateCapacity,
+              installation: item.installation
             }
           } else {
             info = {
               deviceType: 1,
               disabled: false,
               serialNumber: '',
-              nameplateCapacity: ''
+              nameplateCapacity: '',
+              installation: ''
             }
           }
           this.$set(this.addDialogInfo, 1, info)
@@ -2273,6 +2319,7 @@ export default {
         left: 0;
         bottom: -30px;
         color: #ff4949;
+        font-size: 12px;
       }
     }
     .select {
