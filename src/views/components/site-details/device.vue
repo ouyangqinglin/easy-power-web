@@ -34,7 +34,7 @@
           </common-flex>
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
-          <common-flex style="border-bottom: 1px solid #D8DCE6" wrap="wrap">
+          <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
             <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
                 <div class="bat-pile" :id="`batPile${k}`"></div>

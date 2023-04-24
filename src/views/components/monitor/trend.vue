@@ -8,7 +8,7 @@
     <div class="posr container">
       <div class="date-picker posa">
         <el-date-picker
-          format="dd-MM-yyyy"
+          format="MM-dd-yyyy"
           value-format="yyyy-MM-dd"
           v-model="dateVal"
           type="date"

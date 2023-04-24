@@ -26,6 +26,7 @@
 
 <script>
 import { updateUserPwd } from "@/api/system/user";
+import Cookies from "js-cookie";
 
 export default {
   data() {
@@ -74,6 +75,12 @@ export default {
         if (valid) {
           updateUserPwd(this.user.oldPassword, this.user.newPassword).then(response => {
             this.$modal.msgSuccess("Succeeded");
+            setTimeout(() => {
+              this.$store.dispatch('LogOut').then(() => {
+                location.href = '/index';
+              })
+              Cookies.remove("password");
+            }, 200)
           });
         }
       });

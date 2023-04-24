@@ -79,7 +79,7 @@
       <div class="chart-container posr" v-if="dataList && dataList.length">
         <div class="posa date-comp">
           <el-date-picker
-            format="dd-MM-yyyy"
+            format="MM-dd-yyyy"
             value-format="yyyy-MM-dd"
             v-model="dateVal"
             type="date"
