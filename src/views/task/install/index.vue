@@ -85,8 +85,8 @@
             <dict-tag :options="dict.type.install_status" :value="row.status"/>
           </template>
         </el-table-column>
-        <el-table-column label="Customer" align="center" prop="customer" min-width="130"/>
-        <el-table-column label="Installer" align="center" prop="installer" min-width="130"/>
+        <el-table-column label="Customer" align="center" prop="customer" min-width="130" show-tooltip-when-overflow />
+        <el-table-column label="Installer" align="center" prop="installer" min-width="130" show-tooltip-when-overflow />
         <el-table-column label="Time of Appointment" align="center" prop="appointTime" min-width="180">
           <template slot-scope="{ row }">
             <span v-if="row.appointTime && row.appointTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.appointTime)) }}</span>

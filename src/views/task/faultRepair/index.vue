@@ -73,7 +73,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Site" align="center" prop="siteName" show-overflow-tooltip min-width="130" />
-        <el-table-column label="Customer" align="center" prop="customer" min-width="130"/>
+        <el-table-column label="Customer" align="center" show-tooltip-when-overflow prop="customer" min-width="130"/>
         <el-table-column label="Time of Task Completed" align="center" prop="endTime" min-width="180">
           <template slot-scope="{ row }">
             <span v-if="row.endTime && row.endTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.endTime)) }}</span>
