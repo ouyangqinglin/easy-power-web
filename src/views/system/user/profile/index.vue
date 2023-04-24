@@ -48,7 +48,7 @@ import resetPwd from "./resetPwd";
 import { getUserProfile } from "@/api/system/user";
 
 export default {
-  name: "Profile",
+  name: "ProfileDetails",
   components: { userAvatar, userInfo, resetPwd },
   data() {
     return {
