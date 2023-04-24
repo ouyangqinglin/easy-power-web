@@ -510,10 +510,6 @@ const optionBat = {
     {
       type: 'category',
       boundaryGap: true,
-      axisTick: {
-        show: true,
-        alignWithLabel: true
-      },
       data: arr,
       position: 'bottom',
       axisLine: {
@@ -553,8 +549,8 @@ const optionBat = {
       type: 'inside',
       height: 26,
       bottom: 2,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       // zoomOnMouseWheel: false,
       end: 1999
@@ -562,8 +558,8 @@ const optionBat = {
     {
       height: 22,
       bottom: 15,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       end: 1999,
         backgroundColor: 'white',
@@ -705,10 +701,6 @@ const optionPv = {
     {
       type: 'category',
       boundaryGap: true,
-      axisTick: {
-        show: true,
-        alignWithLabel: true
-      },
       data: arrX1,
       position: 'bottom',
       axisLine: {
@@ -748,8 +740,8 @@ const optionPv = {
       type: 'inside',
       height: 26,
       bottom: 2,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       // zoomOnMouseWheel: false,
       end: 1999
@@ -757,8 +749,8 @@ const optionPv = {
     {
       height: 22,
       bottom: 15,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       end: 1999,
       backgroundColor: 'white',
@@ -834,7 +826,7 @@ const optionPv = {
   ]
 }
 const optionBatSoc = {
-  color: ['#f3f3f3', '#98e69f'],
+  color: ['#98e69f', '#f3f3f3'],
   series: [
     {
       type: 'pie',
@@ -910,7 +902,7 @@ export default {
       },
       listDev: [],
       curDevInfo: {},
-      currentItem: {},
+      currentItem: null,
       sn: '',
       navBar: {},
       addDialogInfo: {},
@@ -1129,6 +1121,7 @@ export default {
         netList(params).then(res => {
           let findBatList = res.data.batteryList || []
           let inverList = res.data.inverterSnList || []
+          if (!findBatList.length && !inverList.length) return this.$modal.alert('Device not found')
           if (findBatList.length) {
             let arr = [...findBatList, ...this.addDialogInfo[2]]
             this.addDialogInfo[2] = Array.from(arr.reduce((acc, cur) => {
@@ -1758,10 +1751,15 @@ export default {
         this.$nextTick(() => {
           for(let i = 0; i < this.batList.length; i++) {
             this.batListInstance.push(echarts.init(document.getElementById(`batPile${i}`)))
-            optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy']
-            optionBatSoc.series[0].data[1].value = 100
-            if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) this.batList[i]['soc'] = 0 + '%'
-            else this.batList[i]['soc'] = (this.batList[i]['curEnergy'] / this.batList[i]['capacity']) * 100 + '%'
+            if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) {
+              this.batList[i]['soc'] = 0 + '%'
+              optionBatSoc.series[0].data[0].value = 0
+              optionBatSoc.series[0].data[1].value = 1
+            } else {
+              this.batList[i]['soc'] = (this.batList[i]['curEnergy'] / this.batList[i]['capacity']) * 100 + '%'
+              optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy'] / this.batList[i]['capacity']
+              optionBatSoc.series[0].data[1].value = 1 - (this.batList[i]['curEnergy'] / this.batList[i]['capacity'])
+            }
             this.batListInstance[i].setOption(optionBatSoc)
           }
         })
@@ -2311,6 +2309,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    opacity: 1;
+    transition: all .3s;
     .el-form-item {
       position: relative;
       margin-right: 24px;

@@ -196,9 +196,17 @@
               </common-flex>
             </common-flex>
             <div id="barProduction" class="barChart"></div>
-            <div class="barChart-total" v-if="+totalPvGenerateEnergy < 1000">{{ totalPvGenerateEnergy }}<span>Wh</span></div>
-            <div class="barChart-total" v-else-if="+totalPvGenerateEnergy > 1000 && +totalPvGenerateEnergy < 1000000">{{ (+totalPvGenerateEnergy / 1000).toFixed(2) }}<span>kWh</span></div>
-            <div class="barChart-total" v-else>{{ +(totalPvGenerateEnergy / 1000000).toFixed(2) }}<span>MWh</span></div>
+            <common-flex class="barChart-total" align="center">
+              <el-tooltip effect="dark" placement="top">
+                <span slot="content">
+                  Total system production, including solar<br>production and battery discharge
+                </span>
+                <img class="question" :src="require('@img/question.svg')" alt="">
+              </el-tooltip>
+              <div v-if="+totalPvGenerateEnergy < 1000">{{ totalPvGenerateEnergy }}<span>Wh</span></div>
+              <div v-else-if="+totalPvGenerateEnergy > 1000 && +totalPvGenerateEnergy < 1000000">{{ (+totalPvGenerateEnergy / 1000).toFixed(2) }}<span>kWh</span></div>
+              <div v-else>{{ +(totalPvGenerateEnergy / 1000000).toFixed(2) }}<span>MWh</span></div>
+            </common-flex>
           </common-flex>
           <common-flex direction="column" class="comp-overview-chart-consumption posr">
             <div style="flex-shrink: 0"><p>Consumption</p></div>
@@ -392,7 +400,7 @@ export default {
         color: ['#3daabf', '#8bea91'],
         legend: {
           data: ['Export', 'Used'],
-          right: '12%',
+          right: '13%',
         },
         xAxis: {
           data: [],
@@ -1321,14 +1329,19 @@ export default {
         &-total {
           position: absolute;
           z-index: 55;
-          right: 4%;
-          top: 67px;
+          right: 3%;
+          top: 70px;
           @include nFont(20 #000 700);
           span {
             margin-left: 14px;
-            @include nFont(12 #909399 35 400);
+            @include nFont(12 #909399 400);
           }
         }
+      }
+      .question {
+        margin-right: 3px;
+        width: 18px;
+        cursor: pointer;
       }
     }
   }

@@ -93,7 +93,7 @@ const option = {
       type: 'inside',
       height: 26,
       bottom: 2,
-      left: 40,
+      left: '4%',
       right: 1,
       start: 0,
       // zoomOnMouseWheel: false,
@@ -102,7 +102,7 @@ const option = {
     {
       height: 22,
       bottom: 15,
-      left: 40,
+      left: '4%',
       right: 1,
       start: 0,
       end: 1999,

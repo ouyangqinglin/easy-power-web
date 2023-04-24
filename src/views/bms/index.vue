@@ -52,9 +52,9 @@
           </common-flex>
           <template slot-scope="scope">
             <common-flex justify="center" align="center">
-              <el-button type="text">
-                <router-link :to="{name: 'monitoring-view', params: {id: scope.row.id, info: scope.row.extInfo, sn: scope.row.serialNumber, siteCode: scope.row.siteCode}}">Monitoring</router-link>
-              </el-button>
+              <router-link :to="{name: 'monitoring-view', params: {id: scope.row.id, info: scope.row.extInfo, sn: scope.row.serialNumber, siteCode: scope.row.siteCode}}">
+                <el-button type="text">Monitoring</el-button>
+              </router-link>
               <img @click="follow(2, scope.row.id)" v-if="+scope.row.followBms === 1" class="follow" :src="require('@img/followed.svg')" alt="">
               <img title="Follow" @click="follow(1, scope.row.id)" v-else class="follow" :src="require('@img/follow.svg')" alt="Follow">
             </common-flex>
