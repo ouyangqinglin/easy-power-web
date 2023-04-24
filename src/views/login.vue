@@ -20,6 +20,8 @@
           auto-complete="off"
           placeholder="Please enter"
           @keyup.enter.native="handleLogin"
+          @paste.native.capture.prevent
+          @copy.native.capture.prevent
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
           <template #suffix>
@@ -55,22 +57,32 @@
       <el-form-item prop="pass" label="New Password">
         <el-input
           v-model="modifyForm.pass"
-          type="text"
+          :type="inputNew"
           auto-complete="off"
-          show-password
           placeholder="Please enter"
+          @paste.native.capture.prevent
+          @copy.native.capture.prevent
         >
+          <template #suffix>
+            <svg-icon v-if="eyesNew" @click.native="eyesNew = !eyesNew" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
+            <svg-icon v-else @click.native="eyesNew = !eyesNew" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
+          </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="checkPass" label="Password Again">
         <el-input
           v-model="modifyForm.checkPass"
-          type="password"
+          :type="inputAgain"
           auto-complete="off"
           placeholder="Please enter"
-          show-password
+          @paste.native.capture.prevent
+          @copy.native.capture.prevent
           @keyup.enter.native="handleLogin"
         >
+          <template #suffix>
+            <svg-icon v-if="eyesAgain" @click.native="eyesAgain = !eyesAgain" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
+            <svg-icon v-else @click.native="eyesAgain = !eyesAgain" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
+          </template>
         </el-input>
       </el-form-item>
       <el-form-item style="width:100%;">
@@ -110,10 +122,27 @@
         </div>
       </el-form-item>
       <el-form-item label="New Password" prop="password">
-        <el-input placeholder="Please enter" v-model="forgetForm.password"></el-input>
+        <el-input :type="inputNew"
+                  @copy.native.capture.prevent
+                  @paste.native.capture.prevent
+                  placeholder="Please enter"
+                  v-model="forgetForm.password">
+          <template #suffix>
+            <svg-icon v-if="eyesNew" @click.native="eyesNew = !eyesNew" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
+            <svg-icon v-else @click.native="eyesNew = !eyesNew" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
+          </template>
+        </el-input>
       </el-form-item>
-      <el-form-item label="Password Again" prop="againPassword">
-        <el-input placeholder="Please enter" v-model="forgetForm.againPassword"></el-input>
+      <el-form-item @paste.native.capture.prevent
+                    @copy.native.capture.prevent
+                    label="Password Again"
+                    prop="againPassword">
+        <el-input :type="inputAgain" placeholder="Please enter" v-model="forgetForm.againPassword">
+          <template #suffix>
+            <svg-icon v-if="eyesAgain" @click.native="eyesAgain = !eyesAgain" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
+            <svg-icon v-else @click.native="eyesAgain = !eyesAgain" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button :loading="loading" style="width: 100%" type="primary" @click="reset">Reset</el-button>
@@ -172,6 +201,8 @@ export default {
     }
     return {
       eyes: true,
+      eyesAgain: true,
+      eyesNew: true,
       countTimer: null,
       second: 3,
       dialogShow: false,
@@ -252,7 +283,13 @@ export default {
   computed: {
     inputType() {
       return this.eyes ? 'password' : 'text'
-    }
+    },
+    inputNew() {
+      return this.eyesNew ? 'password' : 'text'
+    },
+    inputAgain() {
+      return this.eyesAgain ? 'password' : 'text'
+    },
   },
   created() {
     // this.getCode()

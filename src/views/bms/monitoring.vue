@@ -21,11 +21,11 @@
             </el-col>
             <el-col :span="6">
               <div class="label">SOH(%)</div>
-              <div class="value">{{ base.soc }}</div>
+              <div class="value">{{ base.soh }}</div>
             </el-col>
             <el-col :span="6">
               <div class="label">Cycle Time</div>
-              <div class="value"></div>
+              <div class="value">{{ base.cycles }}</div>
             </el-col>
           </el-row>
           <el-row style="margin-top: 12px">
@@ -43,7 +43,7 @@
             </el-col>
             <el-col :span="6">
               <div class="label">Status</div>
-              <div class="value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+base.status] }}</div>
+              <div class="value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+base.storeStatus] }}</div>
             </el-col>
           </el-row>
         </div>
@@ -139,10 +139,6 @@ const option = {
     },
     {
       type: 'category',
-      // axisTick: {
-      //   show: true,
-      //   alignWithLabel: true
-      // },
       data: arr,
       position: 'bottom',
       axisLine: {
@@ -185,7 +181,6 @@ const option = {
       left: 28,
       right: 50,
       start: 0,
-      // zoomOnMouseWheel: false,
       end: 1999
     },
     {
@@ -284,7 +279,8 @@ export default {
       siteCode: localStorage.getItem('siteCode'),
     }
     infoDevice(params).then(res => {
-      this.base = {...res.data, ...info}
+      console.log(res)
+      this.base = {...info, ...res.data}
       console.log('base', this.base)
       let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]
       arr.forEach((item, index) => {
