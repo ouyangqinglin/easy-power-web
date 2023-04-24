@@ -28,7 +28,7 @@
           <el-radio class="my-radio" v-model="chooseRadio" :label="row.id"></el-radio>
         </template>
       </el-table-column>
-      <el-table-column label="Name" align="center" prop="userName" />
+      <el-table-column label="Name" align="center" prop="userName" show-tooltip-when-overflow />
       <el-table-column label="Account" align="center" prop="email" />
       <el-table-column label="Agency" align="center" prop="agentName" />
     </el-table>
