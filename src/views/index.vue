@@ -883,7 +883,7 @@ export default {
             unit3 = 'Wh'
           }
           total = (+total).toFixed(2)
-          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>total：${total}${unit3}`
+          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>Total：${total}${unit3}`
         },
         backgroundColor: '#fff',
         extraCssText: 'box-shadow: 0px 3px 6px 1px rgba(0,0,0,0.16);',

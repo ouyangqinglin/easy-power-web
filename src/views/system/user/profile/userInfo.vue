@@ -25,6 +25,7 @@ export default {
       type: Object
     }
   },
+  // regex = /^[0-9\+\-]{1,20}$/;
   data() {
     return {
       // 表单校验
