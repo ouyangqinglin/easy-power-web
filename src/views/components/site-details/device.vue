@@ -1498,7 +1498,6 @@ export default {
             if (i.serialNumber) deviceList.push(item)
           })
         } else if (+v === 1) {
-          console.log('v1', v, this.addDialogInfo[v])
           item = {
             deviceType: +v,
             serialNumber: this.addDialogInfo[v]?.serialNumber,
@@ -1507,7 +1506,6 @@ export default {
           }
           if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
         } else {
-          console.log('v2', v, this.addDialogInfo[v])
           item = {
             deviceType: +v,
             serialNumber: this.addDialogInfo[v]?.serialNumber,

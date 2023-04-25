@@ -642,7 +642,7 @@ export default {
           if (+res.data === 3) {
             if(times > 15) {
               clearInterval(timerInter)
-              this.getList()
+              this.getDeviceSet()
               this.setLoading.close()
               return this.$modal.msgError('timeout')
             }
@@ -652,7 +652,7 @@ export default {
               this.$modal.msgSuccess('SUCCESS')
             } else this.$modal.msgError(statusList[+res.data])
             clearInterval(timerInter)
-            this.getList()
+            this.getDeviceSet()
             this.setLoading.close()
           }
         })
