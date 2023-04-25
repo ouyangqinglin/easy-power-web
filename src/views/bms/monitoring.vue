@@ -115,7 +115,7 @@ const option = {
       } else return [pt[0] + 20, pt[1] - 30];
     },
     formatter(p) {
-      if (p[0].value === '-') return 'No data'
+      if (p[0].value === 'NaN') return 'No data'
       else {
         let str = ''
         for(let i = 0; i < p.length; i++) {
@@ -279,7 +279,6 @@ export default {
       siteCode: localStorage.getItem('siteCode'),
     }
     infoDevice(params).then(res => {
-      console.log(res)
       this.base = {...info, ...res.data}
       console.log('base', this.base)
       let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]
@@ -343,7 +342,7 @@ export default {
         for(let k = 0; k < this.curSeries.length; k++) {
           let arr = []
           for(let i = 0; i < dataList.length; i++) {
-            arr.push(dataList[i][`${list[+this.dataType]}_t${k+1}_avg`])
+            arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(2))
           }
           let item = {
             name: `T${k+1}`,
@@ -363,7 +362,7 @@ export default {
           // cell_v1_avg
           let arr = []
           for(let i = 0; i < dataList.length; i++) {
-            arr.push(dataList[i][`cell_v${k+1}_avg`])
+            arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(2))
           }
           let item = {
             name: `Cell${k+1}`,

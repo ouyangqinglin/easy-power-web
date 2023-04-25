@@ -177,7 +177,7 @@ export default {
       option.xAxis[0].data = []
       arrY = []
       for(let i = 0; i < dataList.length; i++) {
-        arrY.push(dataList[i][dataKeyList[v]])
+        arrY.push((+dataList[i][dataKeyList[v]]).toFixed(2))
         option.xAxis[0].data.push(dataList[i].timestamp)
       }
       option.series[0].data = arrY
