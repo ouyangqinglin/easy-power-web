@@ -302,16 +302,34 @@
                :before-close="beforeClose"
                :close-on-click-modal ="false"
                width="66%">
-      <el-form @submit.native.prevent v-if="addDialogInfo[4]">
+      <common-flex align="center">
         <strong>Stick Logger</strong>
+        <common-flex v-if="!addDialogInfo[4]">
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(4)">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeStick}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Stick')">
+        </common-flex>
+      </common-flex>
+      <el-form @submit.native.prevent v-if="addDialogInfo[4]">
         <div class="dialog-form">
           <el-form-item label="SN">
             <el-input maxlength="20" @change="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
+          <div style="margin-top: 15px; cursor: pointer" v-if="!addDialogInfo[4].disabled" @click="deleteSn(4)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
         </div>
       </el-form>
-      <el-form @submit.native.prevent v-if="addDialogInfo[1]" style="margin-top: 16px">
+      <div class="empty" v-else>No data</div>
+      <common-flex align="center">
         <strong>Inverter</strong>
+        <common-flex v-if="!addDialogInfo[1]">
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(1)">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeInverter}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Inverter')">
+        </common-flex>
+      </common-flex>
+      <el-form @submit.native.prevent v-if="addDialogInfo[1]" style="margin-top: 16px">
         <div class="dialog-form">
           <el-form-item label="SN">
             <el-input maxlength="20" @change="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
@@ -326,8 +344,10 @@
             </el-select>
             <div class="err-msg posa">{{ inverterInstallMsg['msg'] }}</div>
           </el-form-item>
+          <div style="margin-top: 15px; cursor: pointer" v-if="!addDialogInfo[1].disabled" @click="deleteSn(1)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
         </div>
       </el-form>
+      <div class="empty" v-else>No data</div>
       <template v-if="addDialogInfo[2]">
         <common-flex align="center">
           <strong>Battery</strong>
@@ -870,6 +890,8 @@ export default {
           value: 2
         }
       ],
+      activeStick: false,
+      activeInverter: false,
       activeBat: false,
       activeCharger: false,
       activePhotovoltaic: false,
@@ -1088,9 +1110,16 @@ export default {
         serialNumber: '',
         disabled: false
       }
-      this.addDialogInfo[deviceType].push(item)
+      if ([1, 4].includes(deviceType)) this.addDialogInfo[deviceType] = item
+      else this.addDialogInfo[deviceType].push(item)
     },
     deleteSn(deviceType, index) {
+      if ([1, 4].includes(deviceType)) {
+        this.addDialogInfo[deviceType] = null
+        this.inverterCapacityMsg = {}
+        this.inverterInstallMsg = {}
+        return
+      }
       this.addDialogInfo[deviceType].splice(index, 1)
       let mapCapacity = {
         1: 'inverterCapacityMsg',
@@ -1350,7 +1379,7 @@ export default {
               this.$modal.msgSuccess('SUCCESS')
             } else this.$modal.msgError(statusList[+res.data])
             clearInterval(timerInter)
-            this.getList()
+            this.getDeviceSet()
             this.loading.close()
           }
         })
@@ -1469,19 +1498,21 @@ export default {
             if (i.serialNumber) deviceList.push(item)
           })
         } else if (+v === 1) {
+          console.log('v1', v, this.addDialogInfo[v])
           item = {
             deviceType: +v,
-            serialNumber: this.addDialogInfo[v].serialNumber,
-            nameplateCapacity: +this.addDialogInfo[v].nameplateCapacity,
-            installation: this.addDialogInfo[v].installation
+            serialNumber: this.addDialogInfo[v]?.serialNumber,
+            nameplateCapacity: +this.addDialogInfo[v]?.nameplateCapacity,
+            installation: this.addDialogInfo[v]?.installation
           }
           if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
         } else {
+          console.log('v2', v, this.addDialogInfo[v])
           item = {
             deviceType: +v,
-            serialNumber: this.addDialogInfo[v].serialNumber,
+            serialNumber: this.addDialogInfo[v]?.serialNumber,
           }
-          if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
+          if (this.addDialogInfo[v]?.serialNumber) deviceList.push(item)
         }
       }
       if (!deviceList.length) return
@@ -1655,25 +1686,19 @@ export default {
         }
         if (haveTypeList[i] === 4) {
           item = this.listDev.find(item => +item.deviceType === 4)
-          let info = {}
+          let info = null
           if (item) {
             info = {
               deviceType: 4,
               disabled: true,
               serialNumber: item.serialNumber,
             }
-          } else {
-            info = {
-              deviceType: 4,
-              disabled: false,
-              serialNumber: '',
-            }
           }
           this.$set(this.addDialogInfo, 4, info)
         }
         if (haveTypeList[i] === 1) {
           item = this.listDev.find(item => +item.deviceType === 1)
-          let info = {}
+          let info = null
           if (item) {
             info = {
               deviceType: 1,
@@ -1681,14 +1706,6 @@ export default {
               serialNumber: item.serialNumber,
               nameplateCapacity: item.nameplateCapacity,
               installation: item.installation
-            }
-          } else {
-            info = {
-              deviceType: 1,
-              disabled: false,
-              serialNumber: '',
-              nameplateCapacity: '',
-              installation: ''
             }
           }
           this.$set(this.addDialogInfo, 1, info)
