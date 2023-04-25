@@ -673,8 +673,10 @@ export default {
         else data.baseParam = 0
       }
       deviceSet(data).then(res => {
-        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
-        else {
+        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) {
+          this.$modal.alertError(res.msg)
+          this.getDeviceSet()
+        } else {
           let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
           if (+res.data === 3) {
             this.openLoading()
