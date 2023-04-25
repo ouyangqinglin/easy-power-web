@@ -127,7 +127,7 @@ const option = {
     },
   },
   grid: {
-    left: '2%',
+    left: '3%',
     right: '3%'
   },
   xAxis: [
@@ -178,16 +178,16 @@ const option = {
       type: 'inside',
       height: 26,
       bottom: 2,
-      left: 28,
-      right: 50,
+      left: '3%',
+      right: '3%',
       start: 0,
       end: 1999
     },
     {
       height: 22,
       bottom: 15,
-      left: 28,
-      right: 50,
+      left: '3%',
+      right: '3%',
       start: 0,
       end: 1999,
       backgroundColor: 'white',
