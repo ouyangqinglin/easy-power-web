@@ -74,7 +74,7 @@
             <span style="white-space: pre-wrap" v-else>{{ row.siteName || '--'}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Operator" prop="operator" min-width="120" show-overflow-tooltip />
+        <el-table-column label="Operator" prop="updateBy" min-width="120" show-overflow-tooltip />
         <el-table-column label="Agency" prop="agency" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Device Installed" prop="bindTime" min-width="170">
           <template slot-scope="{ row }">

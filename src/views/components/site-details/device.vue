@@ -232,10 +232,6 @@
                   <div class="item-body-item-key">Serial Number</div>
                   <div class="item-body-item-value">{{ inverterInfo.serialNumber }}</div>
                 </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Manufacturer</div>
-                  <div class="item-body-item-value">{{ inverterInfo.manufacturer }}</div>
-                </div>
               </common-flex>
             </div>
             <div class="table posr">
@@ -388,10 +384,12 @@
       <template v-if="addDialogInfo[6]">
         <common-flex align="center" style="margin-top: 16px">
           <strong>Photovoltaic</strong>
-          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
-            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(6)">
-          </el-tooltip>
-          <img class="device-refresh" :class="{rotateAni: activePhotovoltaic}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Photovoltaic')">
+          <template v-if="addDialogInfo[6].length < 1">
+            <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+              <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(6)">
+            </el-tooltip>
+            <img class="device-refresh" :class="{rotateAni: activePhotovoltaic}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Photovoltaic')">
+          </template>
         </common-flex>
         <template v-for="(i, k) of addDialogInfo[6]">
           <el-form @submit.native.prevent :model="i" style="margin-top: 16px">
@@ -978,7 +976,6 @@ export default {
           'title': 'Basic Info',
           'info': {
             'Serial Number': '',
-            'Manufacturer': '',
             'Nameplate capacity (kWh)': '',
             'Connected Inverter': ''
           },
@@ -1030,7 +1027,6 @@ export default {
           'title': 'Basic Info',
           'info': {
             'Serial Number': '',
-            'Manufacturer': ''
           },
         },
       ],
@@ -1040,7 +1036,6 @@ export default {
           'title': 'Basic Info',
           'info': {
             'Serial Number': '',
-            'Manufacturer': '',
           },
         },
       ],
@@ -1866,10 +1861,6 @@ export default {
               value: 'serialNumber'
             },
             {
-              key: 'Manufacturer',
-              value: 'manufacturer'
-            },
-            {
               key: 'Nameplate capacity (kWh)',
               value: 'nameplateCapacity'
             },
@@ -1912,11 +1903,16 @@ export default {
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
             }
             else if (index === 4 || index === 3) {
-              if (index === 3) {
-                let resStr = ''
-                resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
-                this.batteryInfo[index]['info'][k.key] = resStr
-              } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
+              if (+this.curDevInfo.installation === 2) {
+                this.batteryInfo[index]['info'][k.key] = '--'
+              }
+              else {
+                if (index === 3) {
+                  let resStr = ''
+                  resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+                  this.batteryInfo[index]['info'][k.key] = resStr
+                } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
+              }
             }
             else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kWh'
           })
@@ -2002,10 +1998,6 @@ export default {
               key: 'Serial Number',
               value: 'serialNumber'
             },
-            {
-              key: 'Manufacturer',
-              value: 'manufacturer'
-            },
           ],
         ]
         arr.forEach((i, index) => {
@@ -2031,9 +2023,13 @@ export default {
               } else this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? this.curDevInfo[k.value] + 'kWh' : 0
             }
             else if (index === 4) {
-              let resStr = ''
-              resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
-              this.chargeInfo[index]['info'][k.key] = resStr
+              if (+this.curDevInfo.installation === 2) {
+                this.chargeInfo[index]['info'][k.key] = '--'
+              } else {
+                let resStr = ''
+                resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+                this.chargeInfo[index]['info'][k.key] = resStr
+              }
             } else if (index === 5) {
               this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value]
             } else this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? (+this.curDevInfo[k.value]).toFixed(2) + 'kWh' : 0
@@ -2045,10 +2041,6 @@ export default {
             {
               key: 'Serial Number',
               value: 'serialNumber'
-            },
-            {
-              key: 'Manufacturer',
-              value: 'manufacturer'
             },
             // {
             //   key: 'Wifi',
@@ -2143,10 +2135,14 @@ export default {
         })
         this.curDevInfo.gridList = arrGrid
         this.curDevInfo.loadList = arrLoad
-        let resStr = ''
-        resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
         this.inverterInfo = this.curDevInfo
-        this.inverterInfo.Lifetime = resStr
+        if (+this.curDevInfo.installation === 2) {
+          this.inverterInfo.Lifetime = '--'
+        } else {
+          let resStr = ''
+          resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+          this.inverterInfo.Lifetime = resStr
+        }
       } else if (+this.active === 6) {
         let arr = [
           {
@@ -2183,10 +2179,14 @@ export default {
         })
 
         this.curDevInfo.pvList = arr
-        let resStr = ''
-        resStr += `${this.curDevInfo.periodDay} Days ${this.curDevInfo.periodMonth} Months ${this.curDevInfo.periodYear} Year`
         this.pvInfo = this.curDevInfo
-        this.pvInfo.Lifetime = resStr
+        if (+this.curDevInfo.installation === 2) {
+          this.pvInfo.Lifetime = '--'
+        } else {
+          let resStr = ''
+          resStr += `${this.curDevInfo.periodDay} Days ${this.curDevInfo.periodMonth} Months ${this.curDevInfo.periodYear} Year`
+          this.pvInfo.Lifetime = resStr
+        }
       }
     }
   }

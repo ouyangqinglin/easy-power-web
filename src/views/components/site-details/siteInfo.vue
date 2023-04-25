@@ -21,9 +21,9 @@
       <div class="comp-site-info-card-title">Site Correlation Details</div>
       <el-table :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}" class="comp-site-info-card-table" :data="base.userList">
         <el-table-column type="index" width="80" label="No"></el-table-column>
-        <el-table-column label="Owner" prop="userName"></el-table-column>
-        <el-table-column label="E-mail" prop="email"></el-table-column>
-        <el-table-column label="Phone" prop="phone"></el-table-column>
+        <el-table-column label="Owner" prop="userName" show-tooltip-when-overflow />
+        <el-table-column label="E-mail" prop="email" />
+        <el-table-column label="Phone" prop="phone" />
       </el-table>
     </el-card>
     <el-dialog :visible.sync="show" title="Modify"
