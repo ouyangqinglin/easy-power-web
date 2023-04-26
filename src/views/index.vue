@@ -304,10 +304,23 @@ const lineOption = {
     tooltip: {
       show: true,
       trigger: 'axis',
-      // formatter (value) {
-      //   console.log(value)
-      //   return value[0].value
-      // }
+      formatter (v) {
+        let v0, t1, unit1
+        if (v[0]) {
+          if (+v[0].value < 1) {
+            t1 = `${(+v[0].value * 1000).toFixed(2)}`
+            unit1 = 'Wh'
+          } else if (+v[0].value > 1 && +v[0].value < 1000) {
+            t1 = `${(+v[0].value).toFixed(2)}`
+            unit1 = 'kWh'
+          } else {
+            t1 = `${(+v[0].value / 1000).toFixed(2)}`
+            unit1 = 'MWh'
+          }
+          v0 = `${v[0].marker}  ${t1}${unit1}`
+        }
+        return `${v[0].name}<br>${v0}`
+      }
     },
     grid: {
       left: 50,

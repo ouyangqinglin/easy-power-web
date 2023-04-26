@@ -14,7 +14,7 @@
           <el-col :span="8">
             <el-form :rules="rule" :model="base" ref="baseForm" :disabled="edit">
               <el-form-item label="Address" prop="address">
-                <el-input v-model="base.address"></el-input>
+                <el-input v-model="base.address" type="textarea"></el-input>
               </el-form-item>
               <el-form-item label="Support Phone" prop="phone">
                 <el-input v-model="base.phone"></el-input>

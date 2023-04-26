@@ -55,7 +55,7 @@
             <el-input v-model="base.siteCode"></el-input>
           </el-form-item>
           <el-form-item label="Address" prop="address">
-            <el-input v-model="base.address"></el-input>
+            <el-input type="textarea" v-model="base.address"></el-input>
           </el-form-item>
           <el-form-item label="Region" prop="city">
             <el-input v-model="base.region || '--'"></el-input>

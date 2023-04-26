@@ -30,7 +30,7 @@
             <el-input v-model="base.phone" disabled type="text" />
           </el-form-item>
           <el-form-item style="flex: 1" prop="address" label="Address">
-            <el-input v-model="base.address" disabled type="text" />
+            <el-input type="textarea" v-model="base.address" disabled />
           </el-form-item>
         </common-flex>
         <common-flex :style="{ justifyContent: [4, 5].includes(+base.status) ? 'space-between' : '' }">

@@ -1495,7 +1495,7 @@ export default {
             nameplateCapacity: +this.addDialogInfo[v]?.nameplateCapacity,
             installation: this.addDialogInfo[v]?.installation
           }
-          if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
+          if (this.addDialogInfo[v]?.serialNumber) deviceList.push(item)
         } else {
           item = {
             deviceType: +v,
@@ -2126,7 +2126,7 @@ export default {
             p: ''
           }
         ]
-        let objGrid = this.curDevInfo.gridEntity, objLoad = this.curDevInfo.loadEntity
+        let objGrid = this.curDevInfo.inverterEntity?.gridEntity, objLoad = this.curDevInfo.inverterEntity?.loadEntity
         arrGrid.forEach((item, index) => {
           let prefix = item.pvNum.toLowerCase()
           item.v = objGrid[`${prefix}voltage`]
@@ -2176,12 +2176,12 @@ export default {
             p: ''
           },
         ]
-        let obj = this.curDevInfo.pvEntity || this.curDevInfo
+        let obj = this.curDevInfo.pvEntity
         arr.forEach((item, index) => {
           let prefix = `pv${index + 1}`
-          item.v = obj[`${prefix}Voltage`]
-          item.c = obj[`${prefix}Current`]
-          item.p = obj[`${prefix}Power`]
+          item.v = obj[`${prefix}Voltage`] ? obj[`${prefix}Voltage`] : +obj[`${prefix}Voltage`] === 0 ? 0 : '--'
+          item.c = obj[`${prefix}Current`] ? obj[`${prefix}Current`] : +obj[`${prefix}Current`] === 0 ? 0 : '--'
+          item.p = obj[`${prefix}Power`] ? obj[`${prefix}Power`] : +obj[`${prefix}Power`] === 0 ? 0 : '--'
         })
 
         this.curDevInfo.pvList = arr

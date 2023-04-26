@@ -50,7 +50,7 @@
         <el-card class="comp-overview-row-col-card">
           <common-flex class="comp-overview-row-col-card-title" justify="space-between">
             <div>Real-time power</div>
-            <el-tag effect="dark">{{ online ? 'On line' : 'Off line' }}</el-tag>
+            <el-tag v-if="!online" effect="dark">Off line</el-tag>
           </common-flex>
           <common-flex class="circle-container posr" justify="center">
 <!--            <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: +base.pvExist ? '90%' : '80%'}">-->

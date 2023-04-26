@@ -60,6 +60,9 @@
           <template v-else-if="i.prop === 'status'">
             <el-input disabled v-model="['', 'Pending', 'Processing', 'Complete'][base[i.prop]]"></el-input>
           </template>
+          <template v-else-if="i.prop === 'address'">
+            <el-input v-model="base[i.prop]" type="textarea" maxlength="50"></el-input>
+          </template>
           <template v-else>
             <el-input :disabled="!(index > 5)" v-model="base[i.prop]"></el-input>
           </template>
