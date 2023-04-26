@@ -522,7 +522,7 @@ export default {
       barProduction: null,
       barConsumption: null,
       timer: null,
-      online: 0,
+      online: 1,
     }
   },
   watch: {
@@ -1149,7 +1149,7 @@ export default {
              z-index: 1;
            }
            .gridExport {
-             background-color: #3EBCD4;
+             background-color: #FFB968;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1165,11 +1165,11 @@ export default {
                width: 0;
                height: 0;
                border: 6px solid;
-               border-color: transparent #3EBCD4 transparent transparent;
+               border-color: transparent #FFB968 transparent transparent;
              }
            }
            .gridImport {
-             background-color: #3EBCD4;
+             background-color: #FFB968;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1185,7 +1185,7 @@ export default {
                width: 0;
                height: 0;
                border: 6px solid;
-               border-color: transparent transparent transparent #3EBCD4;
+               border-color: transparent transparent transparent #FFB968;
              }
            }
            .circle {

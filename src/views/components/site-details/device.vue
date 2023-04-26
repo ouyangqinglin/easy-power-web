@@ -122,13 +122,13 @@
           </common-flex>
         </div>
         <div v-else-if="+active === 6" style="flex-grow: 1">
-          <div style="border-bottom: 1px solid #D8DCE6">
-            <el-tabs v-model="curPv" @tab-click="changeCurPv">
-              <template v-for="i of pvList">
-                <el-tab-pane :name="i.serialNumber" :label="i.serialNumber"></el-tab-pane>
-              </template>
-            </el-tabs>
-          </div>
+<!--          <div style="border-bottom: 1px solid #D8DCE6">-->
+<!--            <el-tabs v-model="curPv" @tab-click="changeCurPv">-->
+<!--              <template v-for="i of pvList">-->
+<!--                <el-tab-pane :name="i.serialNumber" :label="i.serialNumber">  </el-tab-pane>-->
+<!--              </template>-->
+<!--            </el-tabs>-->
+<!--          </div>-->
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
             <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
@@ -190,6 +190,10 @@
                     <div class="item-body-item-key">Capacity (kW)</div>
                     <div class="item-body-item-value">{{ pvInfo.nameplateCapacity }}</div>
                   </div>
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">New installation or not</div>
+                    <div class="item-body-item-value">{{ ['', 'Yes', 'No'][pvInfo.installation] || '--' }}</div>
+                  </div>
                 </common-flex>
               </div>
             </common-flex>
@@ -231,6 +235,18 @@
                 <div class="item-body-item charge">
                   <div class="item-body-item-key">Serial Number</div>
                   <div class="item-body-item-value">{{ inverterInfo.serialNumber }}</div>
+                </div>
+                <div class="item-body-item charge">
+                  <div class="item-body-item-key">New installation or not</div>
+                  <div class="item-body-item-value">{{ ['', 'Yes', 'No'][inverterInfo.installation] || '--' }}</div>
+                </div>
+                <div class="item-body-item charge">
+                  <div class="item-body-item-key">Rated Power (kW)</div>
+                  <div class="item-body-item-value">{{ inverterInfo.capacity }}</div>
+                </div>
+                <div class="item-body-item charge">
+                  <div class="item-body-item-key">Lifetime</div>
+                  <div class="item-body-item-value">{{ inverterInfo.lifetime }}</div>
                 </div>
               </common-flex>
             </div>
@@ -998,7 +1014,8 @@ export default {
           'info': {
             'Serial Number': '',
             'Nameplate capacity (kWh)': '',
-            'Connected Inverter': ''
+            'Connected Inverter': '',
+            'New installation or not': ''
           },
         },
       ],
@@ -1042,6 +1059,7 @@ export default {
           'title': 'Charge pile Operation Time',
           'info': {
             'Lifetime': '',
+            'New installation or not': ''
           },
         },
         {
@@ -1437,36 +1455,34 @@ export default {
     },
     watchSelect() {
       this.delDialogInfo.sn = this.delDialogInfo.nameplateCapacity = this.delDialogInfo.id = ''
-      let item = this.listDev.find(i => +i.deviceType === +this.delDialogInfo.deviceType)
       let deviceType = +this.delDialogInfo.deviceType
-      if ([2, 3, 6].includes(deviceType)) {
-        let snList = []
-        if (deviceType === 2) {
-          this.batList.forEach(i => {
-            snList.push(i.serialNumber)
-          })
-        }
-        if (deviceType === 3) {
-          this.pileList.forEach(i => {
-            snList.push(i.serialNumber)
-          })
-        }
-        if (deviceType === 6) {
-          this.pvList.forEach(i => {
-            snList.push(i.serialNumber)
-          })
-        }
-        this.delDialogInfo.snOption = snList
-      } else {
-        this.delDialogInfo.snOption = []
+      let item = this.listDev.find(i => +i.deviceType === deviceType)
+      let snList = []
+      if (deviceType === 2) {
+        this.batList.forEach(i => {
+          snList.push(i.serialNumber)
+        })
+      }
+      if (deviceType === 3) {
+        this.pileList.forEach(i => {
+          snList.push(i.serialNumber)
+        })
+      }
+      if (deviceType === 6) {
+        this.pvList.forEach(i => {
+          snList.push(i.serialNumber)
+        })
+      }
+      if ([1, 4].includes(deviceType)) {
         if (item) {
-          this.delDialogInfo.sn = item.serialNumber
+          snList.push(item.serialNumber)
           this.delDialogInfo.id = item.id
         } else {
           this.delDialogInfo.sn = ''
           this.delDialogInfo.id = ''
         }
       }
+      this.delDialogInfo.snOption = snList
       this.delSubType = this.delDialogInfo.sn ? 'primary' : ''
     },
     submitAdd () {
@@ -1873,7 +1889,11 @@ export default {
             {
               key: 'Connected Inverter',
               value: 'connectedInverter'
-            }
+            },
+            {
+              key: 'New installation or not',
+              value: 'installation'
+            },
           ],
         ]
         arr.forEach((i, index) => {
@@ -1886,41 +1906,37 @@ export default {
               }
               this.batteryInfo[index]['info'][k.key] = ((this.curDevInfo[k.value] / this.curDevInfo['capacity']) * 100).toFixed(0) + '%'
               this.dynamicSoc = this.curDevInfo[k.value] / this.curDevInfo['capacity']
-            }
-            else if (k.key === 'Current') {
+            } else if (k.key === 'Current') {
               if (+this.base.storeConnectStatus === 2) {
                 this.batteryInfo[index]['info'][k.key] = 0
                 return
               }
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'A'
-            }
-            else if (k.key === 'Voltage') {
+            } else if (k.key === 'Voltage') {
               if (+this.base.storeConnectStatus === 2) {
                 this.batteryInfo[index]['info'][k.key] = 0
                 return
               }
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'V'
-            }
-            else if (k.key === 'Power') {
+            } else if (k.key === 'Power') {
               if (+this.base.storeConnectStatus === 2) {
                 this.batteryInfo[index]['info'][k.key] = 0
                 return
               }
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
-            }
-            else if (index === 4 || index === 3) {
+            } else if (k.key === 'New installation or not') {
+              this.batteryInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
+            } else if (index === 4 || index === 3) {
               if (+this.curDevInfo.installation === 2) {
                 this.batteryInfo[index]['info'][k.key] = '--'
-              }
-              else {
+              } else {
                 if (index === 3) {
                   let resStr = ''
                   resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
                   this.batteryInfo[index]['info'][k.key] = resStr
                 } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
               }
-            }
-            else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kWh'
+            } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kWh'
           })
         })
       } else if (+this.active === 3) {
@@ -1997,6 +2013,10 @@ export default {
             {
               key: 'Lifetime',
               value: 'createTime'
+            },
+            {
+              key: 'New installation or not',
+              value: 'installation'
             }
           ],
           [
@@ -2027,6 +2047,9 @@ export default {
                 if (+this.curDevInfo.status === 1) this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kWh'
                 else this.chargeInfo[index]['info'][k.key] = 0
               } else this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? this.curDevInfo[k.value] + 'kWh' : 0
+            }
+            else if (k.key === 'New installation or not') {
+              this.chargeInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
             }
             else if (index === 4) {
               if (+this.curDevInfo.installation === 2) {
@@ -2143,11 +2166,11 @@ export default {
         this.curDevInfo.loadList = arrLoad
         this.inverterInfo = this.curDevInfo
         if (+this.curDevInfo.installation === 2) {
-          this.inverterInfo.Lifetime = '--'
+          this.inverterInfo.lifetime = '--'
         } else {
           let resStr = ''
           resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
-          this.inverterInfo.Lifetime = resStr
+          this.inverterInfo.lifetime = resStr
         }
       } else if (+this.active === 6) {
         let arr = [

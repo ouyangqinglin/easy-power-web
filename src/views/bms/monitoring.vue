@@ -35,11 +35,11 @@
             </el-col>
             <el-col :span="6">
               <div class="label">Hardware version</div>
-              <div class="value">{{ base.hardVersion }}</div>
+              <div class="value">{{ base.hardVersion || '--' }}</div>
             </el-col>
             <el-col :span="6">
               <div class="label">software version</div>
-              <div class="value">{{ base.version }}</div>
+              <div class="value">{{ base.version || '--' }}</div>
             </el-col>
             <el-col :span="6">
               <div class="label">Status</div>
