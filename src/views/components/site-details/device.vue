@@ -242,7 +242,7 @@
                 </div>
                 <div class="item-body-item charge">
                   <div class="item-body-item-key">Rated Power (kW)</div>
-                  <div class="item-body-item-value">{{ inverterInfo.capacity }}</div>
+                  <div class="item-body-item-value">{{ inverterInfo.nameplateCapacity }}</div>
                 </div>
                 <div class="item-body-item charge">
                   <div class="item-body-item-key">Lifetime</div>
