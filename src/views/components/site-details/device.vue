@@ -1606,8 +1606,7 @@ export default {
       for(i; i < arr.length; i++) {
         if (arr[i]) break
       }
-      if (i < arr.length) this.addSubType = false
-      else this.addSubType = true
+      this.addSubType = i >= arr.length
     },
     addDevice() {
       this.fillAddDialog()
@@ -1617,6 +1616,7 @@ export default {
       this.addShow = false
       this.delShow = false
       this.delSubType = ''
+      this.addSubType = true
     },
     fillAddDialog() {
       let haveTypeList = [4, 1, 2, 6, 3]
