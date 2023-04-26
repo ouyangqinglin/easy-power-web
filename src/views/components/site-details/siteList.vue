@@ -25,13 +25,9 @@
     <el-table v-loading="loading" :data="atiUserList"
               :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
               border
+              ref="multipleTable"
               @selection-change="handleSelectionChange"
     >
-<!--      <el-table-column width="85">-->
-<!--        <template slot-scope="{ row }">-->
-<!--          <el-radio class="my-radio" v-model="chooseRadio" :label="row.id"></el-radio>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column type="selection" width="75"></el-table-column>
       <el-table-column label="Site" align="center" prop="siteName" />
       <el-table-column label="Site Code" align="center" prop="siteCode" />
@@ -61,6 +57,7 @@ export default {
   name: "comp-add-dialog",
   props: {
     show: Boolean,
+    haveSiteList: Array | Object
   },
   data() {
     return {
@@ -122,19 +119,14 @@ export default {
       this.getList();
     }
   },
-  created() {
+  mounted() {
     this.getList();
   },
   methods: {
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
     change() {
-      // let installer
-      // this.atiUserList.forEach(i => {
-      //   if (i.id === this.chooseRadio) installer = i
-      // })
-      // this.$emit('change', installer)
       this.$emit('change', this.multipleSelection)
       this.beforeClose()
     },
@@ -150,9 +142,37 @@ export default {
             if (!i[k]) i[k] = '--'
           })
         })
-        this.atiUserList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+        this.atiUserList = response.rows
+        this.total = response.total
+        this.loading = false
+        // let arr = [], item = {
+        // }
+        // response.rows.forEach(i => {
+        //   item = {
+        //     siteCode: i.siteCode,
+        //     id: i.id,
+        //     siteName: i.siteName
+        //   }
+        //   arr.push(item)
+        // })
+        // this.atiUserList = arr
+        // let arr2 = []
+        // this.haveSiteList.forEach(i => {
+        //   item = {
+        //     siteCode: i.siteCode,
+        //     id: i.id,
+        //     siteName: i.siteName
+        //   }
+        //   arr2.push(item)
+        // })
+        // arr2.forEach(item => {
+        //   for(let i=0; i<this.atiUserList.length; i++){
+        //     if(item === this.atiUserList[i]){
+        //       this.$refs.multipleTable.toggleRowSelection(this.atiUserList[i])
+        //     }
+        //   }
+        // })
+
       });
     },
     // 取消按钮

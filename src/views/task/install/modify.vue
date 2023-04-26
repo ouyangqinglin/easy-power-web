@@ -63,6 +63,9 @@
           <template v-else-if="i.prop === 'address'">
             <el-input v-model="base[i.prop]" type="textarea" maxlength="50"></el-input>
           </template>
+          <template v-else-if="i.prop === 'phone'">
+            <el-input @input="checkPhone" v-model="base[i.prop]" type="text" maxlength="20"></el-input>
+          </template>
           <template v-else>
             <el-input :disabled="!(index > 5)" v-model="base[i.prop]"></el-input>
           </template>
@@ -88,7 +91,7 @@
         <el-button @click="cancel">Cancel</el-button>
       </common-flex>
     </el-card>
-    <AddDialog :show.sync="showModel" :type="2" @change="getInstaller" header="Please select a installer" />
+    <AddDialog :show.sync="showModel" :type="2" @change="getInstaller" :haveSelect="base.installUid" header="Please select a installer" />
   </div>
 </template>
 
@@ -183,12 +186,16 @@ export default {
     })
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     cancel() {
       history.go(-1)
     },
     getInstaller(data) {
       this.installerInfo = data
       this.base.installer = data.userName
+      this.base.installUid = data.id
     },
     // 打开add弹窗
     openAdd() {

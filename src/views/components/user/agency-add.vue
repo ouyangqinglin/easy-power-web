@@ -16,6 +16,9 @@
             <template v-else-if="i.prop === 'agency'">
               <el-input maxlength="50" v-model="base[i.prop]"></el-input>
             </template>
+            <template v-else-if="i.prop === 'phone'">
+              <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
+            </template>
             <template v-else-if="i.prop === 'status'">
               <el-select style="width: 100%" v-model="base[i.prop]">
                 <el-option
@@ -119,6 +122,9 @@ export default {
     }
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     beforeClose() {
       this.$emit('update:show', false)
     },

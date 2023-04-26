@@ -32,3 +32,7 @@ Vue.prototype.DATE_FORMAT = function (fmt, date) {
   }
   return fmt
 }
+
+Vue.prototype.PHONE_REG = function (phone) {
+  return phone.replace(/[^0-9+-]/g, '')
+}

@@ -641,6 +641,7 @@ export default {
         orderRes(data).then(res => {
           if (+res.data === 3) {
             if(times > 15) {
+              times = 1
               clearInterval(timerInter)
               this.getDeviceSet()
               this.setLoading.close()

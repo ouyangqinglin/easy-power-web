@@ -51,6 +51,9 @@
                 </el-option>
               </el-select>
             </template>
+            <template v-else-if="i.prop === 'phone'">
+              <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
+            </template>
             <template v-else>
               <el-input :class="{smallPlace: i.prop === 'password'}"  :placeholder="i.placeholder" v-model="base[i.prop]"></el-input>
             </template>
@@ -242,6 +245,9 @@ export default {
     }
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getRoleList() {
       let data = {
         pageNum: 1,

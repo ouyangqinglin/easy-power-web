@@ -4,7 +4,7 @@
       <el-input v-model="user.nickName" maxlength="30" />
     </el-form-item>
     <el-form-item label="Phone Number" prop="phonenumber">
-      <el-input v-model="user.phonenumber" />
+      <el-input v-model.trim="user.phonenumber" @input="checkPhone" maxlength="20" />
     </el-form-item>
 <!--    <el-form-item label="邮箱" prop="email">-->
 <!--      <el-input v-model="user.email" maxlength="50" />-->
@@ -32,7 +32,7 @@ export default {
       rules: {
         nickName: [
           { required: true, message: "Please enter", trigger: "blur" }
-        ],
+        ]
         // email: [
         //   { required: true, message: "邮箱地址不能为空", trigger: "blur" },
         //   {
@@ -45,6 +45,9 @@ export default {
     };
   },
   methods: {
+    checkPhone() {
+      this.user.phonenumber = this.PHONE_REG(this.user.phonenumber)
+    },
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {

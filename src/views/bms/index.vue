@@ -45,7 +45,12 @@
             <span>Operat</span>
             <el-tooltip effect="dark" placement="top">
               <span slot="content">
-                Click 'Follow' to retain historical data<br>of battery cellsCancel the following<br>and historical data will be lost.only<br>real-time data can be viewed.
+                Click 'Follow' to retain the collected real-time data<br>
+                of battery cells and temperature; Cancel 'Follow' and<br>
+                only view battery cells and temperature real-time data<br>
+                and data retained during historical follow periods.<br>
+                Regardless of whether it is' followed 'or not,the data <br>
+                viewing ofthe battery pack is not affected
               </span>
               <img style="width: 18px; margin-left: 14px" :src="require('@img/question.svg')" alt="">
             </el-tooltip>

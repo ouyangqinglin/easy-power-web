@@ -38,7 +38,7 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="phone" label="Phone" style="margin-right: 90px">
-            <el-input v-model="base.phone" type="text" />
+            <el-input @input="checkPhone" v-model="base.phone" type="text" maxlength="20" />
           </el-form-item>
         </common-flex>
         <el-form-item prop="address" label="Address">
@@ -66,7 +66,7 @@
         <el-button @click="cancel">Cancel</el-button>
       </common-flex>
     </el-card>
-    <AddDialog :show.sync="show" :type="2" @change="getRepairman" header="Please select a Repairman" />
+    <AddDialog :show.sync="show" :type="2" @change="getRepairman" :haveSelect="base.installUid" header="Please select a Repairman" />
   </div>
 </template>
 
@@ -137,6 +137,9 @@ export default {
     this.getReCustomer(this.base.siteCode)
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getReCustomer(code) {
       let data = {
         pageNum: 1,
@@ -156,6 +159,7 @@ export default {
     },
     getRepairman(i) {
       this.repairmanInfo = i
+      this.base.installUid = this.repairmanInfo.id
     },
     beforeClose() {
       this.show = false

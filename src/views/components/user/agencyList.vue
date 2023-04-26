@@ -27,7 +27,7 @@
     >
             <el-table-column width="85">
               <template slot-scope="{ row }">
-                <el-radio class="my-radio" v-model="chooseRadio" :label="row.agencyCode"></el-radio>
+                <el-radio class="my-radio" v-model="chooseRadio" :label="row.id"></el-radio>
               </template>
             </el-table-column>
       <el-table-column label="Agency" align="center" prop="agency" />
@@ -53,11 +53,13 @@
 
 <script>
 import { getAgencyList } from "@/api/agency"
+import {addAtiUser, delAtiUser, getAtiUser, updateAtiUser} from "@/api/user";
 
 export default {
   name: "comp-add-dialog",
   props: {
     show: Boolean,
+    agencyId: String | Object
   },
   data() {
     return {
@@ -121,7 +123,7 @@ export default {
       this.getList();
     }
   },
-  created() {
+  mounted() {
     this.getList();
   },
   methods: {
@@ -131,7 +133,7 @@ export default {
     change() {
       let installer
       this.atiUserList.forEach(i => {
-        if (i.agencyCode === this.chooseRadio) installer = i
+        if (i.id === this.chooseRadio) installer = i
       })
       this.$emit('change', installer)
       this.beforeClose()
@@ -150,7 +152,9 @@ export default {
           })
         })
         this.atiUserList = response.rows;
-        this.total = response.total;
+        let item = this.atiUserList.find(i => i.id === this.agencyId)
+        if (item) this.chooseRadio = item.id
+        this.total = response.total
         this.loading = false
       });
     },

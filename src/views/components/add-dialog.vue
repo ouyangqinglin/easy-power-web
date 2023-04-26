@@ -56,7 +56,8 @@ export default {
   props: {
     show: Boolean,
     type: Number,
-    header: String
+    header: String,
+    haveSelect: String | Object
   },
   data() {
     return {
@@ -126,7 +127,7 @@ export default {
       this.getList();
     }
   },
-  created() {
+  mounted() {
     this.optionParams.type = 1
     this.getList();
   },
@@ -156,8 +157,10 @@ export default {
             if (!i[k]) i[k] = '--'
           })
         })
-        this.atiUserList = response.rows;
-        this.total = response.total;
+        this.atiUserList = response.rows
+        let item = this.atiUserList.find(i => i.id === this.haveSelect)
+        if (item) this.chooseRadio = item.id
+        this.total = response.total
         this.loading = false;
       });
     },

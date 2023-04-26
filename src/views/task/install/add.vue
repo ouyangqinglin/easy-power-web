@@ -18,6 +18,9 @@
           <template v-else-if="i.prop === 'type'">
             <el-input disabled v-model="['', 'Repair', 'Installation'][2]"></el-input>
           </template>
+          <template v-else-if="i.prop === 'phone'">
+            <el-input @input="checkPhone" v-model="base[i.prop]" type="text" maxlength="20"></el-input>
+          </template>
           <template v-else-if="i.prop === 'status'">
             <el-input disabled v-model="['', 'Pending', 'Processing', 'Complete'][base[i.prop]]"></el-input>
           </template>
@@ -46,7 +49,7 @@
         <el-button @click="cancel">Cancel</el-button>
       </common-flex>
     </el-card>
-    <AddDialog :show.sync="showModel" :type="2" @change="getInstaller" header="Please select a installer" />
+    <AddDialog :show.sync="showModel" :type="2" @change="getInstaller" :haveSelect="base.installUid" header="Please select a installer" />
   </div>
 </template>
 
@@ -148,11 +151,15 @@ export default {
     })
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     cancel() {
       history.go(-1)
     },
     getInstaller(data) {
       this.installerInfo = data
+      this.base.installUid = this.installerInfo.id
     },
     // 打开add弹窗
     openAdd() {

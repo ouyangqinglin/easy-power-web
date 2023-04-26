@@ -13,6 +13,9 @@
             <template v-if="i.prop === 'remark'">
               <el-input style="width: 40vw" type="textarea" maxlength="200" v-model="base[i.prop]"></el-input>
             </template>
+            <template v-else-if="i.prop === 'phone'">
+              <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
+            </template>
             <template v-else-if="i.prop === 'status'">
               <el-select style="width: 100%" v-model="base[i.prop]" :disabled="+id === +$store.state.user.userId">
                 <el-option
@@ -77,8 +80,8 @@
         <el-button size="small" @click="$emit('update:show', false)">Cancel</el-button>
       </common-flex>
     </el-dialog>
-    <siteList :show.sync="siteShow" @change="getSelectSite"/>
-    <agentList :show.sync="agencyShow" @change="getSelectAgent"/>
+    <siteList :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
+    <agentList :show.sync="agencyShow" :agencyId="base.agencyId"  @change="getSelectAgent"/>
   </div>
 </template>
 
@@ -230,6 +233,9 @@ export default {
     this.getRoleList()
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getRoleList() {
       let data = {
         pageNum: 1,
@@ -248,6 +254,7 @@ export default {
       })
     },
     getSelectSite(v) {
+      console.log('out', v)
       this.siteList = [...this.siteList, ...v]
       this.siteList = this.removeDuplicateObj(this.siteList)
     },

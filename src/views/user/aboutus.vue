@@ -17,7 +17,7 @@
                 <el-input v-model="base.address" type="textarea"></el-input>
               </el-form-item>
               <el-form-item label="Support Phone" prop="phone">
-                <el-input v-model="base.phone"></el-input>
+                <el-input v-model="base.phone" @input="checkPhone" maxlength="20"></el-input>
               </el-form-item>
               <el-form-item label="Support Email" prop="email">
                 <el-input v-model="base.email"></el-input>
@@ -67,6 +67,9 @@ export default {
     this.getBase()
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getBase() {
       getContact().then(res => {
         if (res.rows.length) {
