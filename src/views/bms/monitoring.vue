@@ -88,6 +88,9 @@
         </div>
         <div class="line" id="line"></div>
       </div>
+      <div class="chart-container" style="height: 200px" v-else>
+        <no-data />
+      </div>
     </el-card>
     <Trend :show.sync="show" :dataKey="curItem" />
   </div>
@@ -222,7 +225,7 @@ export default {
     let dateVal = new Date()
     return {
       curItem: -1,
-      curSeries: [0],
+      curSeries: [],
       show: false,
       dataType: 0,
       dateVal,
@@ -271,6 +274,10 @@ export default {
     if(this.$route.params.info) localStorage.setItem('info', this.$route.params.info)
     let info = JSON.parse(localStorage.getItem('info'))
     this.voltageList = info.cellVList
+    if (info.cellVList.length) {
+      this.curSeries = []
+      this.curSeries.push(0)
+    }
     this.cellTList = info.cellTList
     this.envTList = info.envTList
     this.mosTList = info.mOSTList
@@ -377,6 +384,7 @@ export default {
           option.series.push(item)
         }
       }
+      if (!this.curSeries.length) return
       clearTimeout(timer)
       timer = setTimeout(() => {
         if(chartIns) chartIns.dispose()
