@@ -84,8 +84,8 @@
         <div class="tips posa">After submission, the initial password<br>will be sent to the user's mailbox</div>
       </common-flex>
     </el-dialog>
-    <siteList :show.sync="siteShow" @change="getSelectSite"/>
-    <agentList :show.sync="agencyShow" @change="getSelectAgent"/>
+    <siteList :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
+    <agentList :show.sync="agencyShow" :agencyId="base.agencyId" @change="getSelectAgent"/>
   </div>
 </template>
 
@@ -266,11 +266,12 @@ export default {
       })
     },
     getSelectSite(v) {
+      console.log(v)
       this.siteList = [...this.siteList, ...v]
       this.siteList = this.removeDuplicateObj(this.siteList)
     },
     getSelectAgent(v) {
-      this.base.agentUid = v.id
+      this.base.agencyId = v.id
       this.base.agentName = v.agency
     },
     // 去重
@@ -303,7 +304,7 @@ export default {
             email: this.base.email,
             password: this.base.password,
             userName: this.base.userName,
-            agencyId: +this.base.agentUid,
+            agencyId: +this.base.agencyId,
             remark: this.base.remark,
             type: +this.type,
             phone: this.base.phone,

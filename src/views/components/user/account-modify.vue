@@ -254,7 +254,6 @@ export default {
       })
     },
     getSelectSite(v) {
-      console.log('out', v)
       this.siteList = [...this.siteList, ...v]
       this.siteList = this.removeDuplicateObj(this.siteList)
     },
