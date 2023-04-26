@@ -345,12 +345,12 @@ export default {
             arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(2))
           }
           let item = {
-            name: `T${k+1}`,
+            name: `T${this.curSeries[k]+1}`,
             symbol: "none",
             type: 'line',
             smooth: true,
             itemStyle: {
-              color: color[k]
+              color: color[this.curSeries[k]]
             },
             data: arr // 接受接口数据值数组
           }
@@ -365,12 +365,12 @@ export default {
             arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(2))
           }
           let item = {
-            name: `Cell${k+1}`,
+            name: `Cell${this.curSeries[k]+1}`,
             symbol: "none",
             type: 'line',
             smooth: true,
             itemStyle: {
-              color: color[k]
+              color: color[this.curSeries[k]]
             },
             data: arr // 接受接口数据值数组
           }
@@ -400,6 +400,7 @@ export default {
       if (this.curSeries.includes(k)) {
         if (this.curSeries.length !== 1) this.curSeries.splice(this.curSeries.indexOf(k), 1)
       } else this.curSeries.push(k)
+      this.curSeries = this.curSeries.sort((a, b) => a - b)
       this.initCanvas()
     }
   }

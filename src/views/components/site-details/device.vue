@@ -912,7 +912,6 @@ export default {
       curPv: '',
       activeBattery: 'first',
       activePv: 'first',
-      loading: '',
       dynamicSoc: '',
       queryParams: {
         pageNum: 1,
@@ -1349,14 +1348,6 @@ export default {
         if (pvInstance) pvInstance.resize()
       }, 500)
     },
-    openLoading() {
-      this.loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-    },
     getOrderRes() {
       let data = {
         sn: this.sn,
@@ -1370,17 +1361,17 @@ export default {
             if(times > 15) {
               clearInterval(timerInter)
               this.getList()
-              this.loading.close()
+              this.waitLoading.close()
               return this.$modal.msgError('timeout')
             }
             this.getOrderRes()
           } else {
             if (+res.data === 1) {
               this.$modal.msgSuccess('SUCCESS')
+              this.getList()
             } else this.$modal.msgError(statusList[+res.data])
             clearInterval(timerInter)
-            this.getDeviceSet()
-            this.loading.close()
+            this.waitLoading.close()
           }
         })
       }, 1000)
@@ -1393,7 +1384,7 @@ export default {
       stopCharge(data).then(res => {
         let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
         if (+res.data === 3) {
-          this.openLoading()
+          this.requestLoading()
           this.getOrderRes()
         } else this.$modal.msg(statusList[+res.data])
       })
