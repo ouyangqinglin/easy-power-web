@@ -453,7 +453,7 @@
 
       <common-flex style="margin-top: 30px" justify="center">
         <el-button @click="submitAdd" :disabled="addSubType">Submit</el-button>
-        <el-button @click="addShow = false; fillAddDialog()">Cancel</el-button>
+        <el-button @click="addShow = false; fillAddDialog(); addSubType = true;">Cancel</el-button>
       </common-flex>
     </el-dialog>
     <el-dialog v-if="delShow" :visible.sync="delShow" title="Delete Device"
