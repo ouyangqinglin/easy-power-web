@@ -1498,6 +1498,7 @@ export default {
         if ([2, 6, 3].includes(+v)) {
           this.addDialogInfo[v].forEach((i, index) => {
             item = {
+              siteCode: this.queryParams.siteCode,
               deviceType: +i.deviceType,
               serialNumber: i.serialNumber,
               nameplateCapacity: +i.nameplateCapacity,
@@ -1508,6 +1509,7 @@ export default {
           })
         } else if (+v === 1) {
           item = {
+            siteCode: this.queryParams.siteCode,
             deviceType: +v,
             serialNumber: this.addDialogInfo[v]?.serialNumber,
             nameplateCapacity: +this.addDialogInfo[v]?.nameplateCapacity,
@@ -1516,6 +1518,7 @@ export default {
           if (this.addDialogInfo[v]?.serialNumber) deviceList.push(item)
         } else {
           item = {
+            siteCode: this.queryParams.siteCode,
             deviceType: +v,
             serialNumber: this.addDialogInfo[v]?.serialNumber,
           }
