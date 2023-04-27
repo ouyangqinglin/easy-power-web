@@ -24,7 +24,6 @@
 
     <el-table v-loading="loading" :data="atiUserList"
               :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
-              border
               @selection-change="handleSelectionChange"
     >
             <el-table-column width="85">
@@ -137,7 +136,6 @@ export default {
         if (i.id === this.chooseRadio) installer = i
       })
       this.$emit('change', installer)
-      console.log(installer)
       this.$router.push({name: 'Repair-add', params: installer})
       this.beforeClose()
     },

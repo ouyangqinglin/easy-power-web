@@ -1905,7 +1905,7 @@ export default {
                 this.dynamicSoc = 0
                 return
               }
-              this.batteryInfo[index]['info'][k.key] = ((this.curDevInfo[k.value] / this.curDevInfo['capacity']) * 100).toFixed(0) + '%'
+              this.batteryInfo[index]['info'][k.key] = this.curDevInfo.soc
               this.dynamicSoc = this.curDevInfo[k.value] / this.curDevInfo['capacity']
             } else if (k.key === 'Current') {
               if (+this.base.storeConnectStatus === 2) {
@@ -1928,7 +1928,7 @@ export default {
             } else if (k.key === 'New installation or not') {
               this.batteryInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
             } else if (index === 4 || index === 3) {
-              if (+this.curDevInfo.installation === 2) {
+              if (+this.curDevInfo.installation === 2 && k.key === 'Lifetime') {
                 this.batteryInfo[index]['info'][k.key] = '--'
               } else {
                 if (index === 3) {

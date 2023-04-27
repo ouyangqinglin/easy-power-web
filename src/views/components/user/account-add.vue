@@ -84,7 +84,7 @@
         <div class="tips posa">After submission, the initial password<br>will be sent to the user's mailbox</div>
       </common-flex>
     </el-dialog>
-    <siteList :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
+    <siteList v-if="siteShow" :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
     <agentList :show.sync="agencyShow" :agencyId="base.agencyId" @change="getSelectAgent"/>
   </div>
 </template>
@@ -266,7 +266,6 @@ export default {
       })
     },
     getSelectSite(v) {
-      console.log(v)
       this.siteList = [...this.siteList, ...v]
       this.siteList = this.removeDuplicateObj(this.siteList)
     },

@@ -24,11 +24,13 @@
 
     <el-table v-loading="loading" :data="atiUserList"
               :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
-              border
               ref="multipleTable"
+              :row-key="(row) => { return row.id }"
+              @select="handleSelect"
+              @select-all="handleSelectAll"
               @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="75"></el-table-column>
+      <el-table-column type="selection" :reserve-selection="true" width="75"></el-table-column>
       <el-table-column label="Site" align="center" prop="siteName" />
       <el-table-column label="Site Code" align="center" prop="siteCode" />
     </el-table>
@@ -61,6 +63,7 @@ export default {
   },
   data() {
     return {
+      selected: [],
       multipleSelection: [],
       chooseRadio: '',
       // 遮罩层
@@ -109,29 +112,92 @@ export default {
     }
   },
   watch: {
-    show(v) {
-      if (!v) return
-      Object.keys(this.queryParams).forEach(i => {
-        this.queryParams[i] = ''
-      })
-      this.queryParams.pageNum = 1
-      this.queryParams.pageSize = 10
-      this.getList();
+    show: {
+      immediate: true,
+      handler(v) {
+        if (!v) return
+        Object.keys(this.queryParams).forEach(i => {
+          this.queryParams[i] = ''
+        })
+        this.queryParams.pageNum = 1
+        this.queryParams.pageSize = 10
+        this.getList()
+      }
     }
   },
-  mounted() {
-    this.getList();
-  },
   methods: {
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable?.toggleRowSelection(row)
+        });
+      } else {
+        this.$refs.multipleTable?.clearSelection()
+      }
+    },
+    handleCurrentChange() {
+      let rows = []
+      this.atiUserList.forEach(row => {
+        this.selected.forEach(item => {
+          if (row.id === item.id) {
+            rows.push(row)
+          }
+        })
+      })
+      this.toggleSelection(rows)
+    },
+    handleSelectAll(selection) {
+      if (selection.length === 0) {
+        this.atiUserList.forEach(item => {
+          this.handleDelItem(item)
+        })
+      } else {
+        this.selected = this.unique(
+          this.selected.concat(this.atiUserList)
+        )
+      }
+    },
+    unique(arr) {
+      let obj = {}
+      arr = arr.reduce((newArr, next) => {
+        if (obj[next.id]) {}
+        else {
+          obj[next.id] = true
+          newArr.push(next)
+        }
+        return newArr
+      }, [])
+      return arr
+    },
+    handleSelect(selection, row) {
+      let isExited = false
+      this.selected.forEach(item => {
+        if(item.id === row.id) {
+          isExited = true
+        }
+      })
+      if (isExited) this.handleDelItem(row)
+      else this.selected.push(row)
+    },
+    handleDelItem(row){
+      let index = -1
+      this.selected.forEach((item, idx) => {
+        if(item.id === row.id) {
+          index = idx
+        }
+      })
+      if (index >= 0) this.selected.splice(index, 1)
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
     change() {
       this.$emit('change', this.multipleSelection)
-      this.beforeClose()
+      this.$emit('update:show', false)
     },
     beforeClose() {
       this.$emit('update:show', false)
+      this.selected = this.multipleSelection = []
     },
     /** 查询用户列表 */
     getList() {
@@ -145,35 +211,9 @@ export default {
         this.atiUserList = response.rows
         this.total = response.total
         this.loading = false
-        // let arr = [], item = {
-        // }
-        // response.rows.forEach(i => {
-        //   item = {
-        //     siteCode: i.siteCode,
-        //     id: i.id,
-        //     siteName: i.siteName
-        //   }
-        //   arr.push(item)
-        // })
-        // this.atiUserList = arr
-        // let arr2 = []
-        // this.haveSiteList.forEach(i => {
-        //   item = {
-        //     siteCode: i.siteCode,
-        //     id: i.id,
-        //     siteName: i.siteName
-        //   }
-        //   arr2.push(item)
-        // })
-        // arr2.forEach(item => {
-        //   for(let i=0; i<this.atiUserList.length; i++){
-        //     if(item === this.atiUserList[i]){
-        //       this.$refs.multipleTable.toggleRowSelection(this.atiUserList[i])
-        //     }
-        //   }
-        // })
-
-      });
+        this.selected = [...this.haveSiteList]
+        this.handleCurrentChange()
+      })
     },
     // 取消按钮
     cancel() {
@@ -203,58 +243,6 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加用户";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getAtiUser(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改用户";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateAtiUser(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addAtiUser(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + ids + '"的数据项？').then(function() {
-        return delAtiUser(ids);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('ati/atiUser/export', {
-        ...this.queryParams
-      }, `atiUser_${new Date().getTime()}.xlsx`)
-    }
   }
 }
 </script>

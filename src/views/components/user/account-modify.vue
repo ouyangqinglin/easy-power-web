@@ -80,7 +80,7 @@
         <el-button size="small" @click="$emit('update:show', false)">Cancel</el-button>
       </common-flex>
     </el-dialog>
-    <siteList :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
+    <siteList v-if="siteShow" :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
     <agentList :show.sync="agencyShow" :agencyId="base.agencyId"  @change="getSelectAgent"/>
   </div>
 </template>

@@ -42,7 +42,7 @@
           </el-form-item>
         </common-flex>
         <el-form-item prop="address" label="Address">
-          <el-input v-model="base.address" max-length="200" type="text" />
+          <el-input v-model="base.address" maxlength="50" type="text" />
         </el-form-item>
       </el-form>
     </el-card>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getTaskInfo, createTask } from '@/api/task'
+import { createTask } from '@/api/task'
 import { getAtiUser, getReCustomer } from '@/api/user'
 import AddDialog from "@/views/components/add-dialog"
 
@@ -131,6 +131,7 @@ export default {
       localStorage.setItem('info', JSON.stringify(this.$route.params))
     }
     let data = JSON.parse(localStorage.getItem('info'))
+    data.installUid = ''
     data.address = `${data.address}${data.city}${data.province}${data.country}`
     this.base = {...data, ...this.base}
     this.getCustomer(this.base.uid)
