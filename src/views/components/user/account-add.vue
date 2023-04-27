@@ -27,7 +27,7 @@
                 </el-option>
               </el-select>
             </template>
-            <template v-else-if="i.prop === 'agentUid'">
+            <template v-else-if="i.prop === 'agencyId'">
               <div class="posr">
                 <el-input :disabled="!(+($store.state.user.agencyId) === -1)" readonly @focus="agencyShow = true" :placeholder="i.placeholder" v-model="base['agentName']"></el-input>
                 <i @click="+($store.state.user.agencyId) === -1? agencyShow = true : ''" class="el-icon-search posa right-search"></i>
@@ -134,7 +134,7 @@ export default {
         email: '',
         userName: '',
         phone: '',
-        agentUid: '',
+        agencyId: '',
         password: '',
         remark: '',
         agentName: '',
@@ -164,7 +164,7 @@ export default {
         roleIds: [
           { required: true, message: 'Please select', trigger: ['blur', 'change']}
         ],
-        agentUid: [
+        agencyId: [
           { required: true, message: 'Please select', trigger: 'change'}
         ],
         password: [
@@ -174,7 +174,7 @@ export default {
       formList: [
         {
           label: 'Agency',
-          prop: 'agentUid',
+          prop: 'agencyId',
           placeholder: 'Please select'
         },
         {
