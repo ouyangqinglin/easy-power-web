@@ -108,7 +108,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Remarks" prop="remark">
-            <el-input type="textarea" maxlength="200" v-model="addInfo.remark"></el-input>
+            <el-input type="textarea" maxlength="200" show-word-limit v-model="addInfo.remark"></el-input>
           </el-form-item>
         </common-flex>
       </el-form>
@@ -133,7 +133,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Remarks" prop="remark">
-            <el-input type="textarea" max-length="200" v-model="modifyInfo.remark"></el-input>
+            <el-input type="textarea" show-word-limit max-length="200" v-model="modifyInfo.remark"></el-input>
           </el-form-item>
         </common-flex>
       </el-form>

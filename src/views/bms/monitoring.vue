@@ -290,7 +290,8 @@ export default {
       console.log('base', this.base)
       let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]
       arr.forEach((item, index) => {
-        this.infoList[index]['value'] = item
+        if (item || item === 0) this.infoList[index]['value'] = item
+        else this.infoList[index]['value'] = '--'
       })
     })
     this.getData()

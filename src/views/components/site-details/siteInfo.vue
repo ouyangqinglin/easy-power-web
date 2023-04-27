@@ -12,7 +12,7 @@
             <el-input disabled v-model="['Completed', 'Commissioning'][+base[i.prop] - 1]"></el-input>
           </template>
           <template v-else-if="i.prop === 'address'">
-            <el-input type="textarea" disabled v-model="base[i.prop]"></el-input>
+            <el-input type="textarea" autosize disabled v-model="base[i.prop]"></el-input>
           </template>
           <template v-else>
             <el-input disabled v-model="base[i.prop]"></el-input>
@@ -54,7 +54,7 @@
             <el-input v-model="copyBase[i.prop]" maxlength="50"></el-input>
           </template>
           <template v-else-if="i.prop === 'address'">
-            <el-input type="textarea" maxlength="50" v-model="copyBase[i.prop]"></el-input>
+            <el-input type="textarea" show-word-limit maxlength="50" v-model="copyBase[i.prop]"></el-input>
           </template>
           <template v-else>
             <el-input :disabled="index > 0 && index < 5" v-model="copyBase[i.prop]"></el-input>

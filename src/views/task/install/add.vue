@@ -6,7 +6,7 @@
         <el-form-item v-for="(i, index) of formList" :key="i.prop" :prop="i.prop">
           <template slot="label"><span>{{ i.label }}</span></template>
           <template v-if="i.prop === 'remark'">
-            <el-input maxlength="200" style="width: 60vw" type="textarea" v-model="base[i.prop]"></el-input>
+            <el-input maxlength="200" show-word-limit style="width: 60vw" type="textarea" v-model="base[i.prop]"></el-input>
           </template>
           <template v-else-if="i.prop === 'appointTime'">
             <el-date-picker style="width: 100%" type="datetime" format="M/d/yyyy HH:mm"

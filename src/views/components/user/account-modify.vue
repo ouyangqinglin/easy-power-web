@@ -11,7 +11,7 @@
           <el-form-item :prop="i.prop">
             <template slot="label"><span>{{ i.label }}</span></template>
             <template v-if="i.prop === 'remark'">
-              <el-input style="width: 40vw" type="textarea" maxlength="200" v-model="base[i.prop]"></el-input>
+              <el-input style="width: 40vw" type="textarea" maxlength="200" show-word-limit v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'phone'">
               <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
