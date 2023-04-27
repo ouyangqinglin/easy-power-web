@@ -36,7 +36,7 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="Remarks" prop="remark"></el-table-column>
+        <el-table-column label="Remarks" prop="remark" show-tooltip-when-overflow />
         <el-table-column label="Upload Time" prop="">
           <template slot-scope="{ row }">
             <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.updateTime) }}</span>
