@@ -43,7 +43,7 @@
       @pagination="getList"
     />
     <common-flex style="margin-top: 30px" justify="center">
-      <el-button :type="btnType" :disabled="!multipleSelection.length" @click="change">
+      <el-button :type="btnType" :disabled="!selected.length" @click="change">
         <span>Confirm</span>
       </el-button>
       <el-button @click="cancel">Cancel</el-button>
@@ -64,7 +64,6 @@ export default {
   data() {
     return {
       selected: [],
-      multipleSelection: [],
       chooseRadio: '',
       // 遮罩层
       loading: true,
@@ -108,7 +107,7 @@ export default {
   },
   computed: {
     btnType() {
-      return this.multipleSelection.length ? 'primary' : ''
+      return this.selected.length ? 'primary' : ''
     }
   },
   watch: {
@@ -189,15 +188,14 @@ export default {
       if (index >= 0) this.selected.splice(index, 1)
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val
+      this.selected = val
     },
     change() {
-      this.$emit('change', this.multipleSelection)
+      this.$emit('change', this.selected)
       this.$emit('update:show', false)
     },
     beforeClose() {
       this.$emit('update:show', false)
-      this.selected = this.multipleSelection = []
     },
     /** 查询用户列表 */
     getList() {

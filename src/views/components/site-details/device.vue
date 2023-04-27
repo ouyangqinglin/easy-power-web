@@ -1385,6 +1385,7 @@ export default {
             }
             this.getOrderRes()
           } else {
+            times = 1
             if (+res.data === 1) {
               this.$modal.msgSuccess('SUCCESS')
               this.getList()
