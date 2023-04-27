@@ -35,7 +35,11 @@ const option = {
     trigger: 'axis',
     position: function (pt) {
       return [pt[0] + 20, pt[1] - 10];
-    }
+    },
+    formatter(p) {
+      if (p[0].value === 'NaN') return 'No data'
+      return `${p[0]['name']}<br>${p[0]['marker']}   ${p[0]['value']}<br>`
+    },
   },
   grid: {
     left: '4%',

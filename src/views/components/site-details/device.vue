@@ -510,6 +510,7 @@ const optionBat = {
       return [pt[0] + 20, pt[1] - 10];
     },
     formatter(v) {
+      if (v[0].value === 'NaN') return 'No data'
       if (optionBat.yAxis.name === 'kW') {
         let t1, unit1
         if (v[0].value < 1) {
@@ -626,6 +627,7 @@ const optionPv = {
       return [pt[0] + 20, pt[1] - 10];
     },
     formatter(v) {
+      if (v[0].value === 'NaN') return 'No data'
       let v0, v1, v2, v3, t1, t2, t3, t4, res, unit1, unit2, unit3, unit4
       if (optionPv.yAxis.name === 'kW') {
         if (v[0]) {
@@ -1253,8 +1255,8 @@ export default {
       if (this.batteryHis.batteryType === 'Temperature') {
         optionBat.yAxis.name = '℃'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].maxTemperature)
-          arr2.push(batData[i].minTemperature)
+          arr1.push((+batData[i].maxTemperature).toFixed(2))
+          arr2.push((+batData[i].minTemperature).toFixed(2))
         }
       }
       let itemOne = {
@@ -1282,8 +1284,8 @@ export default {
         optionBat.series.push(itemTwo)
       }
       optionBat.series.push(itemOne)
-      // if (batteryInstance) batteryInstance.dispose()
-      // batteryInstance = echarts.init(document.getElementById('batteryChart'))
+      if (batteryInstance) batteryInstance.dispose()
+      batteryInstance = echarts.init(document.getElementById('batteryChart'))
       batteryInstance.setOption(optionBat)
       console.log('changeBat')
     },
