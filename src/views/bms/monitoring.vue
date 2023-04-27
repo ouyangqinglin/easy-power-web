@@ -13,19 +13,19 @@
           <el-row>
             <el-col :span="6">
               <div class="label">Serial Number</div>
-              <div class="value">{{ base.sn }}</div>
+              <div class="value">{{ base.sn || '--' }}</div>
             </el-col>
             <el-col :span="6">
               <div class="label">Capacity (Wh)</div>
-              <div class="value">{{ base.capacity }}</div>
+              <div class="value">{{ base.capacity || '--' }}</div>
             </el-col>
             <el-col :span="6">
               <div class="label">SOH(%)</div>
-              <div class="value">{{ base.soh }}</div>
+              <div class="value">{{ base.soh || '--' }}</div>
             </el-col>
             <el-col :span="6">
               <div class="label">Cycle Time</div>
-              <div class="value">{{ base.cycles }}</div>
+              <div class="value">{{ base.cycles || '--' }}</div>
             </el-col>
           </el-row>
           <el-row style="margin-top: 12px">
