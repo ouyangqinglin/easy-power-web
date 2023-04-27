@@ -108,6 +108,7 @@
         <el-table-column label="Operat" align="center" fixed="right" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
+              :disabled="+($store.state.user.userId) === +scope.row.id"
               type="text"
               @click="openModify(scope.row)"
               v-hasPermi="['ati:user:account:edit']"
