@@ -74,7 +74,7 @@
                width="46%">
       <el-form :model="reason" :rules="rule" ref="reasonForm">
         <el-form-item label="Reason" prop="closeReason">
-          <el-input v-model.trim="reason.closeReason" type="textarea" placeholder="Please enter"></el-input>
+          <el-input v-model.trim="reason.closeReason" maxlength="200" show-word-limit type="textarea" placeholder="Please enter"></el-input>
         </el-form-item>
       </el-form>
       <common-flex style="margin-top: 60px" justify="center">
