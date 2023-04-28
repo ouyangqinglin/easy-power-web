@@ -1527,6 +1527,11 @@ export default {
           if (this.addDialogInfo[v]?.serialNumber) deviceList.push(item)
         }
       }
+      let uniqueObj = {}
+      for (let i = 0; i < deviceList.length; i++) {
+        if (!uniqueObj[deviceList[i].serialNumber]) uniqueObj[deviceList[i].serialNumber] = 1
+        else return this.$modal.msgError("sn:Coding repetition")
+      }
       if (!deviceList.length) return
       let i = 0
       let mapCapacity = {
