@@ -133,7 +133,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Remarks" prop="remark">
-            <el-input type="textarea" show-word-limit max-length="200" v-model="modifyInfo.remark"></el-input>
+            <el-input type="textarea" show-word-limit maxlength="200" v-model="modifyInfo.remark"></el-input>
           </el-form-item>
         </common-flex>
       </el-form>
@@ -149,7 +149,6 @@
 import {listRole, addRole, updateRole, delRole} from "@/api/system/role"
 import ConfigRole from '@/views/components/user/authority-config'
 import {mapState} from "vuex"
-import {delTask} from "@/api/task"
 import {roleMenuTreeselect} from "@/api/system/menu"
 
 

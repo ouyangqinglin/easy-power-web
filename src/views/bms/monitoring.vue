@@ -311,7 +311,7 @@ export default {
       if (this.dataList.length) {
         this.curSeries = [0]
         this.initCanvas()
-      }
+      } else this.curSeries = []
     },
     requestLoading() {
       this.loading = this.$loading({

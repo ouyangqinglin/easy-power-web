@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import { getAtiUser } from '@/api/user'
 import { getTaskInfo, modifyTask } from '@/api/task'
 import AddDialog from "@/views/components/add-dialog"
 

@@ -163,7 +163,6 @@
 
 <script>
 import { getCodeImg } from "@/api/login";
-import { getToken, setToken, removeToken } from '@/utils/auth'
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import {resetUserPwd, updateUserPwd, forgetResetPas, sendCode } from "@/api/system/user";

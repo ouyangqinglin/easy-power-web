@@ -89,7 +89,7 @@
 import siteList from '@/views/components/site-details/siteList'
 import agentList from '@/views/components/user/agencyList'
 import {listRole} from "@/api/system/role"
-import {addAtiUser, getAtiUser, updateAtiUser} from '@/api/user'
+import {getAtiUser, updateAtiUser} from '@/api/user'
 
 export default {
   name: "account-modify",
