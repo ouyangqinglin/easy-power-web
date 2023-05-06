@@ -5,7 +5,7 @@
       <el-form class="pages-task-add-card-form" :model="base" :rules="rules" ref="ruleForm">
         <el-form-item v-for="(i, index) of formList" :key="i.prop" :prop="i.prop">
           <template slot="label"><span>{{ i.label }}</span></template>
-          <template v-if="i.prop === 'remark'">
+          <template v-if="['remark', 'address'].includes(i.prop)">
             <el-input maxlength="200" show-word-limit style="width: 60vw" type="textarea" v-model="base[i.prop]"></el-input>
           </template>
           <template v-else-if="i.prop === 'appointTime'">
