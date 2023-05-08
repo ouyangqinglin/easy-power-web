@@ -117,13 +117,17 @@
                         </template>
                       </div>
                       <div style="margin-top: 16px">
-                        <template v-if="+homeData.allProduce > 1000">
-                          <div class="num">{{ (homeData.allProduce / 1000).toFixed(2) }}</div>
-                          <span>(MWh)</span><br>Lifetime
+                        <template v-if="+homeData.allProduce < 1000">
+                          <div class="num">{{ (+homeData.allProduce).toFixed(2) }}</div>
+                          <span>(Wh)</span><br>Lifetime
+                        </template>
+                        <template v-else-if="+homeData.allProduce > 1000 && +homeData.allProduce < 1000000">
+                          <div class="num">{{ (+homeData.allProduce / 1000).toFixed(2) }}</div>
+                          <span>(kWh)</span><br>Lifetime
                         </template>
                         <template v-else>
-                          <div class="num">{{ homeData.allProduce || '--' }}</div>
-                          <span>(kWh)</span><br>Lifetime
+                          <div class="num">{{ (+homeData.allProduce / 1000000).toFixed(2) }}</div>
+                          <span>(MWh)</span><br>Lifetime
                         </template>
                       </div>
                     </div>
