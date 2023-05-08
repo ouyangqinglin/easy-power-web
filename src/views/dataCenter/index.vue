@@ -3,7 +3,7 @@
     <el-card style="margin-top: 24px">
       <common-flex justify="space-between">
         <p>List</p>
-        <div><el-button type="primary" @click="addShow = true">Add</el-button></div>
+        <div v-hasPermi="['ati:data:add']"><el-button type="primary" @click="addShow = true">Add</el-button></div>
       </common-flex>
       <el-table :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
                 v-loading="loading" :data="list"
@@ -29,9 +29,9 @@
         </el-table-column>
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="100">
           <template slot-scope="scope">
-            <el-button type="text" @click="changeShow(1, scope.row.id)">Detail</el-button>
-            <el-button type="text" @click="changeShow(2, scope.row.id)">Modify</el-button>
-            <el-button type="text" @click="deleteItem(scope.row.id)">Delete</el-button>
+            <el-button v-hasPermi="['ati:data:view']" type="text" @click="changeShow(1, scope.row.id)">Detail</el-button>
+            <el-button v-if="+scope.row.type !== 1" v-hasPermi="['ati:data:edit']" type="text" @click="changeShow(2, scope.row.id)">Modify</el-button>
+            <el-button v-if="+scope.row.type !== 1" v-hasPermi="['ati:data:remove']" type="text" @click="deleteItem(scope.row.id)">Delete</el-button>
           </template>
         </el-table-column>
       </el-table>
