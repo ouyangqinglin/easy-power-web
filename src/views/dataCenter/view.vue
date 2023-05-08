@@ -1,7 +1,7 @@
 <template>
   <div v-if="show">
     <el-dialog
-      title="Newly Build"
+      :title="title"
       :before-close="beforeClose"
       :close-on-click-modal="false"
       width="65%"
@@ -86,6 +86,11 @@ export default {
     show: Boolean,
     id: String | Number,
     type: Number
+  },
+  computed: {
+    title() {
+      return this.type === 1 ? 'Detail' : 'Modify'
+    }
   },
   data() {
     return {
