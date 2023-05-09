@@ -20,10 +20,10 @@
                 <el-input v-model="base.phone" @input="checkPhone" maxlength="20"></el-input>
               </el-form-item>
               <el-form-item label="Support Email" prop="email">
-                <el-input v-model="base.email"></el-input>
+                <el-input v-model="base.email" maxlength="50"></el-input>
               </el-form-item>
               <el-form-item label="Sales Email" prop="salesEmail">
-                <el-input v-model="base.salesEmail"></el-input>
+                <el-input v-model="base.salesEmail" maxlength="50"></el-input>
               </el-form-item>
             </el-form>
           </el-col>

@@ -17,7 +17,7 @@
               <el-input maxlength="50" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'email'">
-              <el-input maxlength="20" v-model="base[i.prop]"></el-input>
+              <el-input maxlength="50" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'status'">
               <el-select style="width: 100%" v-model="base[i.prop]">
