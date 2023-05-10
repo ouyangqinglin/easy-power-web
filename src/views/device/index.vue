@@ -183,6 +183,7 @@ export default {
       })
     },
     getList(type) {
+      this.loading = true
       const typeFace = {
         '1': 'inverterTotal',
         '2': 'batteryTotal',
@@ -201,7 +202,7 @@ export default {
           this.list = storageRes[`${type}~${this.queryParams.pageNum}`].rows
           this.total = storageRes[`${type}~${this.queryParams.pageNum}`].total
         }
-      })
+      }).finally(() => this.loading = false)
     },
     tabToggle() {
       this.queryParams.serialNumber = ''
