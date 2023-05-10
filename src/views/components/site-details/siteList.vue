@@ -31,7 +31,7 @@
               @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" :reserve-selection="true" width="75"></el-table-column>
-      <el-table-column label="Site" align="center" prop="siteName" />
+      <el-table-column label="Site" align="center" prop="siteName" show-tooltip-when-overflow />
       <el-table-column label="Site Code" align="center" prop="siteCode" />
     </el-table>
 

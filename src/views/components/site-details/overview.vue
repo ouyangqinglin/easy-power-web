@@ -1303,11 +1303,11 @@ export default {
                animation: light linear 3s infinite;
              }
              @keyframes light {
-               0% { opacity: .6; transform: scale(.9) }
+               0% { opacity: .6; transform: scale(.8) }
                25% { opacity: .8; transform: scale(1) }
-               50% { opacity: 1; transform: scale(1.1) }
+               50% { opacity: 1; transform: scale(1.2) }
                75% { opacity: .8; transform: scale(1) }
-               100% { opacity: .6; transform: scale(.9) }
+               100% { opacity: .6; transform: scale(.8) }
              }
            }
          }

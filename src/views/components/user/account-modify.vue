@@ -66,7 +66,7 @@
                   :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
         >
           <el-table-column type="index" label="No." prop="id" width="55"></el-table-column>
-          <el-table-column label="Site" prop="siteName"></el-table-column>
+          <el-table-column label="Site" prop="siteName" show-tooltip-when-overflow></el-table-column>
           <el-table-column label="Site Code" prop="siteCode"></el-table-column>
           <el-table-column label="Operat">
             <template slot-scope="scope">

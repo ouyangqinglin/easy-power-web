@@ -5,10 +5,10 @@
         <common-flex>
           <common-flex style="flex-grow: 1">
             <el-form-item label="SN：" prop="serialNumber">
-              <el-input clearable placeholder="Please enter" v-model="queryParams.serialNumber"></el-input>
+              <el-input clearable placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.serialNumber"></el-input>
             </el-form-item>
             <el-form-item label="Site：" prop="siteName">
-              <el-input clearable placeholder="Please enter" v-model="queryParams.siteName"></el-input>
+              <el-input clearable placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.siteName"></el-input>
             </el-form-item>
             <el-form-item label="Follow：" prop="followBms">
               <el-select clearable v-model="queryParams.followBms" placeholder="Please select">
@@ -35,9 +35,9 @@
         </el-table-column>
         <el-table-column label="SN" prop="serialNumber"></el-table-column>
         <el-table-column label="Capacity(kWh)" prop="nameplateCapacity"></el-table-column>
-        <el-table-column label="Site" prop="siteName">
+        <el-table-column label="Site" prop="siteName" show-tooltip-when-overflow>
           <template slot-scope="{ row }">
-            <span style="white-space: pre-wrap">{{ row.siteName }}</span>
+            <span>{{ row.siteName }}</span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" align="center" class-name="small-padding fixed-width" min-width="100">

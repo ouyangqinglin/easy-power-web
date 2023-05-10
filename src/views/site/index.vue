@@ -90,7 +90,7 @@
         </el-table-column>
         <el-table-column label="Site Name" align="center" prop="siteName" min-width="140" show-overflow-tooltip>
           <template slot-scope="{ row }">
-            <span style="white-space: pre-wrap">{{ row.siteName }}</span>
+            <span>{{ row.siteName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Site Code" align="center" prop="siteCode" min-width="130" />
