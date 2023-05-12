@@ -1745,7 +1745,7 @@ export default {
         if (haveInverter) this.$set(this.navBar, 'Inverter', '1')
         if (haveBattery) this.$set(this.navBar, 'Battery', '2')
         if (havePv) this.$set(this.navBar, 'Photovoltaic', '6')
-        if (haveCharge) this.$set(this.navBar, 'Charge pile', '3')
+        if (haveCharge) this.$set(this.navBar, 'EV Charger', '3')
         let haveTypeList = [4, 1, 2, 6, 3]
         let i = 0
         for(i; i < haveTypeList.length; i++) {
