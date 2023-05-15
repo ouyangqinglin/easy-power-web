@@ -957,7 +957,7 @@ export default {
             value: '2'
           },
           {
-            label: 'Charge pile',
+            label: 'EV charger',
             value: '3'
           },
           {
@@ -1058,7 +1058,7 @@ export default {
           },
         },
         {
-          'title': 'Charge pile Operation Time',
+          'title': 'EV charger Operation Time',
           'info': {
             'Lifetime': '',
             'New installation or not': ''
