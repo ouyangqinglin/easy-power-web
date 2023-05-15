@@ -11,9 +11,12 @@
           <el-form-item :prop="i.prop">
             <template slot="label"><span>{{ i.label }}</span></template>
             <template v-if="i.prop === 'remark'">
-              <el-input style="width: 40vw" type="textarea" maxlength="200" v-model="base[i.prop]"></el-input>
+              <el-input style="width: 40vw" type="textarea" show-word-limit maxlength="200" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'userName'">
+              <el-input maxlength="50" v-model="base[i.prop]"></el-input>
+            </template>
+            <template v-else-if="i.prop === 'email'">
               <el-input maxlength="50" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'status'">
@@ -27,7 +30,7 @@
                 </el-option>
               </el-select>
             </template>
-            <template v-else-if="i.prop === 'agentUid'">
+            <template v-else-if="i.prop === 'agencyId'">
               <div class="posr">
                 <el-input :disabled="!(+($store.state.user.agencyId) === -1)" readonly @focus="agencyShow = true" :placeholder="i.placeholder" v-model="base['agentName']"></el-input>
                 <i @click="+($store.state.user.agencyId) === -1? agencyShow = true : ''" class="el-icon-search posa right-search"></i>
@@ -51,6 +54,9 @@
                 </el-option>
               </el-select>
             </template>
+            <template v-else-if="i.prop === 'phone'">
+              <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
+            </template>
             <template v-else>
               <el-input :class="{smallPlace: i.prop === 'password'}"  :placeholder="i.placeholder" v-model="base[i.prop]"></el-input>
             </template>
@@ -66,7 +72,7 @@
                   :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
         >
           <el-table-column type="index" label="No." prop="id" width="55"></el-table-column>
-          <el-table-column label="Site" prop="siteName"></el-table-column>
+          <el-table-column label="Site" prop="siteName" show-tooltip-when-overflow></el-table-column>
           <el-table-column label="Site Code" prop="siteCode"></el-table-column>
           <el-table-column label="Operat">
             <template slot-scope="scope">
@@ -81,8 +87,8 @@
         <div class="tips posa">After submission, the initial password<br>will be sent to the user's mailbox</div>
       </common-flex>
     </el-dialog>
-    <siteList :show.sync="siteShow" @change="getSelectSite"/>
-    <agentList :show.sync="agencyShow" @change="getSelectAgent"/>
+    <siteList v-if="siteShow" :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
+    <agentList :show.sync="agencyShow" :agencyId="base.agencyId" @change="getSelectAgent"/>
   </div>
 </template>
 
@@ -131,7 +137,7 @@ export default {
         email: '',
         userName: '',
         phone: '',
-        agentUid: '',
+        agencyId: '',
         password: '',
         remark: '',
         agentName: '',
@@ -161,7 +167,7 @@ export default {
         roleIds: [
           { required: true, message: 'Please select', trigger: ['blur', 'change']}
         ],
-        agentUid: [
+        agencyId: [
           { required: true, message: 'Please select', trigger: 'change'}
         ],
         password: [
@@ -171,7 +177,7 @@ export default {
       formList: [
         {
           label: 'Agency',
-          prop: 'agentUid',
+          prop: 'agencyId',
           placeholder: 'Please select'
         },
         {
@@ -221,13 +227,13 @@ export default {
     authorityList() {
       const userApp = [
         {
-          label: 'ATI Storage',
+          label: 'EasyPower Storage',
           value: '1'
         }
       ]
       const installApp = [
         {
-          label: 'ATI Install',
+          label: 'EasyPower Install',
           value: '2'
         }
       ]
@@ -242,6 +248,9 @@ export default {
     }
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getRoleList() {
       let data = {
         pageNum: 1,
@@ -264,7 +273,7 @@ export default {
       this.siteList = this.removeDuplicateObj(this.siteList)
     },
     getSelectAgent(v) {
-      this.base.agentUid = v.id
+      this.base.agencyId = v.id
       this.base.agentName = v.agency
     },
     // 去重
@@ -297,7 +306,7 @@ export default {
             email: this.base.email,
             password: this.base.password,
             userName: this.base.userName,
-            agencyId: +this.base.agentUid,
+            agencyId: +this.base.agencyId,
             remark: this.base.remark,
             type: +this.type,
             phone: this.base.phone,

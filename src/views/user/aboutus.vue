@@ -14,16 +14,16 @@
           <el-col :span="8">
             <el-form :rules="rule" :model="base" ref="baseForm" :disabled="edit">
               <el-form-item label="Address" prop="address">
-                <el-input v-model="base.address"></el-input>
+                <el-input v-model="base.address" type="textarea" maxlength="200" show-word-limit></el-input>
               </el-form-item>
               <el-form-item label="Support Phone" prop="phone">
-                <el-input v-model="base.phone"></el-input>
+                <el-input v-model="base.phone" @input="checkPhone" maxlength="20"></el-input>
               </el-form-item>
               <el-form-item label="Support Email" prop="email">
-                <el-input v-model="base.email"></el-input>
+                <el-input v-model="base.email" maxlength="50"></el-input>
               </el-form-item>
               <el-form-item label="Sales Email" prop="salesEmail">
-                <el-input v-model="base.salesEmail"></el-input>
+                <el-input v-model="base.salesEmail" maxlength="50"></el-input>
               </el-form-item>
             </el-form>
           </el-col>
@@ -67,6 +67,9 @@ export default {
     this.getBase()
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getBase() {
       getContact().then(res => {
         if (res.rows.length) {

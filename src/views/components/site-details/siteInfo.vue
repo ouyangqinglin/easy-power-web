@@ -11,6 +11,9 @@
           <template v-if="i.prop === 'siteStatus'">
             <el-input disabled v-model="['Completed', 'Commissioning'][+base[i.prop] - 1]"></el-input>
           </template>
+          <template v-else-if="i.prop === 'address'">
+            <el-input type="textarea" autosize disabled v-model="base[i.prop]"></el-input>
+          </template>
           <template v-else>
             <el-input disabled v-model="base[i.prop]"></el-input>
           </template>
@@ -21,9 +24,9 @@
       <div class="comp-site-info-card-title">Site Correlation Details</div>
       <el-table :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}" class="comp-site-info-card-table" :data="base.userList">
         <el-table-column type="index" width="80" label="No"></el-table-column>
-        <el-table-column label="Owner" prop="userName"></el-table-column>
-        <el-table-column label="E-mail" prop="email"></el-table-column>
-        <el-table-column label="Phone" prop="phone"></el-table-column>
+        <el-table-column label="Owner" prop="userName" show-tooltip-when-overflow />
+        <el-table-column label="E-mail" prop="email" />
+        <el-table-column label="Phone" prop="phone" />
       </el-table>
     </el-card>
     <el-dialog :visible.sync="show" title="Modify"
@@ -50,6 +53,9 @@
           <template v-else-if="i.prop === 'siteName'">
             <el-input v-model="copyBase[i.prop]" maxlength="50"></el-input>
           </template>
+          <template v-else-if="i.prop === 'address'">
+            <el-input type="textarea" show-word-limit maxlength="200" v-model="copyBase[i.prop]"></el-input>
+          </template>
           <template v-else>
             <el-input :disabled="index > 0 && index < 5" v-model="copyBase[i.prop]"></el-input>
           </template>
@@ -69,7 +75,7 @@ import countryList from '../../../../public/country.json'
 import { updateSite } from "@/api/site"
 import { Loader } from "@googlemaps/js-api-loader"
 const loader = new Loader({
-  apiKey: "AIzaSyC7PAFSlgXFNvFg5XVT6YjYr-Uw1amyp-o", //之前的key
+  apiKey: "AIzaSyBKQp9U9gHx7dLGYs6XBZiukvXZsM0JpMw", //之前的key
   version: "weekly", //版本
   libraries: ["places"],
 })

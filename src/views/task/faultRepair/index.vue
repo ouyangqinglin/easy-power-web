@@ -2,8 +2,8 @@
   <div class="app-container pages-fault-repair">
     <el-card class="pages-fault-repair-header" >
       <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="130px">
-        <common-flex style="height: 100%" align="center">
-          <common-flex style="height: 100%" wrap="wrap" align="center">
+        <el-row>
+          <el-col :span="6">
             <el-form-item label="Code：" prop="code" class="same-input">
               <el-input
                 v-model="queryParams.code"
@@ -12,7 +12,9 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="Creation Time：" prop="createTime" class="same-input">
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="Creation Time：" prop="createTime">
               <el-date-picker
                 clearable
                 v-model="queryParams.createTime"
@@ -22,6 +24,8 @@
                 placeholder="">
               </el-date-picker>
             </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="Status：" prop="status" class="same-input">
               <el-select
                 v-model="queryParams.status"
@@ -38,16 +42,17 @@
                 </el-option>
               </el-select>
             </el-form-item>
-          </common-flex>
-          <common-flex justify="flex-end" align="center" style="flex-grow: 1; flex-shrink: 0; height: 100%">
-            <el-form-item>
-              <el-button type="primary" @click="handleQuery">Query</el-button>
-              <el-button @click="resetQuery">Reset</el-button>
-            </el-form-item>
-          </common-flex>
-        </common-flex>
+          </el-col>
+          <el-col :span="6">
+            <common-flex justify="flex-end">
+              <el-form-item>
+                <el-button type="primary" @click="handleQuery">Query</el-button>
+                <el-button @click="resetQuery">Reset</el-button>
+              </el-form-item>
+            </common-flex>
+          </el-col>
+        </el-row>
       </el-form>
-
     </el-card>
     <div style="height: 20px"></div>
     <el-card>
@@ -68,7 +73,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Site" align="center" prop="siteName" show-overflow-tooltip min-width="130" />
-        <el-table-column label="Customer" align="center" prop="customer" min-width="130"/>
+        <el-table-column label="Customer" align="center" show-tooltip-when-overflow prop="customer" min-width="130"/>
         <el-table-column label="Time of Task Completed" align="center" prop="endTime" min-width="180">
           <template slot-scope="{ row }">
             <span v-if="row.endTime && row.endTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.endTime)) }}</span>
@@ -82,7 +87,7 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="Created by" align="center" prop="createBy" min-width="140" />
+        <el-table-column label="Created by" align="center" prop="createBy" min-width="140" show-tooltip-when-overflow />
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="140">
           <template slot-scope="{ row }">
             <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.updateTime)) }}</span>

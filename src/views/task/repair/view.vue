@@ -114,9 +114,7 @@
 </template>
 
 <script>
-import { getTaskInfo, createTask } from '@/api/task'
-import { getAtiUser } from '@/api/user'
-
+import { getTaskInfo } from '@/api/task'
 
 export default {
   name: "pages-repair-view",

@@ -24,16 +24,14 @@
 
     <el-table v-loading="loading" :data="atiUserList"
               :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
-              border
+              ref="multipleTable"
+              :row-key="(row) => { return row.id }"
+              @select="handleSelect"
+              @select-all="handleSelectAll"
               @selection-change="handleSelectionChange"
     >
-<!--      <el-table-column width="85">-->
-<!--        <template slot-scope="{ row }">-->
-<!--          <el-radio class="my-radio" v-model="chooseRadio" :label="row.id"></el-radio>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-      <el-table-column type="selection" width="75"></el-table-column>
-      <el-table-column label="Site" align="center" prop="siteName" />
+      <el-table-column type="selection" :reserve-selection="true" width="75"></el-table-column>
+      <el-table-column label="Site" align="center" prop="siteName" show-tooltip-when-overflow />
       <el-table-column label="Site Code" align="center" prop="siteCode" />
     </el-table>
 
@@ -45,7 +43,7 @@
       @pagination="getList"
     />
     <common-flex style="margin-top: 30px" justify="center">
-      <el-button :type="btnType" :disabled="!multipleSelection.length" @click="change">
+      <el-button :type="btnType" :disabled="!selected.length" @click="change">
         <span>Confirm</span>
       </el-button>
       <el-button @click="cancel">Cancel</el-button>
@@ -61,10 +59,11 @@ export default {
   name: "comp-add-dialog",
   props: {
     show: Boolean,
+    haveSiteList: Array | Object
   },
   data() {
     return {
-      multipleSelection: [],
+      selected: [],
       chooseRadio: '',
       // 遮罩层
       loading: true,
@@ -108,35 +107,92 @@ export default {
   },
   computed: {
     btnType() {
-      return this.multipleSelection.length ? 'primary' : ''
+      return this.selected.length ? 'primary' : ''
     }
   },
   watch: {
-    show(v) {
-      if (!v) return
-      Object.keys(this.queryParams).forEach(i => {
-        this.queryParams[i] = ''
-      })
-      this.queryParams.pageNum = 1
-      this.queryParams.pageSize = 10
-      this.getList();
+    show: {
+      immediate: true,
+      handler(v) {
+        if (!v) return
+        Object.keys(this.queryParams).forEach(i => {
+          this.queryParams[i] = ''
+        })
+        this.queryParams.pageNum = 1
+        this.queryParams.pageSize = 10
+        this.getList()
+      }
     }
   },
-  created() {
-    this.getList();
-  },
   methods: {
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable?.toggleRowSelection(row)
+        });
+      } else {
+        this.$refs.multipleTable?.clearSelection()
+      }
+    },
+    handleCurrentChange() {
+      let rows = []
+      this.atiUserList.forEach(row => {
+        this.selected.forEach(item => {
+          if (row.id === item.id) {
+            rows.push(row)
+          }
+        })
+      })
+      this.toggleSelection(rows)
+    },
+    handleSelectAll(selection) {
+      if (selection.length === 0) {
+        this.atiUserList.forEach(item => {
+          this.handleDelItem(item)
+        })
+      } else {
+        this.selected = this.unique(
+          this.selected.concat(this.atiUserList)
+        )
+      }
+    },
+    unique(arr) {
+      let obj = {}
+      arr = arr.reduce((newArr, next) => {
+        if (obj[next.id]) {}
+        else {
+          obj[next.id] = true
+          newArr.push(next)
+        }
+        return newArr
+      }, [])
+      return arr
+    },
+    handleSelect(selection, row) {
+      let isExited = false
+      this.selected.forEach(item => {
+        if(item.id === row.id) {
+          isExited = true
+        }
+      })
+      if (isExited) this.handleDelItem(row)
+      else this.selected.push(row)
+    },
+    handleDelItem(row){
+      let index = -1
+      this.selected.forEach((item, idx) => {
+        if(item.id === row.id) {
+          index = idx
+        }
+      })
+      if (index >= 0) this.selected.splice(index, 1)
+    },
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.selected = val
     },
     change() {
-      // let installer
-      // this.atiUserList.forEach(i => {
-      //   if (i.id === this.chooseRadio) installer = i
-      // })
-      // this.$emit('change', installer)
-      this.$emit('change', this.multipleSelection)
-      this.beforeClose()
+      this.$emit('change', this.selected)
+      this.$emit('update:show', false)
     },
     beforeClose() {
       this.$emit('update:show', false)
@@ -150,10 +206,12 @@ export default {
             if (!i[k]) i[k] = '--'
           })
         })
-        this.atiUserList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.atiUserList = response.rows
+        this.total = response.total
+        this.loading = false
+        this.selected = [...this.haveSiteList]
+        this.handleCurrentChange()
+      })
     },
     // 取消按钮
     cancel() {
@@ -183,58 +241,6 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加用户";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getAtiUser(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改用户";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateAtiUser(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addAtiUser(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + ids + '"的数据项？').then(function() {
-        return delAtiUser(ids);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('ati/atiUser/export', {
-        ...this.queryParams
-      }, `atiUser_${new Date().getTime()}.xlsx`)
-    }
   }
 }
 </script>

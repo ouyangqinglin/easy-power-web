@@ -1,13 +1,21 @@
 <template>
   <el-form ref="form" :model="user" :rules="rules">
     <el-form-item label="Old Password" prop="oldPassword">
-      <el-input v-model="user.oldPassword" placeholder="Please enter" type="password" show-password/>
+      <el-input
+        @paste.native.capture.prevent
+        @copy.native.capture.prevent
+        v-model="user.oldPassword" placeholder="Please enter" type="password" show-password/>
     </el-form-item>
     <el-form-item label="New Password" prop="newPassword">
-      <el-input v-model="user.newPassword" placeholder="Please enter" type="password" show-password/>
+      <el-input
+        @paste.native.capture.prevent
+        @copy.native.capture.prevent
+        v-model="user.newPassword" placeholder="Please enter" type="password" show-password/>
     </el-form-item>
     <el-form-item label="Please confirm" prop="confirmPassword">
-      <el-input v-model="user.confirmPassword" placeholder="Please enter" type="password" show-password/>
+      <el-input @paste.native.capture.prevent
+                @copy.native.capture.prevent
+                v-model="user.confirmPassword" placeholder="Please enter" type="password" show-password/>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" size="mini" @click="submit">Save</el-button>
@@ -18,6 +26,7 @@
 
 <script>
 import { updateUserPwd } from "@/api/system/user";
+import Cookies from "js-cookie";
 
 export default {
   data() {
@@ -66,6 +75,12 @@ export default {
         if (valid) {
           updateUserPwd(this.user.oldPassword, this.user.newPassword).then(response => {
             this.$modal.msgSuccess("Succeeded");
+            setTimeout(() => {
+              this.$store.dispatch('LogOut').then(() => {
+                location.href = '/index';
+              })
+              Cookies.remove("password");
+            }, 200)
           });
         }
       });

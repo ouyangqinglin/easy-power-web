@@ -117,13 +117,17 @@
                         </template>
                       </div>
                       <div style="margin-top: 16px">
-                        <template v-if="+homeData.allProduce > 1000">
-                          <div class="num">{{ (homeData.allProduce / 1000).toFixed(2) }}</div>
-                          <span>(MWh)</span><br>Lifetime
+                        <template v-if="+homeData.allProduce < 1000">
+                          <div class="num">{{ (+homeData.allProduce).toFixed(2) }}</div>
+                          <span>(Wh)</span><br>Lifetime
+                        </template>
+                        <template v-else-if="+homeData.allProduce > 1000 && +homeData.allProduce < 1000000">
+                          <div class="num">{{ (+homeData.allProduce / 1000).toFixed(2) }}</div>
+                          <span>(kWh)</span><br>Lifetime
                         </template>
                         <template v-else>
-                          <div class="num">{{ homeData.allProduce || '--' }}</div>
-                          <span>(kWh)</span><br>Lifetime
+                          <div class="num">{{ (+homeData.allProduce / 1000000).toFixed(2) }}</div>
+                          <span>(MWh)</span><br>Lifetime
                         </template>
                       </div>
                     </div>
@@ -243,7 +247,7 @@
                   <common-flex style="height: 100%" direction="column" justify="space-between" align="center">
                     <common-flex direction="column" align="center">
                       <div class="des ellipsis" title="CO2 Emission Saved">CO2 Emission Saved</div>
-                      <div class="val">{{ homeData.emissionSaved || '-- ' }}<span>kg</span></div>
+                      <div class="val">{{ homeData.emissionSaved || '-- ' }}<span> kg</span></div>
                     </common-flex>
                     <img class="benefit-left" :src="require('@img/home/benefit-left.svg')" alt="">
                   </common-flex>
@@ -304,10 +308,23 @@ const lineOption = {
     tooltip: {
       show: true,
       trigger: 'axis',
-      // formatter (value) {
-      //   console.log(value)
-      //   return value[0].value
-      // }
+      formatter (v) {
+        let v0, t1, unit1
+        if (v[0]) {
+          if (+v[0].value < 1) {
+            t1 = `${(+v[0].value * 1000).toFixed(2)}`
+            unit1 = 'Wh'
+          } else if (+v[0].value > 1 && +v[0].value < 1000) {
+            t1 = `${(+v[0].value).toFixed(2)}`
+            unit1 = 'kWh'
+          } else {
+            t1 = `${(+v[0].value / 1000).toFixed(2)}`
+            unit1 = 'MWh'
+          }
+          v0 = `${v[0].marker}  ${t1}${unit1}`
+        }
+        return `${v[0].name}<br>${v0}`
+      }
     },
     grid: {
       left: 50,
@@ -360,9 +377,9 @@ const lineOption = {
             color: new echarts.graphic.LinearGradient(
               0, 0, 0, 1,
               [
-                {offset: 0, color: '#6bdaef'},
-                {offset: 0.5, color: '#71cfe1'},
-                {offset: 1, color: '#80ccda'}
+                {offset: 0, color: '#a8e1ec'},
+                {offset: 0.5, color: '#d9f2f7'},
+                {offset: 1, color: '#f1fafc'}
               ]
             )
           }
@@ -395,8 +412,8 @@ textStyle: {
 },
 grid: {
   left: '18%',
-    right: '14%',
-    top: '8%',
+  right: '14%',
+  top: '8%',
   // bottom: '10%'
 },
 xAxis: {
@@ -652,8 +669,8 @@ export default {
   methods: {
     changeChartSize() {
       let scaleScreen = detectZoom()
-      console.log('scaleScreen', scaleScreen)
-      console.log('innerHeight', innerHeight)
+      // console.log('scaleScreen', scaleScreen)
+      // console.log('innerHeight', innerHeight)
       if (scaleScreen > 100 && innerHeight < 1000) {
         rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 10
         rankOption.series[0].barWidth = 12
@@ -673,7 +690,7 @@ export default {
         rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 14
         rankOption.yAxis.axisLabel.formatter = function(value) {
           let label = ''
-          if (value.length > 18) label = value.slice(0, 18) + '...'
+          if (value.length > 15) label = value.slice(0, 15) + '...'
           else label = value
           return label
         }
@@ -883,7 +900,7 @@ export default {
             unit3 = 'Wh'
           }
           total = (+total).toFixed(2)
-          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>total：${total}${unit3}`
+          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>Total：${total}${unit3}`
         },
         backgroundColor: '#fff',
         extraCssText: 'box-shadow: 0px 3px 6px 1px rgba(0,0,0,0.16);',

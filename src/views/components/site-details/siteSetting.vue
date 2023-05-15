@@ -43,9 +43,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time1</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -53,9 +53,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time2</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -63,9 +63,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">Charging time3</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.chargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeS3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.chargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.chargeE3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -75,9 +75,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time1</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE1" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE1" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -85,9 +85,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time2</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE2" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE2" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -95,9 +95,9 @@
                         <common-flex class="time-range" align="center">
                           <div class="time-range-label">discharging time3</div>
                           <common-flex class="time-range-picker" align="center">
-                            <el-time-select size="small" v-model="peakShaving.dischargeS3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeS3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                             <div>-</div>
-                            <el-time-select size="small" v-model="peakShaving.dischargeE3" :picker-options="{start: '00:00', step: '01:00', end: '23:00'}"></el-time-select>
+                            <el-time-select size="small" v-model="peakShaving.dischargeE3" :picker-options="{start: '00:00', step: '00:01', end: '24:00'}"></el-time-select>
                           </common-flex>
                         </common-flex>
                       </el-col>
@@ -344,8 +344,10 @@
 
 <script>
 import { siteSetting, siteSettingSubmit } from '@/api/site'
-import { setRecodeList, getSettingInfo, deviceSet } from '@/api/device'
+import {setRecodeList, getSettingInfo, deviceSet, orderRes} from '@/api/device'
 
+let timerInter = null
+let times = 1
 let copyDeviceInfo = {}
 export default {
   name: "siteSetting",
@@ -564,6 +566,9 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    clearInterval(timerInter)
+  },
   methods: {
     inputVerify(min, max, type) {
       if (!Number.isInteger(+this.deviceBase[type])) {
@@ -625,6 +630,36 @@ export default {
         return this.setDevice(type)
       })
     },
+    getOrderRes() {
+      let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+      let data = {
+        siteCode: this.siteCode
+      }
+      clearInterval(timerInter)
+      timerInter = setInterval(() => {
+        times++
+        orderRes(data).then(res => {
+          if (+res.data === 3) {
+            if(times > 15) {
+              times = 1
+              clearInterval(timerInter)
+              this.getDeviceSet()
+              this.setLoading.close()
+              return this.$modal.msgError('timeout')
+            }
+            this.getOrderRes()
+          } else {
+            times = 1
+            if (+res.data === 1) {
+              this.$modal.msgSuccess('SUCCESS')
+            } else this.$modal.msgError(statusList[+res.data])
+            clearInterval(timerInter)
+            this.getDeviceSet()
+            this.setLoading.close()
+          }
+        })
+      }, 1000)
+    },
     setDevice(type) {
       if (copyDeviceInfo[type] === this.deviceBase[type]) {
         if (![22, 23].includes(+type)) return this.$modal.confirm('Value not changed')
@@ -639,16 +674,20 @@ export default {
         if (this.deviceBase[type]) data.baseParam = 1
         else data.baseParam = 0
       }
-      this.openLoading()
-
       deviceSet(data).then(res => {
-        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
-        else this.$modal.msgSuccess('Succeeded!')
-      }).catch((err) => {
-        this.$modal.alertError(err.msg || 'failed!')
-      }).finally(() => {
-        this.setLoading.close()
-        this.getDeviceSet()
+        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) {
+          this.$modal.msgError(res.msg)
+          this.getDeviceSet()
+        } else {
+          let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+          if (+res.data === 3) {
+            this.openLoading()
+            this.getOrderRes()
+          } else {
+            this.$modal.msgError(statusList[+res.data])
+            this.getDeviceSet()
+          }
+        }
       })
     },
     getDeviceSet() {

@@ -5,10 +5,10 @@
         <common-flex>
           <common-flex style="flex-grow: 1">
             <el-form-item label="Role Name：" prop="roleName">
-              <el-input placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.roleName"></el-input>
+              <el-input clearable placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.roleName"></el-input>
             </el-form-item>
             <el-form-item label="Status：" prop="status">
-              <el-select placeholder="All" v-model="queryParams.status">
+              <el-select clearable placeholder="All" v-model="queryParams.status">
                 <el-option v-for="i of statusOptions" :key="i.value" :label="i.label" :value="i.value"></el-option>
               </el-select>
             </el-form-item>
@@ -108,7 +108,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Remarks" prop="remark">
-            <el-input type="textarea" maxlength="200" v-model="addInfo.remark"></el-input>
+            <el-input type="textarea" maxlength="200" show-word-limit v-model="addInfo.remark"></el-input>
           </el-form-item>
         </common-flex>
       </el-form>
@@ -133,7 +133,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Remarks" prop="remark">
-            <el-input type="textarea" max-length="200" v-model="modifyInfo.remark"></el-input>
+            <el-input type="textarea" show-word-limit maxlength="200" v-model="modifyInfo.remark"></el-input>
           </el-form-item>
         </common-flex>
       </el-form>
@@ -149,7 +149,6 @@
 import {listRole, addRole, updateRole, delRole} from "@/api/system/role"
 import ConfigRole from '@/views/components/user/authority-config'
 import {mapState} from "vuex"
-import {delTask} from "@/api/task"
 import {roleMenuTreeselect} from "@/api/system/menu"
 
 

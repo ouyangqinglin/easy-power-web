@@ -14,10 +14,10 @@
         <common-flex justify="space-between">
           <common-flex style="flex-grow: 4" wrap="wrap">
             <el-form-item label="SN：" prop="serialNumber">
-              <el-input @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.serialNumber" placeholder="Please enter SN"></el-input>
+              <el-input clearable @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.serialNumber" placeholder="Please enter SN"></el-input>
             </el-form-item>
             <el-form-item label="Site：" prop="siteName">
-              <el-input @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.siteName" placeholder="Please enter site"></el-input>
+              <el-input clearable @keyup.enter.native="handleQuery" class="same-input" v-model="queryParams.siteName" placeholder="Please enter site"></el-input>
             </el-form-item>
           </common-flex>
           <common-flex justify="flex-end" style="flex-grow: 1; flex-shrink: 0">
@@ -71,10 +71,10 @@
         <el-table-column label="Site" prop="siteName" min-width="120" show-overflow-tooltip>
           <template slot-scope="{ row }">
             <span v-if="+row.siteCode === -1">--</span>
-            <span style="white-space: pre-wrap" v-else>{{ row.siteName || '--'}}</span>
+            <span v-else>{{ row.siteName || '--'}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Operator" prop="operator" min-width="120" show-overflow-tooltip />
+        <el-table-column label="Operator" prop="updateBy" min-width="120" show-overflow-tooltip />
         <el-table-column label="Agency" prop="agency" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Device Installed" prop="bindTime" min-width="170">
           <template slot-scope="{ row }">
@@ -183,6 +183,7 @@ export default {
       })
     },
     getList(type) {
+      this.loading = true
       const typeFace = {
         '1': 'inverterTotal',
         '2': 'batteryTotal',
@@ -201,7 +202,7 @@ export default {
           this.list = storageRes[`${type}~${this.queryParams.pageNum}`].rows
           this.total = storageRes[`${type}~${this.queryParams.pageNum}`].total
         }
-      })
+      }).finally(() => this.loading = false)
     },
     tabToggle() {
       this.queryParams.serialNumber = ''

@@ -30,7 +30,7 @@
             <el-input v-model="base.phone" disabled type="text" />
           </el-form-item>
           <el-form-item style="flex: 1" prop="address" label="Address">
-            <el-input v-model="base.address" disabled type="text" />
+            <el-input type="textarea" v-model="base.address" disabled />
           </el-form-item>
         </common-flex>
         <common-flex :style="{ justifyContent: [4, 5].includes(+base.status) ? 'space-between' : '' }">
@@ -74,7 +74,7 @@
                width="46%">
       <el-form :model="reason" :rules="rule" ref="reasonForm">
         <el-form-item label="Reason" prop="closeReason">
-          <el-input v-model.trim="reason.closeReason" type="textarea" placeholder="Please enter"></el-input>
+          <el-input v-model.trim="reason.closeReason" maxlength="200" show-word-limit type="textarea" placeholder="Please enter"></el-input>
         </el-form-item>
       </el-form>
       <common-flex style="margin-top: 60px" justify="center">

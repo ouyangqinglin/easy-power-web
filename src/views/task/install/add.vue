@@ -5,8 +5,8 @@
       <el-form class="pages-task-add-card-form" :model="base" :rules="rules" ref="ruleForm">
         <el-form-item v-for="(i, index) of formList" :key="i.prop" :prop="i.prop">
           <template slot="label"><span>{{ i.label }}</span></template>
-          <template v-if="i.prop === 'remark'">
-            <el-input maxlength="200" style="width: 60vw" type="textarea" v-model="base[i.prop]"></el-input>
+          <template v-if="['remark', 'address'].includes(i.prop)">
+            <el-input maxlength="200" show-word-limit style="width: 60vw" type="textarea" v-model="base[i.prop]"></el-input>
           </template>
           <template v-else-if="i.prop === 'appointTime'">
             <el-date-picker style="width: 100%" type="datetime" format="M/d/yyyy HH:mm"
@@ -17,6 +17,9 @@
           </template>
           <template v-else-if="i.prop === 'type'">
             <el-input disabled v-model="['', 'Repair', 'Installation'][2]"></el-input>
+          </template>
+          <template v-else-if="i.prop === 'phone'">
+            <el-input @input="checkPhone" v-model="base[i.prop]" type="text" maxlength="20"></el-input>
           </template>
           <template v-else-if="i.prop === 'status'">
             <el-input disabled v-model="['', 'Pending', 'Processing', 'Complete'][base[i.prop]]"></el-input>
@@ -46,7 +49,7 @@
         <el-button @click="cancel">Cancel</el-button>
       </common-flex>
     </el-card>
-    <AddDialog :show.sync="showModel" :type="2" @change="getInstaller" header="Please select a installer" />
+    <AddDialog :show.sync="showModel" :type="2" @change="getInstaller" :haveSelect="base.installUid" header="Please select a installer" />
   </div>
 </template>
 
@@ -148,11 +151,15 @@ export default {
     })
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     cancel() {
       history.go(-1)
     },
     getInstaller(data) {
       this.installerInfo = data
+      this.base.installUid = this.installerInfo.id
     },
     // 打开add弹窗
     openAdd() {

@@ -4,11 +4,16 @@
       <el-form :inline="true" :model="queryParams" label-width="100px" ref="queryForm">
         <common-flex>
           <common-flex style="flex-grow: 1">
-            <el-form-item label="SN：" prop="sn">
-              <el-input placeholder="Please enter" v-model="queryParams.sn"></el-input>
+            <el-form-item label="SN：" prop="serialNumber">
+              <el-input clearable placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.serialNumber"></el-input>
             </el-form-item>
             <el-form-item label="Site：" prop="siteName">
-              <el-input placeholder="Please enter" v-model="queryParams.siteName"></el-input>
+              <el-input clearable placeholder="Please enter" @keyup.enter.native="handleQuery" v-model="queryParams.siteName"></el-input>
+            </el-form-item>
+            <el-form-item label="Follow：" prop="followBms">
+              <el-select clearable v-model="queryParams.followBms" placeholder="Please select">
+                <el-option v-for="i of followOption" :value="i.value" :label="i.label" :key="i.value"></el-option>
+              </el-select>
             </el-form-item>
           </common-flex>
           <el-form-item>
@@ -19,7 +24,7 @@
       </el-form>
     </el-card>
     <el-card style="margin-top: 24px">
-      <p>Alarm List</p>
+      <p>List</p>
       <el-table :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
                 v-loading="loading" :data="list"
       >
@@ -28,14 +33,36 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="SN" prop="sn"></el-table-column>
-        <el-table-column label="Capacity(kWh)" prop="capacity"></el-table-column>
-        <el-table-column label="Site" prop="siteName"></el-table-column>
-        <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="100">
+        <el-table-column label="SN" prop="serialNumber"></el-table-column>
+        <el-table-column label="Capacity(kWh)" prop="nameplateCapacity"></el-table-column>
+        <el-table-column label="Site" prop="siteName" show-tooltip-when-overflow>
+          <template slot-scope="{ row }">
+            <span>{{ row.siteName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" align="center" class-name="small-padding fixed-width" min-width="100">
+          <common-flex justify="center" align="center" slot="header">
+            <span>Operat</span>
+            <el-tooltip effect="dark" placement="top">
+              <span slot="content">
+                Click 'Follow' to retain the collected real-time data<br>
+                of battery cells and temperature; Cancel 'Follow' and<br>
+                only view battery cells and temperature real-time data<br>
+                and data retained during historical follow periods.<br>
+                Regardless of whether it is' followed 'or not,the data <br>
+                viewing ofthe battery pack is not affected
+              </span>
+              <img style="width: 18px; margin-left: 14px" :src="require('@img/question.svg')" alt="">
+            </el-tooltip>
+          </common-flex>
           <template slot-scope="scope">
-            <el-button type="text">
-              <router-link :to="`/bms/monitoring/${scope.row.id}`">Monitoring</router-link>
-            </el-button>
+            <common-flex justify="center" align="center">
+              <router-link :to="{name: 'monitoring-view', params: {id: scope.row.id, info: scope.row.extInfo, sn: scope.row.serialNumber, siteCode: scope.row.siteCode}}">
+                <el-button type="text">Monitoring</el-button>
+              </router-link>
+              <img @click="follow(2, scope.row.id)" v-if="+scope.row.followBms === 1" class="follow" :src="require('@img/followed.svg')" alt="">
+              <img title="Follow" @click="follow(1, scope.row.id)" v-else class="follow" :src="require('@img/follow.svg')" alt="Follow">
+            </common-flex>
           </template>
         </el-table-column>
       </el-table>
@@ -51,6 +78,8 @@
 </template>
 
 <script>
+import { listDevice, editDevice } from '@/api/device'
+
 export default {
   name: "pages-Monitoring",
   data() {
@@ -59,17 +88,48 @@ export default {
       loading: false,
       list: [],
       queryParams: {
+        deviceType: '2',
         pageNum: 1,
         pageSize: 10,
-        sn: '',
+        serialNumber: '',
         siteName: '',
-      }
+        followBms: null
+      },
+      followOption: [
+        {
+          label: 'All battery',
+          value: '',
+        },
+        {
+          label: 'Battery i followed',
+          value: 1,
+        },
+      ]
     }
   },
   mounted() {
     this.getList()
   },
   methods: {
+    follow(type, id) {
+      let data = {
+        followBms: type,
+        id
+      }
+      if (type === 2) {
+        this.$modal.confirm(`Please confirm whether to cancel`).then(() => {
+          this.changeFollow(data)
+        }).then(() => {
+          this.getList()
+        }).catch(() => {})
+      } else this.changeFollow(data)
+    },
+    changeFollow(data) {
+      editDevice(data).then(res => {
+        console.log(res)
+        this.$modal.msgSuccess("Succeeded!")
+      }).finally(() => this.getList())
+    },
     handleQuery() {
       this.queryParams.pageNum = 1
       this.getList()
@@ -79,7 +139,11 @@ export default {
       this.handleQuery()
     },
     getList() {
-      // this.loading = true
+      this.loading = true
+      listDevice(this.queryParams).then(res => {
+        this.list = res.rows
+        this.total = res.total
+      }).finally(() => this.loading = false)
     },
   }
 }
@@ -89,6 +153,11 @@ export default {
 .pages-bms {
   p {
     font-weight: 600;
+  }
+  .follow {
+    margin-left: 20px;
+    width: 16px;
+    cursor: pointer;
   }
 }
 </style>

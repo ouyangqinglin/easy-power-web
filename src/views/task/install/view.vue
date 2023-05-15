@@ -59,6 +59,9 @@
           <template v-else-if="i.prop === 'type'">
             <el-input disabled v-model="['', 'Repair', 'Installation'][base[i.prop]]"></el-input>
           </template>
+          <template v-else-if="i.prop === 'address'">
+            <el-input disabled v-model="base[i.prop]" type="textarea"></el-input>
+          </template>
           <template v-else-if="i.prop === 'status'">
             <el-input disabled v-model="['', 'Pending', 'Processing', 'Complete'][base[i.prop]]"></el-input>
           </template>

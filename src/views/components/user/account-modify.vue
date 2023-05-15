@@ -11,7 +11,10 @@
           <el-form-item :prop="i.prop">
             <template slot="label"><span>{{ i.label }}</span></template>
             <template v-if="i.prop === 'remark'">
-              <el-input style="width: 40vw" type="textarea" maxlength="200" v-model="base[i.prop]"></el-input>
+              <el-input style="width: 40vw" type="textarea" maxlength="200" show-word-limit v-model="base[i.prop]"></el-input>
+            </template>
+            <template v-else-if="i.prop === 'phone'">
+              <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'status'">
               <el-select style="width: 100%" v-model="base[i.prop]" :disabled="+id === +$store.state.user.userId">
@@ -63,7 +66,7 @@
                   :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
         >
           <el-table-column type="index" label="No." prop="id" width="55"></el-table-column>
-          <el-table-column label="Site" prop="siteName"></el-table-column>
+          <el-table-column label="Site" prop="siteName" show-tooltip-when-overflow></el-table-column>
           <el-table-column label="Site Code" prop="siteCode"></el-table-column>
           <el-table-column label="Operat">
             <template slot-scope="scope">
@@ -77,8 +80,8 @@
         <el-button size="small" @click="$emit('update:show', false)">Cancel</el-button>
       </common-flex>
     </el-dialog>
-    <siteList :show.sync="siteShow" @change="getSelectSite"/>
-    <agentList :show.sync="agencyShow" @change="getSelectAgent"/>
+    <siteList v-if="siteShow" :show.sync="siteShow" @change="getSelectSite" :haveSiteList="siteList" />
+    <agentList :show.sync="agencyShow" :agencyId="base.agencyId"  @change="getSelectAgent"/>
   </div>
 </template>
 
@@ -86,7 +89,7 @@
 import siteList from '@/views/components/site-details/siteList'
 import agentList from '@/views/components/user/agencyList'
 import {listRole} from "@/api/system/role"
-import {addAtiUser, getAtiUser, updateAtiUser} from '@/api/user'
+import {getAtiUser, updateAtiUser} from '@/api/user'
 
 export default {
   name: "account-modify",
@@ -213,13 +216,13 @@ export default {
     authorityList() {
       const userApp = [
         {
-          label: 'ATI Storage',
+          label: 'EasyPower Storage',
           value: '1'
         }
       ]
       const installApp = [
         {
-          label: 'ATI Install',
+          label: 'EasyPower Install',
           value: '2'
         }
       ]
@@ -230,6 +233,9 @@ export default {
     this.getRoleList()
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getRoleList() {
       let data = {
         pageNum: 1,

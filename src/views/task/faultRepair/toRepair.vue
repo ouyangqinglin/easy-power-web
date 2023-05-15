@@ -7,7 +7,7 @@
           <el-input maxlength="50" v-model="base.title" type="text" />
         </el-form-item>
         <el-form-item prop="remark" label="Fault Description">
-          <el-input maxlength="200" v-model="base.remark" type="textarea" />
+          <el-input maxlength="200" v-model="base.remark" show-word-limit type="textarea" />
         </el-form-item>
         <common-flex justify="space-between">
           <el-form-item prop="type" label="Task Type">
@@ -36,11 +36,11 @@
         </common-flex>
         <common-flex>
           <el-form-item prop="phone" label="Phone" style="margin-right: 90px">
-            <el-input v-model="base.phone" type="text" />
+            <el-input @input="checkPhone" v-model="base.phone" type="text" maxlength="20" />
           </el-form-item>
         </common-flex>
         <el-form-item prop="address" label="Address">
-          <el-input v-model="base.address" max-length="200" type="text" />
+          <el-input v-model="base.address" maxlength="200" type="textarea" show-word-limit />
         </el-form-item>
       </el-form>
     </el-card>
@@ -64,7 +64,7 @@
         <el-button @click="cancel">Cancel</el-button>
       </common-flex>
     </el-card>
-    <AddDialog :show.sync="show" :type="2" @change="getRepairman" header="Please select a Repairman" />
+    <AddDialog :show.sync="show" :type="2" @change="getRepairman" :haveSelect="base.installUid" header="Please select a Repairman" />
   </div>
 </template>
 
@@ -125,8 +125,12 @@ export default {
     })
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getRepairman(i) {
       this.repairmanInfo = i
+      this.base.installUid = i.id
     },
     beforeClose() {
       this.show = false

@@ -11,10 +11,13 @@
           <el-form-item :prop="i.prop">
             <template slot="label"><span>{{ i.label }}</span></template>
             <template v-if="i.prop === 'remark'">
-              <el-input style="width: 40vw" type="textarea" maxlength="200" v-model="base[i.prop]"></el-input>
+              <el-input style="width: 40vw" type="textarea" show-word-limit maxlength="200" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'agency'">
               <el-input maxlength="50" v-model="base[i.prop]"></el-input>
+            </template>
+            <template v-else-if="i.prop === 'phone'">
+              <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else-if="i.prop === 'status'">
               <el-select style="width: 100%" v-model="base[i.prop]">
@@ -119,6 +122,9 @@ export default {
     }
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     beforeClose() {
       this.$emit('update:show', false)
     },

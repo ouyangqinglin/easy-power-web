@@ -5,7 +5,7 @@
         <common-flex>
           <common-flex style="flex-grow: 1">
             <el-form-item label="Version：" prop="versionNum">
-              <el-input placeholder="Please enter" v-model="queryParams.versionNum"></el-input>
+              <el-input clearable placeholder="Please enter" v-model="queryParams.versionNum"></el-input>
             </el-form-item>
           </common-flex>
           <el-form-item>
@@ -36,7 +36,7 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="Remarks" prop="remark"></el-table-column>
+        <el-table-column label="Remarks" prop="remark" show-tooltip-when-overflow />
         <el-table-column label="Upload Time" prop="">
           <template slot-scope="{ row }">
             <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.updateTime) }}</span>
@@ -86,7 +86,7 @@
             </el-col>
           </el-row>
           <el-form-item label="Remarks">
-            <el-input type="textarea" maxlength="200" v-model="base.remark" placeholder="Please enter"></el-input>
+            <el-input type="textarea" show-word-limit maxlength="200" v-model="base.remark" placeholder="Please enter"></el-input>
           </el-form-item>
         </el-form>
         <common-flex justify="center">

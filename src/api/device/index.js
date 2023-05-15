@@ -60,6 +60,14 @@ export function stopCharge(data) {
   })
 }
 
+export function orderRes(data) {
+  return request({
+    url: `/command/getCommandResult/`,
+    method: 'post',
+    data
+  })
+}
+
 export function setRecodeList(params) {
   return request({
     url: `/siteSettingRecord/list`,
@@ -96,5 +104,29 @@ export function pvHistoryData(params) {
     url: `/device/dataPVInfoStatistics`,
     method: 'get',
     params
+  })
+}
+
+export function cellData(params) {
+  return request({
+    url: `/device/dataCellInfoStatistics`,
+    method: 'get',
+    params
+  })
+}
+
+export function netList(params) {
+  return request({
+    url: `/device/netList`,
+    method: 'get',
+    params
+  })
+}
+
+export function editDevice(data) {
+  return request({
+    url: `/device`,
+    method: 'put',
+    data
   })
 }

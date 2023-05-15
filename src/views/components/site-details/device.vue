@@ -34,16 +34,16 @@
           </common-flex>
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
-          <common-flex style="padding-left: 32px; border-bottom: 1px solid #D8DCE6" wrap="wrap">
-            <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.sn, k)">
+          <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
+            <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
                 <div class="bat-pile" :id="`batPile${k}`"></div>
                 <div class="posa bat-title">
                   <div>SOC</div>
-                  <span>50%</span>
+                  <div style="text-align: center; line-height: 20px">{{ i.soc }}</div>
                 </div>
               </div>
-              <div class="bat-sn" :class="{curClick: batCur === k}">{{ i.sn }}</div>
+              <div class="bat-sn" :class="{curClick: batCur === i.serialNumber}">{{ i.serialNumber }}</div>
             </div>
           </common-flex>
           <el-tabs v-model="activeBattery">
@@ -96,25 +96,39 @@
             <div id="batteryChart" class="batteryChart"></div>
           </common-flex>
         </div>
-        <common-flex auto class="comp-device-card-content-right" v-else-if="+active === 3">
-          <common-flex direction="column" align="center">
-            <img class="device-battery" :src="require('./img/device-discharge.svg')" alt=""><br>
-            <el-button type="primary" size="mini" v-if="+curDevInfo.status === 1" @click="stopCharge">Stop Charging</el-button>
-            <span class="status-tips" v-else>Not connected</span>
+        <div v-else-if="+active === 3" style="width: 100%">
+          <el-tabs v-model="curPile" @tab-click="changeCurPile">
+            <template v-for="i of pileList">
+              <el-tab-pane :name="i.serialNumber" :label="i.serialNumber"></el-tab-pane>
+            </template>
+          </el-tabs>
+          <common-flex auto class="comp-device-card-content-right">
+            <common-flex direction="column" align="center">
+              <img class="device-battery" :src="require('./img/device-discharge.svg')" alt=""><br>
+              <el-button type="primary" size="mini" v-if="+curDevInfo.status === 1" @click="stopCharge">Stop Charging</el-button>
+              <span class="status-tips" v-else>Not connected</span>
+            </common-flex>
+            <common-flex direction="column" auto class="comp-device-card-content-right-container">
+              <div class="item" v-for="i of chargeInfo">
+                <div class="item-title">{{ i.title }}</div>
+                <common-flex class="item-body" wrap="wrap">
+                  <div class="item-body-item charge" v-for="(v, k) of i.info">
+                    <div class="item-body-item-key">{{ k }}</div>
+                    <div class="item-body-item-value">{{ v || '--' }}</div>
+                  </div>
+                </common-flex>
+              </div>
+            </common-flex>
           </common-flex>
-          <common-flex direction="column" auto class="comp-device-card-content-right-container">
-            <div class="item" v-for="i of chargeInfo">
-              <div class="item-title">{{ i.title }}</div>
-              <common-flex class="item-body" wrap="wrap">
-                <div class="item-body-item charge" v-for="(v, k) of i.info">
-                  <div class="item-body-item-key">{{ k }}</div>
-                  <div class="item-body-item-value">{{ v || '--' }}</div>
-                </div>
-              </common-flex>
-            </div>
-          </common-flex>
-        </common-flex>
+        </div>
         <div v-else-if="+active === 6" style="flex-grow: 1">
+<!--          <div style="border-bottom: 1px solid #D8DCE6">-->
+<!--            <el-tabs v-model="curPv" @tab-click="changeCurPv">-->
+<!--              <template v-for="i of pvList">-->
+<!--                <el-tab-pane :name="i.serialNumber" :label="i.serialNumber">  </el-tab-pane>-->
+<!--              </template>-->
+<!--            </el-tabs>-->
+<!--          </div>-->
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
             <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
@@ -176,6 +190,10 @@
                     <div class="item-body-item-key">Capacity (kW)</div>
                     <div class="item-body-item-value">{{ pvInfo.nameplateCapacity }}</div>
                   </div>
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">New installation or not</div>
+                    <div class="item-body-item-value">{{ ['', 'Yes', 'No'][pvInfo.installation] || '--' }}</div>
+                  </div>
                 </common-flex>
               </div>
             </common-flex>
@@ -197,7 +215,10 @@
                   v-model="pvHis.dateVal"
                 />
               </common-flex>
-              <div id="pvChart" class="pvChart"></div>
+              <div class="pvChart" v-if="!this.navBar['Inverter']">
+                <no-data />
+              </div>
+              <div v-else id="pvChart" class="pvChart"></div>
             </div>
           </common-flex>
         </div>
@@ -215,9 +236,17 @@
                   <div class="item-body-item-key">Serial Number</div>
                   <div class="item-body-item-value">{{ inverterInfo.serialNumber }}</div>
                 </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Manufacturer</div>
-                  <div class="item-body-item-value">{{ inverterInfo.manufacturer }}</div>
+                <div class="item-body-item charge">
+                  <div class="item-body-item-key">New installation or not</div>
+                  <div class="item-body-item-value">{{ ['', 'Yes', 'No'][inverterInfo.installation] || '--' }}</div>
+                </div>
+                <div class="item-body-item charge">
+                  <div class="item-body-item-key">Rated Power (kW)</div>
+                  <div class="item-body-item-value">{{ inverterInfo.nameplateCapacity }}</div>
+                </div>
+                <div class="item-body-item charge">
+                  <div class="item-body-item-key">Lifetime</div>
+                  <div class="item-body-item-value">{{ inverterInfo.lifetime }}</div>
                 </div>
               </common-flex>
             </div>
@@ -288,48 +317,150 @@
     <el-dialog v-if="addShow" :visible.sync="addShow" title="Add Device"
                :before-close="beforeClose"
                :close-on-click-modal ="false"
-               width="50%">
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[2]" :model="batteryRequire" :rules="rules" ref="ruleForm">
-        <el-form-item label="Battery">
-          <el-input maxlength="20" @input="change(2, $event)" :disabled="!!navBar['Battery']" v-model.trim="addDialogInfo[2].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
-        <el-form-item label="Capacity (kWh)" prop="nameplateCapacity">
-          <el-input @blur="change(2)" type="text" :disabled="!!navBar['Battery']" v-model.trim="batteryRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
-        </el-form-item>
+               width="66%">
+      <common-flex align="center">
+        <strong>Stick Logger</strong>
+        <common-flex v-if="!addDialogInfo[4]">
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(4)">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeStick}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Stick')">
+        </common-flex>
+      </common-flex>
+      <el-form @submit.native.prevent v-if="addDialogInfo[4]">
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @change="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <div style="margin-top: 15px; cursor: pointer" v-if="!addDialogInfo[4].disabled" @click="deleteSn(4)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
+        </div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[6]" :model="pvRequire" :rules="pvRules" ref="pvForm">
-        <el-form-item label="Photovoltaic">
-          <el-input maxlength="20" @input="change(6, $event)" :disabled="!!navBar['Photovoltaic']" v-model.trim="addDialogInfo[6].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
-        <el-form-item label="Capacity (kW)" prop="nameplateCapacity">
-          <el-input @blur="change(6)" type="text" :disabled="!!navBar['Photovoltaic']" v-model.trim="pvRequire.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
-        </el-form-item>
+      <div class="empty" v-else>No data</div>
+      <common-flex align="center">
+        <strong>Inverter</strong>
+        <common-flex v-if="!addDialogInfo[1]">
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(1)">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeInverter}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Inverter')">
+        </common-flex>
+      </common-flex>
+      <el-form @submit.native.prevent v-if="addDialogInfo[1]" style="margin-top: 16px">
+        <div class="dialog-form">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @change="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="Rated Power (kW)">
+            <el-input maxlength="20" @input="checkCapacity(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].nameplateCapacity" placeholder="Please enter"></el-input>
+            <div class="err-msg posa">{{ inverterCapacityMsg['msg'] }}</div>
+          </el-form-item>
+          <el-form-item label="New installation or not">
+            <el-select style="width: 100%" :disabled="addDialogInfo[1].disabled" @change="checkInstall(1)" v-model="addDialogInfo[1].installation" placeholder="Please select">
+              <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+            </el-select>
+            <div class="err-msg posa">{{ inverterInstallMsg['msg'] }}</div>
+          </el-form-item>
+          <div style="margin-top: 15px; cursor: pointer" v-if="!addDialogInfo[1].disabled" @click="deleteSn(1)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
+        </div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[3]">
-        <el-form-item label="EV charger">
-          <el-input maxlength="20" @input="change(3)" :disabled="!!navBar['EV charger']" v-model.trim="addDialogInfo['3'].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
+      <div class="empty" v-else>No data</div>
+      <template v-if="addDialogInfo[2]">
+        <common-flex align="center">
+          <strong>Battery</strong>
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(2)">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeBat}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Bat')">
+        </common-flex>
+        <template v-for="(i, k) of addDialogInfo[2]">
+          <el-form @submit.native.prevent :model="i">
+            <div class="dialog-form">
+<!--              11111-->
+              <el-form-item label="SN">
+                <el-input maxlength="20" @change="change(2, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+              </el-form-item>
+              <el-form-item label="Capacity (kWh)">
+                <el-input @input="checkCapacity(2, k)" type="text" :disabled="i.disabled" v-model.trim="i.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+                <div class="err-msg posa">{{ batCapacityMsg[k] }}</div>
+              </el-form-item>
+              <el-form-item label="New installation or not">
+                <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(2, k)" v-model="i.installation" placeholder="Please select">
+                  <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+                </el-select>
+                <div class="err-msg posa">{{ batInstallMsg[k] }}</div>
+              </el-form-item>
+              <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(2, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
+            </div>
+          </el-form>
+        </template>
+        <div class="empty" v-if="!addDialogInfo[2].length">No data</div>
+      </template>
+      <el-form @submit.native.prevent v-if="addDialogInfo[3]" style="margin-top: 16px">
+        <common-flex align="center">
+          <strong>EV Charger</strong>
+          <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+            <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(3)">
+          </el-tooltip>
+          <img class="device-refresh" :class="{rotateAni: activeCharger}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Charger')">
+        </common-flex>
+        <div class="dialog-form" v-for="(i, k) of addDialogInfo[3]">
+          <el-form-item label="SN">
+            <el-input maxlength="20" @change="change(3, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+          </el-form-item>
+          <el-form-item label="New installation or not">
+            <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(3, k)" v-model="i.installation" placeholder="Please select">
+              <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+            </el-select>
+            <div class="err-msg posa">{{ chargeInstallMsg[k] }}</div>
+          </el-form-item>
+          <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(3, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
+        </div>
+        <div class="empty" v-if="!addDialogInfo[3].length">No data</div>
       </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[1]">
-        <el-form-item label="Inverter">
-          <el-input maxlength="20" @input="change(1)" :disabled="!!navBar['Inverter']" v-model.trim="addDialogInfo['1'].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form @submit.native.prevent class="dialog-form" v-if="addDialogInfo[4]">
-        <el-form-item label="Stick Logger">
-          <el-input maxlength="20" @input="change(4)" :disabled="!!navBar['Stick Logger']" v-model.trim="addDialogInfo['4'].serialNumber" placeholder="Please enter the serial number"></el-input>
-        </el-form-item>
-      </el-form>
+      <template v-if="addDialogInfo[6]">
+        <common-flex align="center" style="margin-top: 16px">
+          <strong>Photovoltaic</strong>
+          <template v-if="addDialogInfo[6].length < 1">
+            <el-tooltip class="item" effect="dark" content="Add Manually" placement="top">
+              <img class="device-plus" :src="require('@img/site/device-plus.svg')" alt="" @click="addSn(6)">
+            </el-tooltip>
+            <img class="device-refresh" :class="{rotateAni: activePhotovoltaic}" :src="require('@img/site/refresh.svg')" alt="" @click="findDevice('Photovoltaic')">
+          </template>
+        </common-flex>
+        <template v-for="(i, k) of addDialogInfo[6]">
+          <el-form @submit.native.prevent :model="i" style="margin-top: 16px">
+            <div class="dialog-form" >
+              <el-form-item label="SN">
+                <!--            1111111-->
+                <el-input maxlength="20" @change="change(6, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+              </el-form-item>
+              <el-form-item label="Capacity (kW)">
+                <el-input @input="checkCapacity(6, k)" type="text" :disabled="i.disabled" v-model.trim="i.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
+                <div class="err-msg posa">{{ pvCapacityMsg[k] }}</div>
+              </el-form-item>
+              <el-form-item label="New installation or not">
+                <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(6, k)" v-model="i.installation" placeholder="Please select">
+                  <el-option v-for="(i, k) of installOption" :value="i.value" :label="i.label" :key="k"></el-option>
+                </el-select>
+                <div class="err-msg posa">{{ pvInstallMsg[k] }}</div>
+              </el-form-item>
+              <div style="margin-top: 15px; cursor: pointer" v-if="!i.disabled" @click="deleteSn(6, k)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
+            </div>
+          </el-form>
+        </template>
+        <div class="empty" v-if="!addDialogInfo[6].length">No data</div>
+      </template>
+
       <common-flex style="margin-top: 30px" justify="center">
-        <el-button :type="addSubType" :disabled="!addSubType" @click="submit">Submit</el-button>
-        <el-button @click="addShow = false; fillAddDialog(); addSubType = ''">Cancel</el-button>
+        <el-button @click="submitAdd" :disabled="addSubType">Submit</el-button>
+        <el-button @click="addShow = false; fillAddDialog(); addSubType = true;">Cancel</el-button>
       </common-flex>
     </el-dialog>
     <el-dialog v-if="delShow" :visible.sync="delShow" title="Delete Device"
                :before-close="beforeClose"
                :close-on-click-modal ="false"
                width="50%">
-      <el-form @submit.native.prevent class="dialog-form">
+      <el-form @submit.native.prevent class="dialog-form" label-position="top">
         <el-form-item class="select" label=" Product Type">
           <el-select @change="watchSelect" style="width: 100%" v-model="delDialogInfo.deviceType" placeholder="Please select">
             <el-option v-for="i of delDialogInfo.option"
@@ -340,7 +471,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="SN">
-          <el-input disabled v-model="delDialogInfo.sn"></el-input>
+          <el-select style="width: 100%" @change="chooseSn" v-model="delDialogInfo.sn">
+            <el-option v-for="(i, k) of delDialogInfo.snOption" :value="i" :label="i" :key="k"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Capacity(KWh)">
+          <el-input disabled v-model="delDialogInfo.nameplateCapacity"></el-input>
         </el-form-item>
       </el-form>
       <common-flex style="margin-top: 30px" justify="center">
@@ -354,11 +490,12 @@
 <script>
 import * as echarts from 'echarts'
 
-import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData } from '@/api/device'
+import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
-let timer = null
+let timer = null, timerInter = null
+let times = 1
 let arr = [], arr1 = [], arr5 = []
 let arrX1 = [], arrX2 = [], pv1 = [], pv2 = [], pv3 = [], pv4 = []
 let batData = [], pvData = []
@@ -373,6 +510,7 @@ const optionBat = {
       return [pt[0] + 20, pt[1] - 10];
     },
     formatter(v) {
+      if (v[0].value === 'NaN') return 'No data'
       if (optionBat.yAxis.name === 'kW') {
         let t1, unit1
         if (v[0].value < 1) {
@@ -386,7 +524,10 @@ const optionBat = {
           unit1 = 'MW'
         }
         return `${v[0].name}<br>${v[0].marker} ${t1}${unit1}`
-      } else return `${v[0].name}<br>${v[0].marker} ${v[0].value}`
+      } else {
+        if (v.length > 1) return `${v[0].name}<br>${v[0].marker}${v[0].seriesName} ${v[0].value}<br>${v[1].marker}${v[1].seriesName} ${v[1].value}`
+        else return `${v[0].name}<br>${v[0].marker} ${v[0].value}`
+      }
     }
   },
   grid: {
@@ -404,10 +545,6 @@ const optionBat = {
     {
       type: 'category',
       boundaryGap: true,
-      axisTick: {
-        show: true,
-        alignWithLabel: true
-      },
       data: arr,
       position: 'bottom',
       axisLine: {
@@ -447,8 +584,8 @@ const optionBat = {
       type: 'inside',
       height: 26,
       bottom: 2,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       // zoomOnMouseWheel: false,
       end: 1999
@@ -456,8 +593,8 @@ const optionBat = {
     {
       height: 22,
       bottom: 15,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       end: 1999,
         backgroundColor: 'white',
@@ -481,18 +618,7 @@ const optionBat = {
         }
     }
   ],
-  series: [
-    {
-      symbol: "none",
-      // name: 'A相',
-      type: 'line',
-      smooth: true,
-      itemStyle: {
-        color: '#3EBCD4'
-      },
-      data: []
-    }
-  ]
+  series: []
 }
 const optionPv = {
   tooltip: {
@@ -501,6 +627,7 @@ const optionPv = {
       return [pt[0] + 20, pt[1] - 10];
     },
     formatter(v) {
+      if (v[0].value === 'NaN') return 'No data'
       let v0, v1, v2, v3, t1, t2, t3, t4, res, unit1, unit2, unit3, unit4
       if (optionPv.yAxis.name === 'kW') {
         if (v[0]) {
@@ -610,10 +737,6 @@ const optionPv = {
     {
       type: 'category',
       boundaryGap: true,
-      axisTick: {
-        show: true,
-        alignWithLabel: true
-      },
       data: arrX1,
       position: 'bottom',
       axisLine: {
@@ -653,8 +776,8 @@ const optionPv = {
       type: 'inside',
       height: 26,
       bottom: 2,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       // zoomOnMouseWheel: false,
       end: 1999
@@ -662,8 +785,8 @@ const optionPv = {
     {
       height: 22,
       bottom: 15,
-      left: 60,
-      right: 60,
+      left: '5%',
+      right: '5%',
       start: 0,
       end: 1999,
       backgroundColor: 'white',
@@ -739,7 +862,7 @@ const optionPv = {
   ]
 }
 const optionBatSoc = {
-  color: ['#f3f3f3', '#98e69f'],
+  color: ['#98e69f', '#f3f3f3'],
   series: [
     {
       type: 'pie',
@@ -748,12 +871,14 @@ const optionBatSoc = {
         show: false
       },
       data: [
-        { value: 200, name: '' },
-        { value: 300, name: '' }
+        { value: 0, name: '' },
+        { value: 0, name: '' }
       ]
     }
   ]
 }
+
+
 export default {
   name: "comp-device",
   props: {
@@ -765,18 +890,29 @@ export default {
     }
   },
   data() {
-    const validateCapacity = (rule, value, callback) => {
-      if (!rule.required) callback()
-      if (value === '') {
-        callback(new Error('Please enter the capacity'));
-      } else {
-        const reg = /^(?!^\.)(\d*(\.\d{0,3})?)?$/
-        if (reg.test(value)) {
-          callback()
-        } else callback(new Error('At most three significant decimals'))
-      }
-    }
     return {
+      inverterCapacityMsg: {},
+      batCapacityMsg: {},
+      pvCapacityMsg: {},
+      inverterInstallMsg: {},
+      batInstallMsg: {},
+      pvInstallMsg: {},
+      chargeInstallMsg: {},
+      installOption: [
+        {
+          label: 'Yes',
+          value: 1
+        },
+        {
+          label: 'No',
+          value: 2
+        }
+      ],
+      activeStick: false,
+      activeInverter: false,
+      activeBat: false,
+      activeCharger: false,
+      activePhotovoltaic: false,
       batteryHis: {
         batteryType: 'Voltage',
         dateVal: new Date()
@@ -786,20 +922,14 @@ export default {
         dateVal: new Date()
       },
       batListInstance: [],
-      batList: [
-        {
-          sn: 'sdasdsd',
-          soc: '65%'
-        },
-        {
-          sn: 'sdasdxhg',
-          soc: '65%'
-        },
-      ],
+      batList: [],
+      pvList: [],
+      pileList: [],
       batCur: 0,
+      curPile: '',
+      curPv: '',
       activeBattery: 'first',
       activePv: 'first',
-      loading: '',
       dynamicSoc: '',
       queryParams: {
         pageNum: 1,
@@ -809,14 +939,14 @@ export default {
       },
       listDev: [],
       curDevInfo: {},
-      currentItem: {},
+      currentItem: null,
       sn: '',
       navBar: {},
       addDialogInfo: {},
       delDialogInfo: {
         id: '',
         deviceType: '',
-        sn: '',
+        nameplateCapacity: '',
         option: [
           {
             label: 'Inverter', // -逆变器
@@ -838,7 +968,9 @@ export default {
             label: 'Photovoltaic',
             value: '6'
           },
-        ]
+        ],
+        sn: '',
+        snOption: []
       },
       addShow: false,
       delShow: false,
@@ -883,9 +1015,9 @@ export default {
           'title': 'Basic Info',
           'info': {
             'Serial Number': '',
-            'Manufacturer': '',
             'Nameplate capacity (kWh)': '',
-            'Connected Inverter': ''
+            'Connected Inverter': '',
+            'New installation or not': ''
           },
         },
       ],
@@ -929,13 +1061,13 @@ export default {
           'title': 'EV charger Operation Time',
           'info': {
             'Lifetime': '',
+            'New installation or not': ''
           },
         },
         {
           'title': 'Basic Info',
           'info': {
             'Serial Number': '',
-            'Manufacturer': ''
           },
         },
       ],
@@ -945,30 +1077,13 @@ export default {
           'title': 'Basic Info',
           'info': {
             'Serial Number': '',
-            'Manufacturer': '',
           },
         },
       ],
-      addSubType: '',
       delSubType: '',
-      localChangeList: [],
-      batteryRequire: {
-        nameplateCapacity: ''
-      },
-      rules: {
-        nameplateCapacity: [
-          { required: false, validator: validateCapacity, trigger: ['blur', 'change'] }
-        ]
-      },
-      pvRequire: {
-        nameplateCapacity: ''
-      },
-      pvRules: {
-        nameplateCapacity: [
-          { required: false, validator: validateCapacity, trigger: ['blur', 'change'] }
-        ]
-      },
-      waitLoading: ''
+      localChangeList: {},
+      waitLoading: '',
+      addSubType: true,
     }
   },
   watch: {
@@ -991,6 +1106,7 @@ export default {
     },
     activePv (v) {
       if (v === 'second') {
+        if (!this.navBar['Inverter']) return
         this.$nextTick(() => {
           pvInstance = echarts.init(document.getElementById('pvChart'))
           this.getPvHisData()
@@ -1000,12 +1116,102 @@ export default {
     }
   },
   beforeDestroy() {
-    clearInterval(timer)
+    clearInterval(timerInter)
+    clearTimeout(timer)
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
-    changeCurBat(sn, index) {
-      this.batCur = index
+    addSn(deviceType) {
+      let item = {
+        deviceType,
+        nameplateCapacity: '',
+        installation: '',
+        serialNumber: '',
+        disabled: false
+      }
+      if ([1, 4].includes(deviceType)) this.addDialogInfo[deviceType] = item
+      else this.addDialogInfo[deviceType].push(item)
+    },
+    deleteSn(deviceType, index) {
+      if ([1, 4].includes(deviceType)) {
+        this.addDialogInfo[deviceType] = null
+        this.inverterCapacityMsg = {}
+        this.inverterInstallMsg = {}
+        return
+      }
+      this.addDialogInfo[deviceType].splice(index, 1)
+      let mapCapacity = {
+        1: 'inverterCapacityMsg',
+        2: 'batCapacityMsg',
+        6: 'pvCapacityMsg'
+      }
+      let mapInstall = {
+        2: 'batInstallMsg',
+        6: 'pvInstallMsg',
+        3: 'chargeInstallMsg'
+      }
+      if (deviceType !== 3) this.$delete(this[mapCapacity[deviceType]], index)
+      this.$delete(this[mapInstall[deviceType]], index)
+    },
+    findDevice(str) {
+      let item = this.listDev.find(i => +i.deviceType === 4)
+      this.requestLoading()
+      this[`active${str}`] = true
+      if (item && item.serialNumber) {
+        let params = {
+          sn: item.serialNumber
+        }
+        netList(params).then(res => {
+          let findBatList = res.data.batteryList || []
+          let inverList = res.data.inverterSnList || []
+          if (!findBatList.length && !inverList.length) return this.$modal.alert('Device not found')
+          if (findBatList.length) {
+            let arr = [...findBatList, ...this.addDialogInfo[2]]
+            this.addDialogInfo[2] = Array.from(arr.reduce((acc, cur) => {
+              acc.has(cur.serialNumber) || acc.set(cur.serialNumber, cur)
+              return acc;
+            }, new Map()).values())
+          }
+          if (inverList.length) {
+            this.addDialogInfo[1] = {
+              deviceType: 1,
+              disabled: true,
+              serialNumber: inverList[0].serialNumber,
+            }
+          }
+        }).catch(err => {
+          this.$modal.alert('Device not found')
+        }).finally(() => {
+          this[`active${str}`] = false
+          this.waitLoading.close()
+        })
+      } else {
+        this.waitLoading.close()
+        this.$modal.alert('Device not found')
+        this[`active${str}`] = false
+      }
+    },
+    changeCurBat(sn) {
+      this.batCur = sn
+      this.sn = sn
+      this.activeBattery = 'first'
+      this.commonStore()
+    },
+    commonStore() {
+      this.currentItem = this.listDev.find(i => i.serialNumber === this.sn)
+      if (deviceNavInfo[this.sn]) {
+        this.curDevInfo = deviceNavInfo[this.sn]
+        this.tempInfo()
+      } else this.getDeviceInfo()
+    },
+    changeCurPv() {
+      this.sn = this.curPv
+      this.activePv = 'first'
+      this.commonStore()
+    },
+    changeCurPile() {
+      this.sn = this.curPile
+      this.commonStore()
     },
     requestLoading() {
       this.waitLoading = this.$loading({
@@ -1020,6 +1226,8 @@ export default {
     },
     changeBatType() {
       arr1 = []
+      let arr2 = []
+      optionBat.series = []
       if (this.batteryHis.batteryType === 'Voltage') {
         optionBat.yAxis.name = 'V'
         for(let i = 0; i < batData.length; i++) {
@@ -1047,18 +1255,48 @@ export default {
       if (this.batteryHis.batteryType === 'Temperature') {
         optionBat.yAxis.name = '℃'
         for(let i = 0; i < batData.length; i++) {
-          arr1.push(batData[i].temperature)
+          arr1.push((+batData[i].maxTemperature).toFixed(2))
+          arr2.push((+batData[i].minTemperature).toFixed(2))
         }
       }
-      optionBat.series[0].data = arr1
+      let itemOne = {
+        symbol: "none",
+        // name: 'A相',
+        type: 'line',
+        smooth: true,
+        itemStyle: {
+          color: '#3EBCD4'
+        },
+        data: arr1
+      }
+      if (this.batteryHis.batteryType === 'Temperature') {
+        let itemTwo = {
+          name: 'minTemperature',
+          symbol: 'none',
+          type: 'line',
+          smooth: true,
+          itemStyle: {
+            color: '#FFB968'
+          },
+          data: arr2
+        }
+        itemOne.name = 'maxTemperature'
+        optionBat.series.push(itemTwo)
+      }
+      optionBat.series.push(itemOne)
+      if (batteryInstance) batteryInstance.dispose()
+      batteryInstance = echarts.init(document.getElementById('batteryChart'))
       batteryInstance.setOption(optionBat)
       console.log('changeBat')
     },
     getBatHisData() {
       this.requestLoading()
+      let format = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
       let params = {
         siteCode: this.queryParams.siteCode,
-        startTime: this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal),
+        sn: this.sn,
+        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
+        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
       }
       batHistoryData(params).then(res => {
         batData = res.data
@@ -1073,9 +1311,11 @@ export default {
       })
     },
     changePvDate() {
+      if (!this.navBar['Inverter']) return
       this.getPvHisData()
     },
     changePvType() {
+      if (!this.navBar['Inverter']) return
       pv1 = []
       pv2 = []
       pv3 = []
@@ -1101,9 +1341,12 @@ export default {
     },
     getPvHisData() {
       this.requestLoading()
+      let format = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
       let params = {
         siteCode: this.queryParams.siteCode,
-        startTime: this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal),
+        sn: this.sn,
+        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
+        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
       }
       pvHistoryData(params).then(res => {
         // console.log('hisPv', res.data)
@@ -1119,39 +1362,54 @@ export default {
       })
     },
     changeSize() {
-      clearInterval(timer)
+      clearTimeout(timer)
       timer = setTimeout(() => {
         if (batteryInstance) batteryInstance.resize()
         if (pvInstance) pvInstance.resize()
       }, 500)
     },
-    openLoading() {
-      this.loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+    getOrderRes() {
+      let data = {
+        sn: this.sn,
+      }
+      let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+      clearInterval(timerInter)
+      timerInter = setInterval(() => {
+        times++
+        orderRes(data).then(res => {
+          if (+res.data === 3) {
+            if(times > 15) {
+              times = 1
+              clearInterval(timerInter)
+              this.getList()
+              this.waitLoading.close()
+              return this.$modal.msgError('timeout')
+            }
+            this.getOrderRes()
+          } else {
+            times = 1
+            if (+res.data === 1) {
+              this.$modal.msgSuccess('SUCCESS')
+              this.getList()
+            } else this.$modal.msgError(statusList[+res.data])
+            clearInterval(timerInter)
+            this.waitLoading.close()
+          }
+        })
+      }, 1000)
     },
     stopCharge() {
-      this.openLoading()
       let data = {
-        siteCode: this.queryParams.siteCode
+        siteCode: this.queryParams.siteCode,
+        sn: this.sn
       }
       stopCharge(data).then(res => {
-        if (+res.code === 200) {
-          this.$message({
-            type: 'success',
-            message: 'Succeeded!'
-          })
-          this.getList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: 'Not Succeeded!'
-          })
-        }
-      }).finally(() => this.loading.close())
+        let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+        if (+res.data === 3) {
+          this.requestLoading()
+          this.getOrderRes()
+        } else this.$modal.msg(statusList[+res.data])
+      })
     },
     cancelDelete() {
       this.delShow = false
@@ -1171,120 +1429,311 @@ export default {
         }
       })
     },
-    watchSelect() {
-      let item = this.listDev.find(i => +i.deviceType === +this.delDialogInfo.deviceType)
-      if (item) {
-        this.delDialogInfo.sn = item.serialNumber
-        this.delDialogInfo.id = item.id
-        this.delSubType = 'primary'
-      } else {
-        this.delDialogInfo.sn = ''
-        this.delSubType = ''
-        this.delDialogInfo.id = ''
-      }
-    },
-    submit () {
-      let v1, v2
-      this.$refs.ruleForm.validate(v => {
-        v1 = v
-      })
-      this.$refs.pvForm.validate(v => {
-        v2 = v
-      })
-
-      if (v1 && v2) {
-        this.addDialogInfo[2].nameplateCapacity = +this.batteryRequire.nameplateCapacity
-        this.addDialogInfo[6].nameplateCapacity = +this.pvRequire.nameplateCapacity
-        let data = {
-          deviceList: [],
-          siteCode: this.queryParams.siteCode
-        }
-        let deviceList = []
-        for (let v in this.addDialogInfo) {
-          let item = {
-            deviceType: v,
-            serialNumber: this.addDialogInfo[v].serialNumber,
-            nameplateCapacity: +this.addDialogInfo[v].nameplateCapacity
+    chooseSn() {
+      this.delSubType = 'primary'
+      let deviceType = +this.delDialogInfo.deviceType
+      if (deviceType === 2) {
+        this.batList.forEach(i => {
+          if (i.serialNumber === this.delDialogInfo.sn) {
+            this.delDialogInfo.id = i.id
+            this.delDialogInfo.nameplateCapacity = i.nameplateCapacity
           }
-          if (this.addDialogInfo[v].serialNumber) deviceList.push(item)
-        }
-        data.deviceList = deviceList
-        addBatchDevice(data).then(res => {
-          if (+res.code === 200) {
-            this.$message({
-              type: 'success',
-              message: 'Succeeded!'
-            })
-            this.beforeClose()
-            this.getList()
+        })
+      }
+      if (deviceType === 3) {
+        this.pileList.forEach(i => {
+          if (i.serialNumber === this.delDialogInfo.sn) {
+            this.delDialogInfo.id = i.id
+            this.delDialogInfo.nameplateCapacity = i.nameplateCapacity
+          }
+        })
+      }
+      if (deviceType === 6) {
+        this.pvList.forEach(i => {
+          if (i.serialNumber === this.delDialogInfo.sn) {
+            this.delDialogInfo.id = i.id
+            this.delDialogInfo.nameplateCapacity = i.nameplateCapacity
           }
         })
       }
     },
-    change(type) {
-      if ([2, 6].includes(type)) {
-        if (type === 2) {
-          if (this.addDialogInfo[2].serialNumber.replace(/\s*/g,"")) {
-            this.rules.nameplateCapacity[0].required = true
-            this.rules = {...this.rules}
-          } else {
-            this.rules.nameplateCapacity[0].required = false
-            this.rules = {...this.rules}
-          }
+    watchSelect() {
+      this.delDialogInfo.sn = this.delDialogInfo.nameplateCapacity = this.delDialogInfo.id = ''
+      let deviceType = +this.delDialogInfo.deviceType
+      let item = this.listDev.find(i => +i.deviceType === deviceType)
+      let snList = []
+      if (deviceType === 2) {
+        this.batList.forEach(i => {
+          snList.push(i.serialNumber)
+        })
+      }
+      if (deviceType === 3) {
+        this.pileList.forEach(i => {
+          snList.push(i.serialNumber)
+        })
+      }
+      if (deviceType === 6) {
+        this.pvList.forEach(i => {
+          snList.push(i.serialNumber)
+        })
+      }
+      if ([1, 4].includes(deviceType)) {
+        if (item) {
+          snList.push(item.serialNumber)
+          this.delDialogInfo.id = item.id
         } else {
-          if (this.addDialogInfo[6].serialNumber.replace(/\s*/g,"")) {
-            this.pvRules.nameplateCapacity[0].required = true
-            this.pvRules = {...this.pvRules}
-          } else {
-            this.pvRules.nameplateCapacity[0].required = false
-            this.pvRules = {...this.pvRules}
+          this.delDialogInfo.sn = ''
+          this.delDialogInfo.id = ''
+        }
+      }
+      this.delDialogInfo.snOption = snList
+      this.delSubType = this.delDialogInfo.sn ? 'primary' : ''
+    },
+    submitAdd () {
+      let item = {}
+      let data = {
+        deviceList: [],
+        siteCode: this.queryParams.siteCode
+      }
+      let deviceList = []
+      for (let v in this.addDialogInfo) {
+        if ([2, 6, 3].includes(+v)) {
+          this.addDialogInfo[v].forEach((i, index) => {
+            item = {
+              siteCode: this.queryParams.siteCode,
+              deviceType: +i.deviceType,
+              serialNumber: i.serialNumber,
+              nameplateCapacity: +i.nameplateCapacity,
+              installation: i.installation,
+              index: index + 1
+            }
+            if (i.serialNumber) deviceList.push(item)
+          })
+        } else if (+v === 1) {
+          item = {
+            siteCode: this.queryParams.siteCode,
+            deviceType: +v,
+            serialNumber: this.addDialogInfo[v]?.serialNumber,
+            nameplateCapacity: +this.addDialogInfo[v]?.nameplateCapacity,
+            installation: this.addDialogInfo[v]?.installation
+          }
+          if (this.addDialogInfo[v]?.serialNumber) deviceList.push(item)
+        } else {
+          item = {
+            siteCode: this.queryParams.siteCode,
+            deviceType: +v,
+            serialNumber: this.addDialogInfo[v]?.serialNumber,
+          }
+          if (this.addDialogInfo[v]?.serialNumber) deviceList.push(item)
+        }
+      }
+      let uniqueObj = {}
+      for (let i = 0; i < deviceList.length; i++) {
+        if (!uniqueObj[deviceList[i].serialNumber]) uniqueObj[deviceList[i].serialNumber] = 1
+        else return this.$modal.msgError("sn:Coding repetition")
+      }
+      if (!deviceList.length) return
+      let i = 0
+      let mapCapacity = {
+        1: 'inverterCapacityMsg',
+        2: 'batCapacityMsg',
+        6: 'pvCapacityMsg'
+      }
+      let mapInstall = {
+        1: 'inverterInstallMsg',
+        2: 'batInstallMsg',
+        6: 'pvInstallMsg',
+        3: 'chargeInstallMsg'
+      }
+      for (i; i < deviceList.length; i++) {
+        // 先检验容量
+        if ([1, 2, 6].includes(+deviceList[i].deviceType)) {
+          if (!deviceList[i].nameplateCapacity) {
+            if (deviceList[i].index) this.$set(this[mapCapacity[+deviceList[i].deviceType]], deviceList[i].index - 1, 'please enter capacity')
+            else this.$set(this[mapCapacity[+deviceList[i].deviceType]], 'msg', 'please enter rated power')
+          }
+        }
+        // 校验是否选择new installation or not
+        if (+deviceList[i].deviceType !== 4) {
+          if (!deviceList[i].installation) {
+            if (+deviceList[i].deviceType !== 1) this.$set(this[mapInstall[+deviceList[i].deviceType]], deviceList[i].index - 1, 'please select')
+            else this.$set(this[mapInstall[+deviceList[i].deviceType]], 'msg', 'please select')
           }
         }
       }
-      if (!this.localChangeList.includes(type)) this.localChangeList.push(type)
-      let i = 0;
-      for(i; i < this.localChangeList.length; i++) {
-        if (this.addDialogInfo[this.localChangeList[i]].serialNumber.replace(/\s*/g,"")) break
+      // 1111111111
+      let arrList = ['inverterCapacityMsg', 'batCapacityMsg', 'pvCapacityMsg', 'inverterInstallMsg', 'batInstallMsg', 'pvInstallMsg', 'chargeInstallMsg']
+      for (let p = 0; p < arrList.length; p++) {
+        for (let k in this[arrList[p]]) {
+          if (this[arrList[p]][k]) return
+        }
       }
-      if (i < this.localChangeList.length) this.addSubType = 'primary'
+      data.deviceList = deviceList
+      this.requestLoading()
+      addBatchDevice(data).then(res => {
+        if (+res.code === 200) {
+          this.$message({
+            type: 'success',
+            message: 'Succeeded!'
+          })
+          this.beforeClose()
+          this.getList()
+        }
+      }).finally(() => this.waitLoading.close())
+    },
+    checkInstall(deviceType, index) {
+      let mapInstall = {
+        1: 'inverterInstallMsg',
+        2: 'batInstallMsg',
+        6: 'pvInstallMsg',
+        3: 'chargeInstallMsg'
+      }
+      if (deviceType !== 1) this.$delete(this[mapInstall[deviceType]], index)
+      else this.$delete(this[mapInstall[deviceType]], 'msg')
+    },
+    checkCapacity(deviceType, index) {
+      // 1111111111
+      let msgType = deviceType === 1 ? 'inverterCapacityMsg' : deviceType === 2 ? 'batCapacityMsg' : 'pvCapacityMsg'
+      const reg = /^(?!^\.)(\d*(\.\d{0,3})?)?$/
+      // At most three significant decimals
+      let capacity
+      if (deviceType === 1) capacity = this.addDialogInfo[deviceType].nameplateCapacity.replace(/\s*/g,"")
+      else capacity = this.addDialogInfo[deviceType][index].nameplateCapacity.replace(/\s*/g,"")
 
-      else this.addSubType = ''
+      if (!capacity) {
+        if (deviceType === 1) this.$set(this[msgType], 'msg', 'please enter rated power')
+        else this.$set(this[msgType], index, 'please enter capacity')
+      } else {
+        if (reg.test(capacity)) {
+          if (deviceType === 1) this.$set(this[msgType], 'msg', '')
+          else this.$set(this[msgType], index, '')
+        } else {
+          if (deviceType === 1) this.$set(this[msgType], 'msg', 'At most three significant decimals')
+          else this.$set(this[msgType], index, 'At most three significant decimals')
+        }
+      }
+    },
+    change(deviceType, index) {
+      // 1111111111
+      let sn = ''
+      if ([2, 3, 6].includes(deviceType)) {
+        sn = this.addDialogInfo[deviceType][index].serialNumber.replace(/\s*/g,"")
+        if (sn) this.$set(this.localChangeList, `${deviceType}${index}`, sn)
+        else this.$delete(this.localChangeList, `${deviceType}${index}`)
+      } else {
+        sn = this.addDialogInfo[deviceType].serialNumber
+        if (sn) this.$set(this.localChangeList, deviceType, sn)
+        else this.$delete(this.localChangeList, deviceType)
+      }
+      if (deviceType === 1 && !sn) {
+        this.inverterInstallMsg = {}
+        this.inverterCapacityMsg = {}
+      }
+      let arr = Object.keys(this.localChangeList)
+      let i = 0;
+      for(i; i < arr.length; i++) {
+        if (arr[i]) break
+      }
+      this.addSubType = i >= arr.length
     },
     addDevice() {
+      this.fillAddDialog()
       this.addShow = true
     },
     beforeClose() {
       this.addShow = false
-      this.addSubType = ''
       this.delShow = false
+      this.delSubType = ''
+      this.addSubType = true
     },
     fillAddDialog() {
       let haveTypeList = [4, 1, 2, 6, 3]
-      haveTypeList.forEach(i => {
-        let item = this.listDev.find(item => +item.deviceType === i)
-        if (item) {
-          if (i === 2) this.batteryRequire.nameplateCapacity = item.nameplateCapacity
-          if (i === 6) this.pvRequire.nameplateCapacity = item.nameplateCapacity
-          let info = {
-            deviceType: i,
-            serialNumber: item.serialNumber,
-            nameplateCapacity: item.nameplateCapacity
+      let item = {
+        deviceType: 0,
+        nameplateCapacity: 0,
+        installation: 2,
+        serialNumber: '',
+        disabled: false
+      }
+      for(let i = 0; i < haveTypeList.length; i++) {
+        if (haveTypeList[i] === 2) {
+          this.$set(this.addDialogInfo, 2, [])
+          if (this.batList.length) {
+            this.batList.forEach(i => {
+              item = {
+                deviceType: 2,
+                nameplateCapacity: i.nameplateCapacity,
+                installation: i.installation,
+                serialNumber: i.serialNumber,
+                disabled: true
+              }
+              this.addDialogInfo[2].push(item)
+            })
           }
-          this.$set(this.addDialogInfo, i, info)
-        } else {
-          let info = {
-            deviceType: i,
-            serialNumber: '',
-            nameplateCapacity: ''
-          }
-          this.$set(this.addDialogInfo, i, info)
         }
-      })
-      if (!this.addDialogInfo[2].serialNumber) this.batteryRequire.nameplateCapacity = ''
-      if (!this.addDialogInfo[6].serialNumber) this.pvRequire.nameplateCapacity = ''
+        if (haveTypeList[i] === 3) {
+          this.$set(this.addDialogInfo, 3, [])
+          if (this.pileList.length) {
+            this.pileList.forEach(i => {
+              item = {
+                deviceType: 3,
+                nameplateCapacity: i.nameplateCapacity,
+                installation: i.installation,
+                serialNumber: i.serialNumber,
+                disabled: true
+              }
+              this.addDialogInfo[3].push(item)
+            })
+          }
+        }
+        if (haveTypeList[i] === 6) {
+          this.$set(this.addDialogInfo, 6, [])
+          if (this.pvList.length) {
+            this.pvList.forEach(i => {
+              item = {
+                deviceType: 6,
+                nameplateCapacity: i.nameplateCapacity,
+                installation: i.installation,
+                serialNumber: i.serialNumber,
+                disabled: true
+              }
+              this.addDialogInfo[6].push(item)
+            })
+          }
+        }
+        if (haveTypeList[i] === 4) {
+          item = this.listDev.find(item => +item.deviceType === 4)
+          let info = null
+          if (item) {
+            info = {
+              deviceType: 4,
+              disabled: true,
+              serialNumber: item.serialNumber,
+            }
+          }
+          this.$set(this.addDialogInfo, 4, info)
+        }
+        if (haveTypeList[i] === 1) {
+          item = this.listDev.find(item => +item.deviceType === 1)
+          let info = null
+          if (item) {
+            info = {
+              deviceType: 1,
+              disabled: true,
+              serialNumber: item.serialNumber,
+              nameplateCapacity: item.nameplateCapacity,
+              installation: item.installation
+            }
+          }
+          this.$set(this.addDialogInfo, 1, info)
+        }
+      }
     },
     getList() {
       this.navBar = {}
+      this.batList = []
+      this.pvList = []
+      this.pileList = []
       listDevice(this.queryParams).then(res => {
         this.listDev = res.rows
         let haveBattery = this.listDev.find(i => +i.deviceType === 2)
@@ -1296,9 +1745,8 @@ export default {
         if (haveInverter) this.$set(this.navBar, 'Inverter', '1')
         if (haveBattery) this.$set(this.navBar, 'Battery', '2')
         if (havePv) this.$set(this.navBar, 'Photovoltaic', '6')
-        if (haveCharge) this.$set(this.navBar, 'EV charger', '3')
+        if (haveCharge) this.$set(this.navBar, 'EV Charger', '3')
         let haveTypeList = [4, 1, 2, 6, 3]
-        this.fillAddDialog()
         let i = 0
         for(i; i < haveTypeList.length; i++) {
           if (this.listDev.find(item => +item.deviceType === haveTypeList[i])) break
@@ -1309,24 +1757,54 @@ export default {
           this.active = this.currentItem.deviceType + ''
           this.getDeviceInfo()
         }
+        let list = res.rows
+        for(let i = 0; i < list.length; i++) {
+          if (+list[i]['deviceType'] === 2) this.batList.push(list[i])
+          if (+list[i]['deviceType'] === 6) this.pvList.push(list[i])
+          if (+list[i]['deviceType'] === 3) this.pileList.push(list[i])
+        }
+        if (this.batList.length) this.batCur = this.batList[0].serialNumber
+        if (this.pvList.length) this.curPv = this.pvList[0].serialNumber
+        if (this.pileList.length) this.curPile = this.pileList[0].serialNumber
+        for(let i = 0; i < this.batList.length; i++) {
+          this.batList[i]['soc'] = JSON.parse(this.batList[i].extInfo)['soc']
+          this.batList[i]['curEnergy'] = JSON.parse(this.batList[i].extInfo)['soc']
+          this.batList[i]['capacity'] = 100
+        }
+        if (+this.active === 2) this.$nextTick(() => this.initBatInstance())
       })
     },
     initBatInstance() {
       this.batListInstance = []
       if (this.batList.length) {
-        for(let i = 0; i < this.batList.length; i++) {
-          this.$nextTick(() => {
+        this.$nextTick(() => {
+          for(let i = 0; i < this.batList.length; i++) {
             this.batListInstance.push(echarts.init(document.getElementById(`batPile${i}`)))
+            if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) {
+              this.batList[i]['soc'] = 0 + '%'
+              optionBatSoc.series[0].data[0].value = 0
+              optionBatSoc.series[0].data[1].value = 1
+            } else {
+              this.batList[i]['soc'] = (this.batList[i]['curEnergy'] / this.batList[i]['capacity']) * 100 + '%'
+              optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy'] / this.batList[i]['capacity']
+              optionBatSoc.series[0].data[1].value = 1 - (this.batList[i]['curEnergy'] / this.batList[i]['capacity'])
+            }
             this.batListInstance[i].setOption(optionBatSoc)
-          })
-        }
+          }
+        })
       }
     },
     changeNav(v) {
       if (+v === 2 ) this.$nextTick(() => { this.initBatInstance() })
       this.activePv = this.activeBattery = 'first'
       this.active = v
-      this.currentItem = this.listDev.find(i => +i.deviceType === +v)
+      if ([2, 3, 6].includes(+v)) {
+        let list
+        if (+v === 2) list = this.batList
+        if (+v === 6) list = this.pvList
+        if (+v === 3) list = this.pileList
+        this.currentItem = this.listDev.find(i => i.serialNumber === list[0].serialNumber)
+      } else this.currentItem = this.listDev.find(i => +i.deviceType === +v)
       this.sn = this.currentItem.serialNumber
       if (deviceNavInfo[this.sn]) {
         this.curDevInfo = deviceNavInfo[this.sn]
@@ -1417,17 +1895,17 @@ export default {
               value: 'serialNumber'
             },
             {
-              key: 'Manufacturer',
-              value: 'manufacturer'
-            },
-            {
               key: 'Nameplate capacity (kWh)',
               value: 'nameplateCapacity'
             },
             {
               key: 'Connected Inverter',
               value: 'connectedInverter'
-            }
+            },
+            {
+              key: 'New installation or not',
+              value: 'installation'
+            },
           ],
         ]
         arr.forEach((i, index) => {
@@ -1438,38 +1916,39 @@ export default {
                 this.dynamicSoc = 0
                 return
               }
-              this.batteryInfo[index]['info'][k.key] = ((this.curDevInfo[k.value] / this.curDevInfo['capacity']) * 100).toFixed(0) + '%'
+              this.batteryInfo[index]['info'][k.key] = this.curDevInfo.soc
               this.dynamicSoc = this.curDevInfo[k.value] / this.curDevInfo['capacity']
-            }
-            else if (k.key === 'Current') {
+            } else if (k.key === 'Current') {
               if (+this.base.storeConnectStatus === 2) {
                 this.batteryInfo[index]['info'][k.key] = 0
                 return
               }
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'A'
-            }
-            else if (k.key === 'Voltage') {
+            } else if (k.key === 'Voltage') {
               if (+this.base.storeConnectStatus === 2) {
                 this.batteryInfo[index]['info'][k.key] = 0
                 return
               }
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'V'
-            }
-            else if (k.key === 'Power') {
+            } else if (k.key === 'Power') {
               if (+this.base.storeConnectStatus === 2) {
                 this.batteryInfo[index]['info'][k.key] = 0
                 return
               }
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
-            }
-            else if (index === 4 || index === 3) {
-              if (index === 3) {
-                let resStr = ''
-                resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
-                this.batteryInfo[index]['info'][k.key] = resStr
-              } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
-            }
-            else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kWh'
+            } else if (k.key === 'New installation or not') {
+              this.batteryInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
+            } else if (index === 4 || index === 3) {
+              if (+this.curDevInfo.installation === 2 && k.key === 'Lifetime') {
+                this.batteryInfo[index]['info'][k.key] = '--'
+              } else {
+                if (index === 3) {
+                  let resStr = ''
+                  resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+                  this.batteryInfo[index]['info'][k.key] = resStr
+                } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
+              }
+            } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kWh'
           })
         })
       } else if (+this.active === 3) {
@@ -1546,16 +2025,16 @@ export default {
             {
               key: 'Lifetime',
               value: 'createTime'
+            },
+            {
+              key: 'New installation or not',
+              value: 'installation'
             }
           ],
           [
             {
               key: 'Serial Number',
               value: 'serialNumber'
-            },
-            {
-              key: 'Manufacturer',
-              value: 'manufacturer'
             },
           ],
         ]
@@ -1581,10 +2060,17 @@ export default {
                 else this.chargeInfo[index]['info'][k.key] = 0
               } else this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? this.curDevInfo[k.value] + 'kWh' : 0
             }
+            else if (k.key === 'New installation or not') {
+              this.chargeInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
+            }
             else if (index === 4) {
-              let resStr = ''
-              resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
-              this.chargeInfo[index]['info'][k.key] = resStr
+              if (+this.curDevInfo.installation === 2) {
+                this.chargeInfo[index]['info'][k.key] = '--'
+              } else {
+                let resStr = ''
+                resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+                this.chargeInfo[index]['info'][k.key] = resStr
+              }
             } else if (index === 5) {
               this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value]
             } else this.chargeInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? (+this.curDevInfo[k.value]).toFixed(2) + 'kWh' : 0
@@ -1596,10 +2082,6 @@ export default {
             {
               key: 'Serial Number',
               value: 'serialNumber'
-            },
-            {
-              key: 'Manufacturer',
-              value: 'manufacturer'
             },
             // {
             //   key: 'Wifi',
@@ -1679,7 +2161,7 @@ export default {
             p: ''
           }
         ]
-        let objGrid = this.curDevInfo.gridEntity, objLoad = this.curDevInfo.loadEntity
+        let objGrid = this.curDevInfo.inverterEntity?.gridEntity, objLoad = this.curDevInfo.inverterEntity?.loadEntity
         arrGrid.forEach((item, index) => {
           let prefix = item.pvNum.toLowerCase()
           item.v = objGrid[`${prefix}voltage`]
@@ -1694,10 +2176,14 @@ export default {
         })
         this.curDevInfo.gridList = arrGrid
         this.curDevInfo.loadList = arrLoad
-        let resStr = ''
-        resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
         this.inverterInfo = this.curDevInfo
-        this.inverterInfo.Lifetime = resStr
+        if (+this.curDevInfo.installation === 2) {
+          this.inverterInfo.lifetime = '--'
+        } else {
+          let resStr = ''
+          resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
+          this.inverterInfo.lifetime = resStr
+        }
       } else if (+this.active === 6) {
         let arr = [
           {
@@ -1725,20 +2211,23 @@ export default {
             p: ''
           },
         ]
-        let obj = this.curDevInfo
+        let obj = this.curDevInfo.pvEntity
         arr.forEach((item, index) => {
           let prefix = `pv${index + 1}`
-          item.v = obj[`${prefix}Voltage`]
-          item.c = obj[`${prefix}Current`]
-          item.p = obj[`${prefix}Power`]
+          item.v = obj[`${prefix}Voltage`] ? obj[`${prefix}Voltage`] : +obj[`${prefix}Voltage`] === 0 ? 0 : '--'
+          item.c = obj[`${prefix}Current`] ? obj[`${prefix}Current`] : +obj[`${prefix}Current`] === 0 ? 0 : '--'
+          item.p = obj[`${prefix}Power`] ? obj[`${prefix}Power`] : +obj[`${prefix}Power`] === 0 ? 0 : '--'
         })
 
         this.curDevInfo.pvList = arr
-
-        let resStr = ''
-        resStr += `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
         this.pvInfo = this.curDevInfo
-        this.pvInfo.Lifetime = resStr
+        if (+this.curDevInfo.installation === 2) {
+          this.pvInfo.Lifetime = '--'
+        } else {
+          let resStr = ''
+          resStr += `${this.curDevInfo.periodDay} Days ${this.curDevInfo.periodMonth} Months ${this.curDevInfo.periodYear} Year`
+          this.pvInfo.Lifetime = resStr
+        }
       }
     }
   }
@@ -1849,12 +2338,30 @@ export default {
       }
     }
   }
+  .device-plus, .device-refresh {
+    margin-left: 24px;
+    @include wh(16);
+    cursor: pointer;
+  }
+  .device-plus {
+    @include wh(20);
+  }
   .dialog-form {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    align-items: center;
+    opacity: 1;
+    transition: all .3s;
     .el-form-item {
-      width: calc(100% / 2 - 24px);
+      position: relative;
+      margin-right: 24px;
+      width: calc(100% / 3 - 40px);
+      .err-msg {
+        left: 0;
+        bottom: -30px;
+        color: #ff4949;
+        font-size: 12px;
+      }
     }
     .select {
       .el-form-item__label{
@@ -1932,6 +2439,21 @@ export default {
       color: #3EBCD4;
       transition: all .3s;
     }
+  }
+  .rotateAni {
+    animation: autoRotate infinite linear .5s;
+  }
+  @keyframes  autoRotate{
+    from { transform: rotate(0) }
+    to { transform: rotate(-360deg) }
+  }
+  .empty {
+    color: #909399;
+    text-indent: 8px;
+    line-height: 40px;
+  }
+  strong {
+    min-width: 120px;
   }
 }
 </style>

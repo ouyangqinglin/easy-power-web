@@ -50,7 +50,7 @@
         <el-card class="comp-overview-row-col-card">
           <common-flex class="comp-overview-row-col-card-title" justify="space-between">
             <div>Real-time power</div>
-<!--            <div>Signal strength of stick logger：Strong</div>-->
+            <el-tag v-if="!online" effect="dark">Off line</el-tag>
           </common-flex>
           <common-flex class="circle-container posr" justify="center">
 <!--            <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: +base.pvExist ? '90%' : '80%'}">-->
@@ -77,6 +77,7 @@
                 <div v-else>{{ (+base.solarPower / 1000).toFixed(2) }}<br><span>MW</span></div>
               </common-flex>
               <common-flex direction="column" justify="center" align="center" class="circle left posa">
+                <div class="posa soc">{{ base.soc || 0 }}%<br><span style="color: #666">SOC</span></div>
                 <img :src="require('./img/battery.svg')" alt="">
                 <template v-if="+base.storeConnectStatus === 1">
                   <div v-if="+base.storePower < 1000">{{ base.storePower }}<br><span>kW</span></div>
@@ -133,7 +134,7 @@
             </common-flex>
             <common-flex class="comp-overview-row-col-card-content" direction="column" justify="space-around">
               <common-flex justify="space-around">
-                <img class="cur-wea-img" style="width: 80px" :src="weatherImg[weatherData.currentWeather]" alt="">
+                <img class="cur-wea-img" :src="weatherImg[weatherCodeEnum[weatherData.weatherId]]" alt="">
                 <div style="margin-right: 4.5vw">
                   <div class="comp-overview-row-col-card-content-temperature">{{ weatherData.currentWeather }}<br>
                     {{ weatherData.currentTemp }}°C<br>
@@ -155,7 +156,7 @@
               <common-flex justify="space-around">
                 <common-flex direction="column" align="center" v-for="i of weatherData.futureWeathers" :key="i.dayOfWeek">
                   <div class="comp-overview-row-col-card-content-day">{{ i.dayOfWeek }}</div>
-                  <img class="comp-overview-row-col-card-content-weather-img" :src="weatherImg[i.weather]" alt="">
+                  <img class="comp-overview-row-col-card-content-weather-img" :src="weatherImg[weatherCodeEnum[i.futureWeatherId]]" alt="">
                   <div class="comp-overview-row-col-card-content-random">{{ i.minTemp }}-{{i.maxTemp }}°C</div>
                   <div class="comp-overview-row-col-card-content-cloud">{{ i.weather }}</div>
                 </common-flex>
@@ -195,9 +196,17 @@
               </common-flex>
             </common-flex>
             <div id="barProduction" class="barChart"></div>
-            <div class="barChart-total" v-if="+totalPvGenerateEnergy < 1000">{{ totalPvGenerateEnergy }}<span>Wh</span></div>
-            <div class="barChart-total" v-else-if="+totalPvGenerateEnergy > 1000 && +totalPvGenerateEnergy < 1000000">{{ (+totalPvGenerateEnergy / 1000).toFixed(2) }}<span>kWh</span></div>
-            <div class="barChart-total" v-else>{{ +(totalPvGenerateEnergy / 1000000).toFixed(2) }}<span>MWh</span></div>
+            <common-flex class="barChart-total" align="center">
+              <el-tooltip effect="dark" placement="top">
+                <span slot="content">
+                  Total system production, including solar<br>production and battery discharge
+                </span>
+                <img class="question" :src="require('@img/question.svg')" alt="">
+              </el-tooltip>
+              <div v-if="+totalPvGenerateEnergy < 1000">{{ totalPvGenerateEnergy }}<span>Wh</span></div>
+              <div v-else-if="+totalPvGenerateEnergy > 1000 && +totalPvGenerateEnergy < 1000000">{{ (+totalPvGenerateEnergy / 1000).toFixed(2) }}<span>kWh</span></div>
+              <div v-else>{{ +(totalPvGenerateEnergy / 1000000).toFixed(2) }}<span>MWh</span></div>
+            </common-flex>
           </common-flex>
           <common-flex direction="column" class="comp-overview-chart-consumption posr">
             <div style="flex-shrink: 0"><p>Consumption</p></div>
@@ -213,7 +222,7 @@
 </template>
 
 <script>
-import {getWeather, homeChart} from "@/api/index"
+import {getWeather, homeChart, getNet} from "@/api/index"
 import * as echarts from 'echarts'
 
 function detectZoom() {
@@ -247,7 +256,63 @@ let data2 = [];
 
 let xAxisDataConsu = []
 let data3 = [], data4 = []
-
+const weatherCodeEnum = {
+  "200": "thunderstorm", //雷雨
+  "201": "thunderstorm",
+  "202": "thunderstorm",
+  "210": "thunderstorm",
+  "211": "thunderstorm",
+  "212": "thunderstorm",
+  '221': "thunderstorm",
+  '230': "thunderstorm",
+  "231": "thunderstorm",
+  "232": "thunderstorm",
+  "300": "drizzle", //小雨
+  "301": "drizzle",
+  "302": "drizzle",
+  '310': "drizzle",
+  "311": "drizzle",
+  '312': "drizzle",
+  "313": "drizzle",
+  "314": "drizzle",
+  "321": "drizzle",
+  "500": "drizzle",
+  "501": "heavyRain",
+  "502": "heavyRain", //大雨
+  "503": "heavyRain",
+  "504": "heavyRain",
+  "511": "heavyRain",
+  "520": "heavyRain",
+  "521": "heavyRain",
+  "522": "heavyRain",
+  "531": "heavyRain",
+  "600": "lightSonw", //小雪
+  "601": "lightSonw",
+  "602": "heavySnow", //大雪
+  "611": "heavySnow",
+  "612": "heavySnow",
+  '613': "heavySnow",
+  "615": "heavySnow",
+  "616": "heavySnow",
+  "620": "heavySnow",
+  "621": "heavySnow",
+  '622': "heavySnow",
+  "701": "fog", // 雾
+  "711": "fog",
+  "721": "fog",
+  "731": "fog",
+  "741": "fog",
+  "751": "fog",
+  "761": "fog",
+  "762": "fog",
+  "771": "fog",
+  "781": "fog",
+  "800": "sunny", // 晴朗
+  "801": "clounds", // 多云
+  "802": "clounds",
+  "803": "clounds",
+  "804": "overcast", // 阴天
+};
 export default {
   name: "comp-overview",
   props: {
@@ -262,6 +327,7 @@ export default {
     const dateVal = new Date()
     const that = this
     return {
+      weatherCodeEnum,
       closePicker: {
         onPick(a) {
           that.$refs.dataEnd.handleClose()
@@ -273,16 +339,48 @@ export default {
           }, 200)
         },
       },
-      weatherImg: {
-        'Sunny': require('./img/sun.svg'),
-        'Clear': require('./img/sun.svg'),
-        'Drizzle': require('./img/rainy.svg'),
-        'Rainy': require('./img/drizzle.svg'),
-        'Rain': require('./img/drizzle.svg'),
-        'Clouds': require('./img/cloudy.svg'),
-        'Snow': require('./img/snow.svg'),
-        'Thunderstorm': require('./img/thunderstorm.svg'),
-        'Mist': require('./img/mist.svg')
+      weatherImgDay: {
+        "sunny": require("./img/weather_day_sunny.png"),
+        //多云
+        "clounds": require("./img/weather_day_cloud.png"),
+        //阴天
+        "overcast": require("./img/weather_day_overcast.png"),
+        // 小雨
+        "drizzle": require("./img/weather_day_lightrain.png"),
+        // 大雨
+        "heavyRain": require("./img/weather_day_heavyrain.png"),
+        //雷雨
+        "thunderstorm": require("./img/weather_day_thunderstorm.png"),
+        // 小雪
+        "lightSonw": require("./img/weather_day_lightsnow.png"),
+        // 大雪
+        "heavySnow": require("./img/weather_day_heavysnow.png"),
+        // 冰雹
+        "hail": require("./img/weather_day_hail.png"),
+        // 雾
+        "fog": require("./img/weather_day_fog.png")
+      },
+      weatherImgNight: {
+        // 晴天
+        "sunny": require("./img/weather_night_sunny.png"),
+        //多云
+        "clounds": require("./img/weather_night_cloud.png"),
+        //阴天  assets/png/weather_night_overcast.png
+        "overcast": require("./img/weather_night_overcast.png"),
+        // 小雨
+        "drizzle": require("./img/weather_night_lightrain.png"),
+        // 大雨
+        "heavyRain": require("./img/weather_night_heavyrain.png"),
+        //雷雨
+        "thunderstorm": require("./img/weather_night_thunderstorm.png"),
+        // 小雪
+        "lightSonw": require("./img/weather_night_lightsnow.png"),
+        // 大雪
+        "heavySnow": require("./img/weather_night_heavysnow.png"),
+        // 冰雹
+        "hail": require("./img/weather_night_hail.png"),
+        // 雾
+        "fog": require("./img/weather_night_fog.png")
       },
       weatherData: {},
       flag: false,
@@ -302,7 +400,7 @@ export default {
         color: ['#3daabf', '#8bea91'],
         legend: {
           data: ['Export', 'Used'],
-          right: '12%',
+          right: '13%',
         },
         xAxis: {
           data: [],
@@ -424,23 +522,24 @@ export default {
       barProduction: null,
       barConsumption: null,
       timer: null,
+      online: 1,
     }
   },
   watch: {
     base(v) {
+      this.params.siteCode = this.$route.query?.siteCode
       let params = {
         latitude: v.latitude,
         longitude: v.longitude
       }
       this.getWeatherData(params)
+      this.getOnline()
       if (this.flag) return this.flag = false
       if (this.dateType === 'date') {
-        this.params.siteCode = this.$route.query?.siteCode
         this.$nextTick(() => {
           this.getDataOption()
         })
       } else this.dateType = 'date'
-
     },
     dateType(v) {
       if (v === 'date' || v === 'week') {
@@ -486,6 +585,9 @@ export default {
     },
   },
   computed: {
+    weatherImg() {
+      return +this.weatherData.dayType === 1 ? this.weatherImgDay : this.weatherImgNight
+    },
     timeType() {
       const arr = {
         'date': 'date',
@@ -507,6 +609,15 @@ export default {
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
+    getOnline() {
+      let p = {
+        deviceType: 4,
+        siteCode: this.params.siteCode
+      }
+      getNet(p).then(res => {
+        this.online = +res.net
+      })
+    },
     getWeatherData(params) {
       getWeather(params).then(res => {
         this.weatherData = res.data
@@ -647,6 +758,7 @@ export default {
       })
     },
     initConsuOption() {
+      // Import - netBuyEnergy Battery-storeDischargeEnergy Solar-pvUsedEnergy
       this.optionTwo.series[0].data = data3
       this.optionTwo.series[1].data = data4
       this.optionTwo.xAxis.data = xAxisDataConsu
@@ -707,7 +819,7 @@ export default {
             unit3 = 'Wh'
           }
           total = (+total).toFixed(2)
-          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>total：${total}${unit3}`
+          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>Total：${total}${unit3}`
         },
         backgroundColor: '#fff',
         extraCssText: 'box-shadow: 0px 3px 6px 1px rgba(0,0,0,0.16);',
@@ -778,7 +890,7 @@ export default {
             unit3 = 'Wh'
           }
           total = (+total).toFixed(2)
-          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>total：${total}${unit3}`
+          return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>Total：${total}${unit3}`
         },
         backgroundColor: '#fff',
         extraCssText: 'box-shadow: 0px 3px 6px 1px rgba(0,0,0,0.16);',
@@ -841,7 +953,6 @@ export default {
            }
          }
          :nth-child(2) {
-           color: #909399;
            @media screen and (max-width: 1334px) {
              font-size: 14px;
            }
@@ -855,6 +966,10 @@ export default {
              margin-top: 5px;
              transform: scale(0.7);
            }
+         }
+         .cur-wea-img {
+           margin-top: 30px;
+           @include wh(80);
          }
          .num {
            @include nFont(24 700);
@@ -1034,7 +1149,7 @@ export default {
              z-index: 1;
            }
            .gridExport {
-             background-color: #3EBCD4;
+             background-color: #FFB968;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1050,11 +1165,11 @@ export default {
                width: 0;
                height: 0;
                border: 6px solid;
-               border-color: transparent #3EBCD4 transparent transparent;
+               border-color: transparent #FFB968 transparent transparent;
              }
            }
            .gridImport {
-             background-color: #3EBCD4;
+             background-color: #FFB968;
              width: 50%;
              height: 2px;
              right: 0;
@@ -1070,7 +1185,7 @@ export default {
                width: 0;
                height: 0;
                border: 6px solid;
-               border-color: transparent transparent transparent #3EBCD4;
+               border-color: transparent transparent transparent #FFB968;
              }
            }
            .circle {
@@ -1128,6 +1243,11 @@ export default {
                  transform: translateY(-80%);
                }
              }
+             .soc {
+               top: -40px;
+               left: 50%;
+               transform: translateX(-50%);
+             }
            }
            .right {
              top: 50%;
@@ -1183,11 +1303,11 @@ export default {
                animation: light linear 3s infinite;
              }
              @keyframes light {
-               0% { opacity: .6; transform: scale(.9) }
+               0% { opacity: .6; transform: scale(.8) }
                25% { opacity: .8; transform: scale(1) }
-               50% { opacity: 1; transform: scale(1.1) }
+               50% { opacity: 1; transform: scale(1.2) }
                75% { opacity: .8; transform: scale(1) }
-               100% { opacity: .6; transform: scale(.9) }
+               100% { opacity: .6; transform: scale(.8) }
              }
            }
          }
@@ -1209,14 +1329,19 @@ export default {
         &-total {
           position: absolute;
           z-index: 55;
-          right: 4%;
-          top: 67px;
+          right: 3%;
+          top: 70px;
           @include nFont(20 #000 700);
           span {
             margin-left: 14px;
-            @include nFont(12 #909399 35 400);
+            @include nFont(12 #909399 400);
           }
         }
+      }
+      .question {
+        margin-right: 3px;
+        width: 18px;
+        cursor: pointer;
       }
     }
   }

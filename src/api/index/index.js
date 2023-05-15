@@ -33,3 +33,10 @@ export function getWeather(params) {
     params
   })
 }
+export function getNet(params) {
+  return request({
+    url: `/device/getNet`,
+    method: 'get',
+    params
+  })
+}

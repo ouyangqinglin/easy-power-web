@@ -7,7 +7,7 @@
           <el-input maxlength="50" v-model="base.title" type="text" placeholder="Please enter" />
         </el-form-item>
         <el-form-item prop="remark" label="Fault Description">
-          <el-input maxlength="200" v-model="base.remark" type="textarea" placeholder="Please enter" />
+          <el-input maxlength="200" v-model="base.remark" show-word-limit type="textarea" placeholder="Please enter" />
         </el-form-item>
         <common-flex>
           <el-form-item prop="type" label="Task Type" style="margin-right: 90px">
@@ -38,11 +38,11 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="phone" label="Phone" style="margin-right: 90px">
-            <el-input v-model="base.phone" type="text" />
+            <el-input @input="checkPhone" v-model="base.phone" type="text" maxlength="20" />
           </el-form-item>
         </common-flex>
         <el-form-item prop="address" label="Address">
-          <el-input v-model="base.address" max-length="200" type="text" />
+          <el-input v-model="base.address" maxlength="200" type="textarea" show-word-limit />
         </el-form-item>
       </el-form>
     </el-card>
@@ -66,12 +66,12 @@
         <el-button @click="cancel">Cancel</el-button>
       </common-flex>
     </el-card>
-    <AddDialog :show.sync="show" :type="2" @change="getRepairman" header="Please select a Repairman" />
+    <AddDialog :show.sync="show" :type="2" @change="getRepairman" :haveSelect="base.installUid" header="Please select a Repairman" />
   </div>
 </template>
 
 <script>
-import { getTaskInfo, createTask } from '@/api/task'
+import { createTask } from '@/api/task'
 import { getAtiUser, getReCustomer } from '@/api/user'
 import AddDialog from "@/views/components/add-dialog"
 
@@ -131,12 +131,16 @@ export default {
       localStorage.setItem('info', JSON.stringify(this.$route.params))
     }
     let data = JSON.parse(localStorage.getItem('info'))
+    data.installUid = ''
     data.address = `${data.address}${data.city}${data.province}${data.country}`
     this.base = {...data, ...this.base}
     this.getCustomer(this.base.uid)
     this.getReCustomer(this.base.siteCode)
   },
   methods: {
+    checkPhone() {
+      this.base.phone = this.PHONE_REG(this.base.phone)
+    },
     getReCustomer(code) {
       let data = {
         pageNum: 1,
@@ -156,6 +160,7 @@ export default {
     },
     getRepairman(i) {
       this.repairmanInfo = i
+      this.base.installUid = this.repairmanInfo.id
     },
     beforeClose() {
       this.show = false

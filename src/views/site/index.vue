@@ -29,7 +29,7 @@
           </common-flex>
         </common-flex>
       </el-form>
-      <el-form :inline="true">
+      <el-form :inline="true" size="small">
         <el-form-item class="region" label="Region" prop="province">
           <el-select
             :disabled="!(queryParams.province && queryParams.country)"
@@ -90,7 +90,7 @@
         </el-table-column>
         <el-table-column label="Site Name" align="center" prop="siteName" min-width="140" show-overflow-tooltip>
           <template slot-scope="{ row }">
-            <span style="white-space: pre-wrap">{{ row.siteName }}</span>
+            <span>{{ row.siteName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Site Code" align="center" prop="siteCode" min-width="130" />
@@ -114,7 +114,7 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="Last update by" align="center" prop="updateBy" min-width="140" />
+        <el-table-column label="Last update by" align="center" prop="updateBy" min-width="140" show-overflow-tooltip />
         <el-table-column fixed="right" label="Operat" align="center" class-name="small-padding fixed-width" min-width="130">
           <template slot-scope="scope">
             <el-button
@@ -139,73 +139,6 @@
         @pagination="getList"
       />
     </el-card>
-
-    <!-- 添加或修改站点对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="站点名称" prop="siteName">
-          <el-input v-model="form.siteName" placeholder="请输入站点名称" />
-        </el-form-item>
-        <el-form-item label="站点详细地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入站点详细地址" />
-        </el-form-item>
-        <el-form-item label="站点封面" prop="cover">
-          <el-input v-model="form.cover" placeholder="请输入站点封面" />
-        </el-form-item>
-        <el-form-item label="当日生产电量" prop="dayProduce">
-          <el-input v-model="form.dayProduce" placeholder="请输入当日生产电量" />
-        </el-form-item>
-        <el-form-item label="当前月生产电量" prop="monthProduce">
-          <el-input v-model="form.monthProduce" placeholder="请输入当前月生产电量" />
-        </el-form-item>
-        <el-form-item label="当前年生产电量" prop="yearProduce">
-          <el-input v-model="form.yearProduce" placeholder="请输入当前年生产电量" />
-        </el-form-item>
-        <el-form-item label="总生产电量" prop="allProduce">
-          <el-input v-model="form.allProduce" placeholder="请输入总生产电量" />
-        </el-form-item>
-        <el-form-item label="最高功率" prop="peakPower">
-          <el-input v-model="form.peakPower" placeholder="请输入最高功率" />
-        </el-form-item>
-        <el-form-item label="关联的用户id" prop="uid">
-          <el-input v-model="form.uid" placeholder="请输入关联的用户id" />
-        </el-form-item>
-        <el-form-item label="安装人员id" prop="installUid">
-          <el-input v-model="form.installUid" placeholder="请输入安装人员id" />
-        </el-form-item>
-        <el-form-item label="站点编码" prop="siteCode">
-          <el-input v-model="form.siteCode" placeholder="请输入站点编码" />
-        </el-form-item>
-        <el-form-item label="纬度" prop="latitude">
-          <el-input v-model="form.latitude" placeholder="请输入纬度" />
-        </el-form-item>
-        <el-form-item label="经度" prop="longitude">
-          <el-input v-model="form.longitude" placeholder="请输入经度" />
-        </el-form-item>
-        <el-form-item label="0-正常 2-删除" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入0-正常 2-删除" />
-        </el-form-item>
-        <el-form-item label="关联的任务id" prop="taskId">
-          <el-input v-model="form.taskId" placeholder="请输入关联的任务id" />
-        </el-form-item>
-        <el-form-item label="站点别名" prop="nickName">
-          <el-input v-model="form.nickName" placeholder="请输入站点别名" />
-        </el-form-item>
-        <el-form-item label="国家" prop="country">
-          <el-input v-model="form.country" placeholder="请输入国家" />
-        </el-form-item>
-        <el-form-item label="城市" prop="city">
-          <el-input v-model="form.city" placeholder="请输入城市" />
-        </el-form-item>
-        <el-form-item label="省/州" prop="province">
-          <el-input v-model="form.province" placeholder="请输入省/州" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 

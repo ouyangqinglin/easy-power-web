@@ -43,6 +43,7 @@
             </el-form-item>
             <el-form-item label="SN：" prop="sn">
               <el-input
+                clearable
                 placeholder="Please enter"
                 v-model="queryParams.sn"
               ></el-input>
@@ -97,12 +98,22 @@
           label="Alarm Start Time"
           prop="createTime"
           min-width="100"
-        ></el-table-column>
+        >
+          <template slot-scope="{ row }">
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.createTime) }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
         <el-table-column
           label="Alarm Recovery Time"
           prop="recoveryTime"
           min-width="100"
-        ></el-table-column>
+        >
+          <template slot-scope="{ row }">
+            <span v-if="row.recoveryTime && row.recoveryTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.recoveryTime) }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination
         v-show="total > 0"
@@ -124,7 +135,7 @@ export default {
     return {
       total: 0,
       // 遮罩层
-      loading: true,
+      loading: false,
       // 告警列表
       alarmList: [],
       queryParams: {
@@ -168,6 +179,7 @@ export default {
     getAlarmList() {
       this.loading = true;
       getList(this.queryParams).then((response) => {
+        console.log(response);
         response.rows.forEach((i) => {
           Object.keys(i).forEach((k) => {
             if (k !== "recoveryStatus" && !i[k]) i[k] = "--";
