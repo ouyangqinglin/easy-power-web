@@ -179,7 +179,6 @@ export default {
     getAlarmList() {
       this.loading = true;
       getList(this.queryParams).then((response) => {
-        console.log(response);
         response.rows.forEach((i) => {
           Object.keys(i).forEach((k) => {
             if (k !== "recoveryStatus" && !i[k]) i[k] = "--";
