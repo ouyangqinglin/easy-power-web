@@ -167,10 +167,10 @@ export default {
     }
   },
   mounted() {
-    if(this.$route.params.sn) localStorage.setItem('sn', this.$route.params.sn)
-    if(this.$route.params.siteCode) localStorage.setItem('siteCode', this.$route.params.siteCode)
-    this.params.sn = localStorage.getItem('sn')
-    this.params.siteCode = localStorage.getItem('siteCode')
+    if(this.$route.params.sn) localStorage.setItem(`sn${this.$route.params.id}`, this.$route.params.sn)
+    if(this.$route.params.siteCode) localStorage.setItem(`siteCode${this.$route.params.id}`, this.$route.params.siteCode)
+    this.params.sn = localStorage.getItem(`sn${this.$route.params.id}`)
+    this.params.siteCode = localStorage.getItem(`siteCode${this.$route.params.id}`)
     this.getData()
   },
   methods: {

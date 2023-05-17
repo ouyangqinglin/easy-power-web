@@ -271,8 +271,8 @@ export default {
     }
   },
   mounted() {
-    if(this.$route.params.info) localStorage.setItem('info', this.$route.params.info)
-    let info = JSON.parse(localStorage.getItem('info'))
+    if(this.$route.params.info) localStorage.setItem(`info${this.$route.params.id}`, this.$route.params.info)
+    let info = JSON.parse(localStorage.getItem(`info${this.$route.params.id}`))
     this.voltageList = info.cellVList
     if (info.cellVList.length) {
       this.curSeries = []
@@ -282,8 +282,8 @@ export default {
     this.envTList = info.envTList
     this.mosTList = info.mOSTList
     let params = {
-      sn: localStorage.getItem('sn'),
-      siteCode: localStorage.getItem('siteCode'),
+      sn: localStorage.getItem(`sn${this.$route.params.id}`),
+      siteCode: localStorage.getItem(`siteCode${this.$route.params.id}`),
     }
     infoDevice(params).then(res => {
       this.base = {...info, ...res.data}
@@ -325,8 +325,8 @@ export default {
       this.requestLoading()
       let format = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
       let params = {
-        sn: localStorage.getItem('sn'),
-        siteCode: localStorage.getItem('siteCode'),
+        sn: localStorage.getItem(`sn${this.$route.params.id}`),
+        siteCode: localStorage.getItem(`siteCode${this.$route.params.id}`),
         startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
         endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
       }

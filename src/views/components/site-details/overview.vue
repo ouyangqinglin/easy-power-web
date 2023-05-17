@@ -95,7 +95,7 @@
                 <div v-if="+base.devicePower < 1000">{{ base.devicePower }}<br><span>kW</span></div>
                 <div v-else>{{ (+base.devicePower / 1000).toFixed(2) }}<br><span>MW</span></div>
               </common-flex>
-              <common-flex direction="column" justify="center" align="center" class="circle bottom-right posa">
+              <common-flex v-if="+base.pileNum" direction="column" justify="center" align="center" class="circle bottom-right posa">
                 <div v-if="base.pilePower" class="bottom-right-dot posa"></div>
                 <img :src="require('./img/pile.svg')" alt="">
                 <div v-if="+base.pilePower < 1000">{{ base.pilePower }}<br><span>kW</span></div>
