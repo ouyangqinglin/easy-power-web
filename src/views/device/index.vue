@@ -5,7 +5,7 @@
         <el-tab-pane name="4" :label="`Stick Logger (${stickTotal})`"></el-tab-pane>
         <el-tab-pane name="1" :label="`Inverter (${inverterTotal})`"></el-tab-pane>
         <el-tab-pane name="2" :label="`Battery (${batteryTotal})`"></el-tab-pane>
-        <el-tab-pane name="3" :label="`EV charger (${chargeTotal})`"></el-tab-pane>
+        <el-tab-pane name="3" :label="`EV Charger (${chargeTotal})`"></el-tab-pane>
         <el-tab-pane name="6" :label="`Photovoltaic (${pvTotal})`"></el-tab-pane>
       </el-tabs>
     </el-card>
@@ -112,7 +112,7 @@ import { listDevice } from '@/api/device'
 const deviceType = {
     '1': 'Inverter',
     '2': 'Battery',
-    '3': 'EV charger',
+    '3': 'EV Charger',
     '4': 'Stick Logger',
     '6': 'Photovoltaic'
   }
