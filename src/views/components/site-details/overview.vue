@@ -1284,7 +1284,7 @@ export default {
              &::before {
                width: 120px;
                text-align: center;
-               content: 'EV charger';
+               content: 'EV Charger';
                position: absolute;
                bottom: -28px;
                @include nFont(16 #000 700);

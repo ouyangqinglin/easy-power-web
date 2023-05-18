@@ -173,7 +173,7 @@ export default {
       deviceType: {
         '1': 'Inverter',
         '2': 'Battery',
-        '3': 'EV charger',
+        '3': 'EV Charger',
         '4': 'Stick Logger',
         '6': 'Photovoltaic',
       },
