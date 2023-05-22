@@ -350,7 +350,7 @@ export default {
         for(let k = 0; k < this.curSeries.length; k++) {
           let arr = []
           for(let i = 0; i < dataList.length; i++) {
-            arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(2))
+            arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(3))
           }
           let item = {
             name: `T${this.curSeries[k]+1}`,
@@ -370,7 +370,7 @@ export default {
           // cell_v1_avg
           let arr = []
           for(let i = 0; i < dataList.length; i++) {
-            arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(2))
+            arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(3))
           }
           let item = {
             name: `Cell${this.curSeries[k]+1}`,

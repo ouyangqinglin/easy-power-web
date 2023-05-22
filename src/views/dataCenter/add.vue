@@ -19,11 +19,11 @@
             <el-input placeholder="Please enter" v-model="addBase.api" maxlength="50" show-word-limit></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="Port" prop="apiPort">
-            <el-input placeholder="Please enter" maxlength="50" disabled v-model.number="addBase.apiPort"></el-input>
-          </el-form-item>
-        </el-col>
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="Port" prop="apiPort">-->
+<!--            <el-input placeholder="Please enter" maxlength="50" disabled v-model.number="addBase.apiPort"></el-input>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
       </el-row>
       <el-row :gutter="24">
         <el-col :span="8">
@@ -33,7 +33,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="Port" prop="loggerV1Port">
-            <el-input placeholder="Please enter" v-model.number="addBase.loggerV1Port"></el-input>
+            <el-input @change="checkUrl('loggerV1')" placeholder="Please enter" v-model.number="addBase.loggerV1Port"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -45,7 +45,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="Port" prop="loggerV2Port">
-            <el-input placeholder="Please enter" v-model.number="addBase.loggerV2Port"></el-input>
+            <el-input @change="checkUrl('loggerV2')" placeholder="Please enter" v-model.number="addBase.loggerV2Port"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -62,7 +62,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="Port" prop="pilePort">
-            <el-input placeholder="Please enter" v-model.number="addBase.pilePort"></el-input>
+            <el-input @change="checkUrl('pile')" placeholder="Please enter" v-model.number="addBase.pilePort"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -105,16 +105,26 @@ export default {
         api: [
           { required: true, message: 'Please enter', trigger: ['blur', 'change']}
         ],
+        loggerV1Url: [
+          { required: false, message: 'Please enter', trigger: ['blur', 'change']}
+        ],
         loggerV1Port: [
           { required: false, message: 'Please enter', trigger: ['blur', 'change']}
         ],
+        loggerV2Url: [
+          { required: false, message: 'Please enter', trigger: ['blur', 'change']}
+        ],
         loggerV2Port: [
+          { required: false, message: 'Please enter', trigger: ['blur', 'change']}
+        ],
+        pileUrl: [
           { required: false, message: 'Please enter', trigger: ['blur', 'change']}
         ],
         pilePort: [
           { required: false, message: 'Please enter', trigger: ['blur', 'change']}
         ],
       }
+
     }
   },
   methods: {
@@ -131,7 +141,8 @@ export default {
       })
     },
     checkUrl(type) {
-      this.rules[`${type}Port`][0].required = !!this.addBase[`${type}Url`];
+      this.rules[`${type}Port`][0].required = !!this.addBase[`${type}Url`]
+      this.rules[`${type}Url`][0].required = !!this.addBase[`${type}Port`]
       this.rules = {...this.rules}
     },
     beforeClose() {
