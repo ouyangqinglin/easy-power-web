@@ -34,7 +34,7 @@
           </el-col>
           <el-col :span="9">
             <el-form-item label="Port" prop="loggerV1Port">
-              <el-input @change="checkUrl('loggerV1')" placeholder="Please enter" v-model.number="addBase.loggerV1Port"></el-input>
+              <el-input @change="checkUrl('loggerV1')" maxlength="5" placeholder="Please enter" v-model.number="addBase.loggerV1Port"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -46,7 +46,7 @@
           </el-col>
           <el-col :span="9">
             <el-form-item label="Port" prop="loggerV2Port">
-              <el-input @change="checkUrl('loggerV2')" placeholder="Please enter" v-model.number="addBase.loggerV2Port"></el-input>
+              <el-input @change="checkUrl('loggerV2')" maxlength="5" placeholder="Please enter" v-model.number="addBase.loggerV2Port"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,7 +63,7 @@
           </el-col>
           <el-col :span="9">
             <el-form-item label="Port" prop="pilePort">
-              <el-input @change="checkUrl('pile')" placeholder="Please enter" v-model.number="addBase.pilePort"></el-input>
+              <el-input @change="checkUrl('pile')" maxlength="5" placeholder="Please enter" v-model.number="addBase.pilePort"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
