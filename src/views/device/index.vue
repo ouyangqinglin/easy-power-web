@@ -156,7 +156,7 @@ export default {
         if (list.length) {
           list.forEach(i => str += i)
           this.hoverWarn = str
-        }
+        } else  this.hoverWarn = '--'
       })
 
     },
