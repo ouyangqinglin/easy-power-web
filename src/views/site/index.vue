@@ -30,7 +30,7 @@
         </common-flex>
       </el-form>
       <el-form :inline="true" size="small">
-        <el-form-item class="region" label="Region" prop="province">
+        <el-form-item class="region" label="Region：" prop="province">
           <el-select
             :disabled="!(queryParams.province && queryParams.country)"
             v-model="queryParams.city"
