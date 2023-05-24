@@ -890,6 +890,7 @@ export default {
     }
   },
   data() {
+    const that = this
     return {
       inverterCapacityMsg: {},
       batCapacityMsg: {},
@@ -915,11 +916,11 @@ export default {
       activePhotovoltaic: false,
       batteryHis: {
         batteryType: 'Voltage',
-        dateVal: new Date()
+        dateVal: new Date(that.UTC_START_OF(this.base.timeZone))
       },
       pvHis: {
         pvType: 'Voltage',
-        dateVal: new Date()
+        dateVal: new Date(that.UTC_START_OF(this.base.timeZone))
       },
       batListInstance: [],
       batList: [],
@@ -1291,12 +1292,12 @@ export default {
     },
     getBatHisData() {
       this.requestLoading()
-      let format = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
+      let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
       let params = {
-        siteCode: this.queryParams.siteCode,
         sn: this.sn,
-        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
-        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
+        siteCode: this.queryParams.siteCode,
+        startTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
       }
       batHistoryData(params).then(res => {
         batData = res.data
@@ -1341,12 +1342,12 @@ export default {
     },
     getPvHisData() {
       this.requestLoading()
-      let format = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
+      let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
       let params = {
-        siteCode: this.queryParams.siteCode,
         sn: this.sn,
-        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
-        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
+        siteCode: this.queryParams.siteCode,
+        startTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
       }
       pvHistoryData(params).then(res => {
         // console.log('hisPv', res.data)
@@ -2042,7 +2043,7 @@ export default {
           i.forEach(k => {
             if (k.key === 'Session Started') {
               if (+this.curDevInfo.status === 1) {
-                if (this.curDevInfo[k.value]) this.chargeInfo[index]['info'][k.key] = this.DATE_FORMAT('M/d/yyyy hh:mm', this.curDevInfo[k.value] * 1000)
+                if (this.curDevInfo[k.value]) this.chargeInfo[index]['info'][k.key] = this.UTC_DATE_FORMAT(this.curDevInfo[k.value], this.base.timeZone)
                 else this.chargeInfo[index]['info'][k.key] = '--'
               } else {
                 this.chargeInfo[index]['info'][k.key] = '--'

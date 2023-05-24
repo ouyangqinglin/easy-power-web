@@ -49,7 +49,6 @@
           <template v-else-if="i.prop === 'appointTime'">
             <el-date-picker style="width: 100%" type="datetime" format="M/d/yyyy HH:mm"
                             v-model="base.appointTime"
-                            value-format="yyyy-MM-dd HH:mm:ss"
                             size="medium"
             >
             </el-date-picker>
@@ -178,8 +177,8 @@ export default {
     this.id = this.$route.params?.id
     this.base.uid = this.id
     getTaskInfo(this.id).then(res => {
+      if (res.data.appointTime) res.data.appointTime = this.DATE_FORMAT('M/d/yyyy hh:mm', +res.data.appointTime * 1000)
       this.base = res.data
-      this.base.appointTime = new Date(res.data.appointTime)
       this.installerInfo.id = res.data.installUid
       this.active = +this.base.status
     })
@@ -217,7 +216,7 @@ export default {
           uid: this.base.id,
           installUid: this.installerInfo.id,
           remark: this.base.remark,
-          appointTime: this.DATE_FORMAT('yyyy-MM-dd hh:mm:ss', new Date(this.base.appointTime)),
+          appointTime: new Date(this.base.appointTime).getTime() / 1000,
           phone: this.base.phone,
           id: this.id
         }

@@ -11,6 +11,16 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+          <el-form-item class="second-item" label="Local time：">
+            <el-date-picker
+              clearable
+              v-model="queryTime"
+              type="date"
+              format="M/d/yyyy"
+              value-format="yyyy-MM-dd"
+              placeholder="">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item class="second-item" label="Time of Installed：" prop="createTime">
             <el-date-picker
               clearable
@@ -150,6 +160,7 @@ export default {
   dicts: ['site_status'],
   data() {
     return {
+      queryTime: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -211,6 +222,9 @@ export default {
     };
   },
   watch: {
+    queryTime(v) {
+      if (!v) this.queryParams.startTime = this.queryParams.endTime = ''
+    },
     'queryParams.country': {
       handler(v) {
         this.optionsParams.country = v
@@ -227,8 +241,6 @@ export default {
     }
   },
   created() {
-
-    // 24 寸左右 分辨率1920 * 1080 以上 HDMI+VGA接口
     this.getList()
     this.getAddressOption()
   },
@@ -271,6 +283,10 @@ export default {
     },
     /** 查询站点列表 */
     getList() {
+      if (this.queryTime) {
+        this.queryParams.startTime = new Date((`${this.queryTime} 00:00:00`)).getTime() / 1000
+        this.queryParams.endTime = new Date((`${this.queryTime} 23:59:59`)).getTime() / 1000
+      }
       this.loading = true;
       listSite(this.queryParams).then(response => {
         response.rows.forEach(i => {
@@ -325,6 +341,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParams.country = this.queryParams.province = this.queryParams.city = null
+      this.queryTime = ''
+      this.queryParams.startTime = this.queryParams.endTime = ''
       this.resetForm("queryForm");
       this.handleQuery();
     },

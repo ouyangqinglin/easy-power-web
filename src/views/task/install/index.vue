@@ -50,7 +50,7 @@
           <el-date-picker
             class="same-input"
             clearable
-            v-model="queryParams.endTime"
+            v-model="queryTime"
             type="date"
             format="MM/dd/yyyy"
             value-format="yyyy-M-d"
@@ -185,6 +185,7 @@ export default {
       taskList: [],
       // 弹出层标题
       title: "",
+      queryTime: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -218,6 +219,11 @@ export default {
       },
     };
   },
+  watch: {
+    queryTime(v) {
+      if (!v) this.queryParams.startTime = this.queryParams.endTime = ''
+    },
+  },
   created() {
     this.getList()
   },
@@ -229,6 +235,10 @@ export default {
     /** 查询站点列表 */
     getList() {
       this.loading = true;
+      if (this.queryTime) {
+        this.queryParams.startTime = new Date((`${this.queryTime} 00:00:00`)).getTime() / 1000
+        this.queryParams.endTime = new Date((`${this.queryTime} 23:59:59`)).getTime() / 1000
+      }
       listTask(this.queryParams).then(response => {
         response.rows.forEach(i => {
           Object.keys(i).forEach(k => {
@@ -264,7 +274,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParams.status = ''
-      this.queryParams.endTime = ''
+      this.queryTime = ''
+      this.queryParams.startTime = this.queryParams.endTime = ''
       this.resetForm("queryForm");
       this.handleQuery();
     },

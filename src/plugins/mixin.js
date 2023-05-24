@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment-timezone'
 
 Vue.prototype.TYPE_JUD = function (value, type) {
   return Object.prototype.toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase()
@@ -35,4 +36,23 @@ Vue.prototype.DATE_FORMAT = function (fmt, date) {
 
 Vue.prototype.PHONE_REG = function (phone) {
   return phone.replace(/[^0-9+-]/g, '')
+}
+
+// 指定时区的时间格式
+Vue.prototype.UTC_DATE_FORMAT = function (timestamp, timeZone) {
+  const format = 'MM/DD/YYYY HH:mm'
+  const date = moment(timestamp * 1000).tz(timeZone);
+  return date.format(format)
+}
+
+// 夏令时时间戳
+Vue.prototype.ISD_TIMESTAMP = function (timeStr, timeZone) {
+  // 2023-03-01 00:00:00
+  const date = moment.tz(timeStr, timeZone)
+  return date.valueOf()
+}
+
+// 获取指定时区的当天00:00:00的时间戳
+Vue.prototype.UTC_START_OF = function (timeZone) {
+  return moment.tz(timeZone).startOf('day').format()
 }

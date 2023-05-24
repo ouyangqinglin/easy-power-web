@@ -143,7 +143,7 @@ export default {
           { required: true, message: 'Please enter', trigger: 'blur'}
         ],
         appointTime: [
-          { type: 'string', required: true, message: 'Please enter', trigger: 'blur' }
+          { required: true, message: 'Please enter', trigger: 'blur' }
         ],
         customer: [
           { required: true, message: 'Please enter', trigger: 'blur'}
@@ -160,6 +160,7 @@ export default {
   created() {
     this.id = this.$route.params?.id
     getTaskInfo(this.id).then(res => {
+      if (res.data.appointTime) res.data.appointTime = this.DATE_FORMAT('M/d/yyyy hh:mm', +res.data.appointTime * 1000)
       this.base = res.data
       this.repairmanInfo.userName = this.base.installer
       this.repairmanInfo.id = this.base.installUid
