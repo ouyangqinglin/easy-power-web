@@ -130,3 +130,11 @@ export function editDevice(data) {
     data
   })
 }
+
+export function batEnergy(params) {
+  return request({
+    url: '/device/batteryEnergy',
+    method: 'get',
+    params
+  })
+}

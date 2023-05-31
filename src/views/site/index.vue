@@ -21,16 +21,6 @@
               placeholder="">
             </el-date-picker>
           </el-form-item>
-          <el-form-item class="second-item" label="Time of Installed：" prop="createTime">
-            <el-date-picker
-              clearable
-              v-model="queryParams.createTime"
-              type="date"
-              format="M/d/yyyy"
-              value-format="yyyy-M-d"
-              placeholder="">
-            </el-date-picker>
-          </el-form-item>
           <common-flex style="flex: 1" justify="flex-end">
             <el-form-item>
               <el-button type="primary" @click="handleQuery">Query</el-button>
@@ -109,7 +99,14 @@
         <el-table-column label="Country/Area" align="center" prop="country" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Installed" align="center" prop="createTime" min-width="130">
           <template slot-scope="{ row }">
-            <span>{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime, row.timeZone || 'Asia/Shanghai') }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Local time" align="center" prop="createTime" min-width="140">
+          <template slot-scope="{ row }">
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.createTime * 1000) }}</span>
+            <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Agency" align="center" prop="agentName" min-width="140" show-overflow-tooltip />
@@ -183,7 +180,6 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        createTime: '',
         siteName: null,
         address: null,
         cover: null,
@@ -315,7 +311,6 @@ export default {
         monthProduce: null,
         yearProduce: null,
         allProduce: null,
-        createTime: null,
         updateTime: null,
         peakPower: null,
         status: 0,

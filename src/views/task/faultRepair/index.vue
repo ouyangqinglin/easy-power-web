@@ -76,21 +76,21 @@
         <el-table-column label="Customer" align="center" show-tooltip-when-overflow prop="customer" min-width="130"/>
         <el-table-column label="Time of Task Completed" align="center" prop="endTime" min-width="180">
           <template slot-scope="{ row }">
-            <span v-if="row.endTime && row.endTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.endTime)) }}</span>
+            <span v-if="row.endTime && row.endTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.endTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Agency" align="center" prop="agentName" min-width="130" show-overflow-tooltip />
         <el-table-column label="Creation Time" align="center" prop="createTime" min-width="180">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.createTime)) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.createTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="Created by" align="center" prop="createBy" min-width="140" show-tooltip-when-overflow />
+        <el-table-column label="Created by" align="center" prop="createBy" min-width="140" />
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="140">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.updateTime)) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.updateTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

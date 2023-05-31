@@ -89,34 +89,33 @@
         <el-table-column label="Installer" align="center" prop="installer" min-width="130" show-tooltip-when-overflow />
         <el-table-column label="Time of Appointment" align="center" prop="appointTime" min-width="180">
           <template slot-scope="{ row }">
-            <span v-if="row.appointTime && row.appointTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.appointTime)) }}</span>
+            <span v-if="row.appointTime && row.appointTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.appointTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Time of Task Receiving" align="center" prop="startTime" min-width="180">
           <template slot-scope="{ row }">
-            <span v-if="row.startTime && row.startTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.startTime)) }}</span>
+            <span v-if="row.startTime && row.startTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.startTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Time of Task Completed" align="center" prop="endTime" min-width="180">
           <template slot-scope="{ row }">
-            <span v-if="row.endTime && row.endTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', new Date(row.endTime)) }}</span>
+            <span v-if="row.endTime && row.endTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.endTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Agency" align="center" prop="agentName" min-width="140" show-overflow-tooltip />
-
         <el-table-column label="Creation Time" align="center" prop="createTime" min-width="180">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.createTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Created by" align="center" prop="createBy" min-width="140" />
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="140">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.updateTime) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.updateTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

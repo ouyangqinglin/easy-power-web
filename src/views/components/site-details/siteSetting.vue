@@ -724,9 +724,16 @@ export default {
       })
     },
     getList() {
-      this.queryParams.createTime = this.DATE_FORMAT('yyyy-M-d', this.queryParams.createTime)
+      this.queryParams.createTime = this.DATE_FORMAT('yyyy-MM-dd', this.queryParams.createTime)
       this.loading = true
-      setRecodeList(this.queryParams).then(res => {
+      let data = {
+        pageNum: this.queryParams.pageNum,
+        pageSize: this.queryParams.pageSize,
+        siteCode: this.queryParams.siteCode,
+        startTime: (this.ISD_TIMESTAMP(`${this.queryParams.createTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.queryParams.createTime} 23:59:59`, this.base.timeZone)) / 1000,
+      }
+      setRecodeList(data).then(res => {
         this.list = res.rows
         this.total = res.total
       }).finally(() => {

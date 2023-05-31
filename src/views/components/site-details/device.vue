@@ -34,6 +34,54 @@
           </common-flex>
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
+          <common-flex class="total-box" justify="space-between">
+            <div class="item">
+              <div class="item-title">Total Charging Energy</div>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Today</div>
+                  <div class="item-body-item-value">{{ batEnergy.dayChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Month</div>
+                  <div class="item-body-item-value">{{ batEnergy.monthChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Year</div>
+                  <div class="item-body-item-value">{{ batEnergy.yearChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Lifetime</div>
+                  <div class="item-body-item-value">{{ batEnergy.allChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+            </div>
+            <div class="item">
+              <div class="item-title">Total Discharging Energy</div>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Today</div>
+                  <div class="item-body-item-value">{{ batEnergy.dayDisChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Month</div>
+                  <div class="item-body-item-value">{{ batEnergy.monthDisChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Year</div>
+                  <div class="item-body-item-value">{{ batEnergy.yearDisChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Lifetime</div>
+                  <div class="item-body-item-value">{{ batEnergy.allDisChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+            </div>
+          </common-flex>
           <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
             <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
@@ -490,7 +538,7 @@
 <script>
 import * as echarts from 'echarts'
 
-import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
+import { listDevice, infoDevice, addBatchDevice, batEnergy, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
@@ -938,6 +986,7 @@ export default {
         delFlag: 0,
         siteCode: ''
       },
+      batEnergy: {},
       listDev: [],
       curDevInfo: {},
       currentItem: null,
@@ -986,24 +1035,6 @@ export default {
             'Current': '',
             'Voltage': '',
             'Power': ''
-          },
-        },
-        {
-          'title': 'Charging Energy',
-          'info': {
-            'Today': '',
-            'This Month': '',
-            'This Year': '',
-            'Lifetime': ''
-          },
-        },
-        {
-          'title': 'Discharging Energy',
-          'info': {
-            'Today': '',
-            'This Month': '',
-            'This Year': '',
-            'Lifetime': ''
           },
         },
         {
@@ -1093,6 +1124,7 @@ export default {
         deviceNavInfo = {}
         this.queryParams.siteCode = this.$route.query?.siteCode
         this.getList()
+        this.getBatEnergy()
       },
       immediate: true
     },
@@ -1730,6 +1762,14 @@ export default {
         }
       }
     },
+    getBatEnergy() {
+      let params = {
+        siteCode: this.queryParams.siteCode
+      }
+      batEnergy(params).then(res => {
+        this.batEnergy = res.data
+      })
+    },
     getList() {
       this.navBar = {}
       this.batList = []
@@ -1850,42 +1890,6 @@ export default {
           ],
           [
             {
-              key: 'Today',
-              value: 'dayChargeEnergy'
-            },
-            {
-              key: 'This Month',
-              value: 'monthChargeEnergy'
-            },
-            {
-              key: 'This Year',
-              value: 'yearChargeEnergy'
-            },
-            {
-              key: 'Lifetime',
-              value: 'allChargeEnergy'
-            },
-          ],
-          [
-            {
-              key: 'Today',
-              value: 'dayDisChargeEnergy'
-            },
-            {
-              key: 'This Month',
-              value: 'monthDisChargeEnergy'
-            },
-            {
-              key: 'This Year',
-              value: 'yearDisChargeEnergy'
-            },
-            {
-              key: 'Lifetime',
-              value: 'allDisChargeEnergy'
-            },
-          ],
-          [
-            {
               key: 'Lifetime',
               value: '' // 没有
             }
@@ -1939,11 +1943,11 @@ export default {
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
             } else if (k.key === 'New installation or not') {
               this.batteryInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
-            } else if (index === 4 || index === 3) {
+            } else if (index === 2 || index === 1) {
               if (+this.curDevInfo.installation === 2 && k.key === 'Lifetime') {
                 this.batteryInfo[index]['info'][k.key] = '--'
               } else {
-                if (index === 3) {
+                if (index === 1) {
                   let resStr = ''
                   resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
                   this.batteryInfo[index]['info'][k.key] = resStr
@@ -2412,6 +2416,46 @@ export default {
   }
   .pvChart {
     height: 55vh;
+  }
+  .total-box {
+    margin-bottom: 27px;
+    padding: 0 24px 30px;
+    border-radius: 2px;
+    border: 1px solid #D8DCE6;
+    .item {
+      width: calc(100% / 2 - 40px);
+      margin-top: 24px;
+      &-title {
+        font-weight: 700;
+        line-height: 26px;
+        border-bottom: 1px solid #D8DCE6;
+      }
+      &-body {
+        max-width: 1200px;
+        >:nth-child(1) {
+          flex: 1 0 0;
+        }
+        >:nth-child(2) {
+          flex: 1.5 0 0;
+        }
+        &-item {
+          margin-top: 12px;
+          line-height: 26px;
+          font-size: 14px;
+          &-key {
+            color: #828282;
+          }
+          &-value {
+            color: #000;
+            font-weight: 500;
+          }
+        }
+        .charge {
+          flex-grow: 0;
+          width: calc(100% / 4);
+        }
+      }
+    }
   }
   .bat-item {
     margin-right: 80px;
