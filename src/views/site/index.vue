@@ -99,7 +99,7 @@
         <el-table-column label="Country/Area" align="center" prop="country" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Installed" align="center" prop="createTime" min-width="130">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime, row.timeZone || 'Asia/Shanghai') }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime, row.timeZone) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

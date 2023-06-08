@@ -40,7 +40,7 @@ Vue.prototype.PHONE_REG = function (phone) {
 
 // 指定时区的时间格式
 Vue.prototype.UTC_DATE_FORMAT = function (timestamp, timeZone) {
-  const format = 'MM/DD/YYYY HH:mm'
+  const format = 'M/D/YYYY HH:mm'
   const date = moment(timestamp * 1000).tz(timeZone);
   return date.format(format)
 }

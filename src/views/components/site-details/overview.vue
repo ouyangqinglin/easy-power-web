@@ -687,7 +687,14 @@ export default {
     },
     getChartData() {
       this.$set(this.params, 'scope', 1)
-      homeChart(this.params).then(res => {
+      const data = {
+        startTime: (this.ISD_TIMESTAMP(`${this.params.startTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.params.endTime} 23:59:59`, this.base.timeZone)) / 1000,
+        dataType: this.params.dataType,
+        scope: this.params.scope,
+        siteCode: this.params.siteCode
+      }
+      homeChart(data).then(res => {
         const lineData = res.data.list
         this.totalPvGenerateEnergy = (lineData.reduce((sum, i) => {
           return sum + i.systemProduction
