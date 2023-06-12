@@ -513,7 +513,7 @@
         <common-flex direction="column" align="center" class="network">
           <img src="./img/network.png" alt="">
           <common-flex direction="column" align="flex-start">
-            <p :class="{step: stepActive === 1}">1.Device searching...</p>
+            <p :class="{step: stepActive === 1}">1.Device searching{{ stepActive === 1 ? '...': ''}}</p>
             <p :class="{step: stepActive === 2}">2.Device connection{{ stepActive === 2 ? '...': ''}}</p>
             <p :class="{step: stepActive === 3}">3.Command sending{{ stepActive === 3 ? '...': ''}}</p>
             <p :class="{step: stepActive === 4}">4.Device networking{{ stepActive === 4 ? '...': ''}}</p>
