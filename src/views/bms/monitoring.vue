@@ -16,7 +16,7 @@
               <div class="value">{{ base.sn || '--' }}</div>
             </el-col>
             <el-col :span="6">
-              <div class="label">Capacity (Wh)</div>
+              <div class="label">Capacity (kWh)</div>
               <div class="value">{{ base.capacity || '--' }}</div>
             </el-col>
             <el-col :span="6">
