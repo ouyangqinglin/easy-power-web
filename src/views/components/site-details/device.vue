@@ -513,12 +513,12 @@
         <common-flex direction="column" align="center" class="network">
           <img src="./img/network.png" alt="">
           <common-flex direction="column" align="flex-start">
-            <p :class="{step: stepActive === 1}">1.Device searching, please wait...</p>
-            <p :class="{step: stepActive === 2}">2.Device connection{{ stepActive === 2 && '...'}}</p>
-            <p :class="{step: stepActive === 3}">3.Command sending{{ stepActive === 3 && '...'}}</p>
-            <p :class="{step: stepActive === 4}">4.Device networking{{ stepActive === 4 && '...'}}</p>
-            <p :class="{step: stepActive === 5}">5.Server connection{{ stepActive === 5 && '...'}}</p>
-            <p :class="{step: stepActive === 6}">6.Data synchronization{{ stepActive === 6 && '...'}}</p>
+            <p :class="{step: stepActive === 1}">1.Device searching...</p>
+            <p :class="{step: stepActive === 2}">2.Device connection{{ stepActive === 2 ? '...': ''}}</p>
+            <p :class="{step: stepActive === 3}">3.Command sending{{ stepActive === 3 ? '...': ''}}</p>
+            <p :class="{step: stepActive === 4}">4.Device networking{{ stepActive === 4 ? '...': ''}}</p>
+            <p :class="{step: stepActive === 5}">5.Server connection{{ stepActive === 5 ? '...': ''}}</p>
+            <p :class="{step: stepActive === 6}">6.Data synchronization{{ stepActive === 6 ? '...': ''}}</p>
           </common-flex>
           <div style="width: 90%">
             <el-progress :percentage="percentage"></el-progress>
