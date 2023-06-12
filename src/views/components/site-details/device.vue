@@ -21,13 +21,13 @@
           <common-flex direction="column" auto class="comp-device-card-content-right-container">
             <div class="item" v-for="i of stickInfo">
               <div class="item-title">{{ i.title }}</div>
-              <common-flex class="item-body" wrap="wrap">
+              <common-flex class="item-body" wrap="wrap" justify="space-between">
                 <div class="item-body-item charge" v-for="(v, k) of i.info">
                   <div class="item-body-item-key">{{ k }}</div>
-                  <!--                  <div class="item-body-item-value" v-if="k === 'Wifi'">{{ v || '&#45;&#45;' }}<br>-->
-                  <!--                    <span style="color: #828282">Password:</span> {{ stickInfo.wifiPassword || '&#45;&#45;' }}-->
-                  <!--                  </div>-->
                   <div class="item-body-item-value">{{ v || '--' }}</div>
+                </div>
+                <div style="padding: 24px 24px 0 0">
+                  <el-button type="primary" @click="configNetShow = true">Device Networking</el-button>
                 </div>
               </common-flex>
             </div>
@@ -484,6 +484,48 @@
         <el-button @click="cancelDelete">Cancel</el-button>
       </common-flex>
     </el-dialog>
+    <el-dialog v-if="configNetShow" :visible.sync="configNetShow" title="Networking"
+               :before-close="beforeClose"
+               :close-on-click-modal ="false"
+               width="30%">
+      <div style="width: 66%; margin: 0 auto" v-show="startNetShow">
+        <el-form @submit.native.prevent :model="network" :rules="networkRules" ref="networkRef">
+          <el-form-item prop="wifi">
+            <el-input v-model="network.wifi">
+              <svg-icon slot="prefix" icon-class="wifi" class="el-input__icon input-icon" />
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input :type="inputType" v-model="network.password">
+              <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+              <template #suffix>
+                <svg-icon v-if="eyes" @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
+                <svg-icon v-else @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <common-flex style="margin-top: 30px" justify="center">
+          <el-button type="primary" @click="startNet">Start to configure</el-button>
+        </common-flex>
+      </div>
+      <template v-if="!startNetShow">
+        <common-flex direction="column" align="center" class="network">
+          <img src="./img/network.png" alt="">
+          <common-flex direction="column" align="flex-start">
+            <p :class="{step: stepActive === 1}">1.Device searching, please wait...</p>
+            <p :class="{step: stepActive === 2}">2.Device connection</p>
+            <p :class="{step: stepActive === 3}">3.Command sending</p>
+            <p :class="{step: stepActive === 4}">4.Device networking</p>
+            <p :class="{step: stepActive === 5}">5.Server connection</p>
+            <p :class="{step: stepActive === 6}">6.Data synchronization</p>
+          </common-flex>
+          <div style="width: 90%">
+            <el-progress :percentage="percentage"></el-progress>
+          </div>
+        </common-flex>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -494,8 +536,8 @@ import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharg
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
-let timer = null, timerInter = null
-let times = 1
+let timer = null, timerInter = null, timerNet = null
+let times = 1, timesNet = 1
 let arr = [], arr1 = [], arr5 = []
 let arrX1 = [], arrX2 = [], pv1 = [], pv2 = [], pv3 = [], pv4 = []
 let batData = [], pvData = []
@@ -889,8 +931,33 @@ export default {
       }
     }
   },
+  computed: {
+    inputType() {
+      return this.eyes ? 'password' : 'text'
+    },
+    percentage() {
+      let percentageList = [10, 26, 42, 58, 74, 100]
+      return percentageList[this.stepActive -1]
+    },
+  },
   data() {
     return {
+      stepActive: 1,
+      startNetShow: true,
+      network: {
+        wifi: '',
+        password: ''
+      },
+      networkRules: {
+        wifi: [
+          { required: true, message: 'Please enter', trigger: 'blur' },
+        ],
+        password: [
+          { required: true, message: 'Please enter', trigger: 'blur' },
+        ]
+      },
+      eyes: true,
+      configNetShow: false,
       inverterCapacityMsg: {},
       batCapacityMsg: {},
       pvCapacityMsg: {},
@@ -1118,9 +1185,29 @@ export default {
   beforeDestroy() {
     clearInterval(timerInter)
     clearTimeout(timer)
+    clearInterval(timerNet)
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
+    startNet() {
+      this.$refs.networkRef.validate(v => {
+        if (v) {
+          this.startNetShow = false
+          timerNet = setInterval(() => {
+            if (timesNet === 6) this.stepActive = 2
+            if (timesNet === 12) this.stepActive = 3
+            if (timesNet === 18) this.stepActive = 4
+            if (timesNet === 24) this.stepActive = 5
+            if (timesNet === 30) this.stepActive = 6
+            timesNet++
+            if (timesNet > 30) {
+              this.beforeClose()
+              this.$modal.alertSuccess('Configuration succeeded')
+            }
+          }, 1000)
+        }
+      })
+    },
     addSn(deviceType) {
       let item = {
         deviceType,
@@ -1642,9 +1729,11 @@ export default {
     },
     beforeClose() {
       this.addShow = false
+      this.configNetShow = false
       this.delShow = false
       this.delSubType = ''
       this.addSubType = true
+      clearInterval(timerNet)
     },
     fillAddDialog() {
       let haveTypeList = [4, 1, 2, 6, 3]
@@ -2454,6 +2543,12 @@ export default {
   }
   strong {
     min-width: 120px;
+  }
+  .network {
+    @include cImg();
+  }
+  .step {
+    font-weight: 700;
   }
 }
 </style>
