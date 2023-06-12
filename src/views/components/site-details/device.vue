@@ -1729,6 +1729,7 @@ export default {
     },
     beforeClose() {
       timesNet = 1
+      this.stepActive = 1
       this.addShow = false
       this.configNetShow = false
       this.startNetShow = true
