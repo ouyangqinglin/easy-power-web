@@ -514,11 +514,11 @@
           <img src="./img/network.png" alt="">
           <common-flex direction="column" align="flex-start">
             <p :class="{step: stepActive === 1}">1.Device searching, please wait...</p>
-            <p :class="{step: stepActive === 2}">2.Device connection</p>
-            <p :class="{step: stepActive === 3}">3.Command sending</p>
-            <p :class="{step: stepActive === 4}">4.Device networking</p>
-            <p :class="{step: stepActive === 5}">5.Server connection</p>
-            <p :class="{step: stepActive === 6}">6.Data synchronization</p>
+            <p :class="{step: stepActive === 2}">2.Device connection{{ stepActive === 2 && '...'}}</p>
+            <p :class="{step: stepActive === 3}">3.Command sending{{ stepActive === 3 && '...'}}</p>
+            <p :class="{step: stepActive === 4}">4.Device networking{{ stepActive === 4 && '...'}}</p>
+            <p :class="{step: stepActive === 5}">5.Server connection{{ stepActive === 5 && '...'}}</p>
+            <p :class="{step: stepActive === 6}">6.Data synchronization{{ stepActive === 6 && '...'}}</p>
           </common-flex>
           <div style="width: 90%">
             <el-progress :percentage="percentage"></el-progress>
@@ -1200,7 +1200,7 @@ export default {
             if (timesNet === 24) this.stepActive = 5
             if (timesNet === 30) this.stepActive = 6
             timesNet++
-            if (timesNet > 30) {
+            if (timesNet > 31) {
               this.beforeClose()
               this.$modal.alertSuccess('Configuration succeeded')
             }
@@ -1728,8 +1728,10 @@ export default {
       this.addShow = true
     },
     beforeClose() {
+      timesNet = 1
       this.addShow = false
       this.configNetShow = false
+      this.startNetShow = true
       this.delShow = false
       this.delSubType = ''
       this.addSubType = true
@@ -2548,6 +2550,7 @@ export default {
     @include cImg();
   }
   .step {
+    font-size: 16px;
     font-weight: 700;
   }
 }
