@@ -8,18 +8,18 @@
     </el-card>
     <el-card style="margin-top: 24px">
       <el-form :inline="true" :model="queryParams" label-width="100px" ref="queryForm" size="small">
-        <el-row :gutter="16">
+        <el-row :gutter="1">
           <el-col :span="7">
             <el-form-item label="Alarm：" prop="fault">
               <el-input @keyup.enter.native="handleQuery" placeholder="Please enter" v-model="queryParams.fault"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label-width="160px" label="Fault Code：" prop="faultCode">
               <el-input @keyup.enter.native="handleQuery" placeholder="Please enter" v-model="queryParams.faultCode"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="6">
             <el-form-item label="Site Name：" prop="siteName">
               <el-input @keyup.enter.native="handleQuery" placeholder="Please enter" v-model="queryParams.siteName"></el-input>
             </el-form-item>
@@ -31,7 +31,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="16">
+        <el-row :gutter="1">
           <el-col :span="7">
             <el-form-item label="Importance：" prop="type">
               <el-select placeholder="All" v-model="queryParams.type">
@@ -39,7 +39,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="9">
             <el-form-item label-width="160px" placeholder="Please select" label="Occurrence Time：" prop="createTime">
               <el-date-picker
                 clearable
