@@ -98,7 +98,7 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="Site Name" prop="siteName">
+        <el-table-column label="Site Name" prop="siteName" min-width="120">
           <template slot-scope="{ row }">
             <span style="color: #3EBCD4">{{ row.siteName }}</span>
           </template>
@@ -108,14 +108,14 @@
             <span>{{ deviceType[+row.deviceType] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Device SN" prop="sn" show-overflow-tooltip></el-table-column>
+        <el-table-column label="Device SN" prop="sn" show-overflow-tooltip min-width="120" />
         <el-table-column label="Alarm" prop="fault" min-width="180" show-overflow-tooltip />
         <el-table-column label="Importance" prop="type" width="120">
           <template slot-scope="{ row }"><span>{{ ['--', 'Warning', 'Fault', 'Notice'][+row.type] }}</span></template>
         </el-table-column>
-        <el-table-column label="Fault code" prop="faultCode"></el-table-column>
-        <el-table-column label="Collection Source" prop="collectionSource" min-width="120"></el-table-column>
-        <el-table-column label="Source SN" prop="sn" show-overflow-tooltip></el-table-column>
+        <el-table-column label="Fault code" prop="faultCode" min-width="120" />
+        <el-table-column label="Collection Source" prop="collectionSource" min-width="140" />
+        <el-table-column label="Source SN" prop="sn" show-overflow-tooltip min-width="120" />
         <el-table-column label="Status" prop="recoveryStatus" width="120">
           <template slot-scope="{ row }"><span>{{ ['Open', 'Closed'][+row.recoveryStatus] }}</span></template>
         </el-table-column>
