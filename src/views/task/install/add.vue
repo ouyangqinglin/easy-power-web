@@ -182,7 +182,7 @@ export default {
           uid: this.base.id,
           installUid: this.installerInfo.id,
           remark: this.base.remark,
-          appointTime: this.base.appointTime,
+          appointTime: new Date(this.base.appointTime).getTime() / 1000,
           phone: this.base.phone,
           agencyId: this.base.agencyId
         }

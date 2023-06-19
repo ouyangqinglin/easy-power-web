@@ -753,7 +753,13 @@ export default {
       })
     },
     getChartData() {
-      homeChart(this.params).then(res => {
+      const data = {
+        startTime: new Date((`${this.params.startTime} 00:00:00`)).getTime() / 1000,
+        endTime: new Date((`${this.params.endTime} 23:59:59`)).getTime() / 1000,
+        dataType: this.params.dataType,
+        scope: this.params.scope
+      }
+      homeChart(data).then(res => {
         const lineData = res.data.list
         this.barNoData = res.data && !!lineData.length
         if (this.barNoData) {

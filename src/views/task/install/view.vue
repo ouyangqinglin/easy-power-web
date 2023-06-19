@@ -171,6 +171,7 @@ export default {
   created() {
     this.id = this.$route.params?.id
     getTaskInfo(this.id).then(res => {
+      if (res.data.appointTime) res.data.appointTime = this.DATE_FORMAT('M/d/yyyy hh:mm', +res.data.appointTime * 1000)
       this.base = res.data
       this.active = +this.base.status
     })

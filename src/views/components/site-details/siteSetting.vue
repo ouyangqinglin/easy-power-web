@@ -247,7 +247,7 @@
                 <el-table-column label="No." type="index" />
                 <el-table-column label="Time" prop="">
                   <template slot-scope="{ row }">
-                    <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+                    <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime, base.timeZone) }}</span>
                     <span v-else>--</span>
                   </template>
                 </el-table-column>
@@ -729,9 +729,16 @@ export default {
       })
     },
     getList() {
-      this.queryParams.createTime = this.DATE_FORMAT('yyyy-M-d', this.queryParams.createTime)
+      this.queryParams.createTime = this.DATE_FORMAT('yyyy-MM-dd', this.queryParams.createTime)
       this.loading = true
-      setRecodeList(this.queryParams).then(res => {
+      let data = {
+        pageNum: this.queryParams.pageNum,
+        pageSize: this.queryParams.pageSize,
+        siteCode: this.queryParams.siteCode,
+        startTime: (this.ISD_TIMESTAMP(`${this.queryParams.createTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.queryParams.createTime} 23:59:59`, this.base.timeZone)) / 1000,
+      }
+      setRecodeList(data).then(res => {
         this.list = res.rows
         this.total = res.total
       }).finally(() => {

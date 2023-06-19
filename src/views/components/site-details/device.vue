@@ -34,6 +34,54 @@
           </common-flex>
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
+          <common-flex class="total-box" justify="space-between">
+            <div class="item">
+              <div class="item-title">Total Charging Energy</div>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Today</div>
+                  <div class="item-body-item-value">{{ batEnergy.dayChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Month</div>
+                  <div class="item-body-item-value">{{ batEnergy.monthChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Year</div>
+                  <div class="item-body-item-value">{{ batEnergy.yearChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Lifetime</div>
+                  <div class="item-body-item-value">{{ batEnergy.allChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+            </div>
+            <div class="item">
+              <div class="item-title">Total Discharging Energy</div>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Today</div>
+                  <div class="item-body-item-value">{{ batEnergy.dayDisChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Month</div>
+                  <div class="item-body-item-value">{{ batEnergy.monthDisChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+              <common-flex class="item-body">
+                <div class="item-body-item">
+                  <div class="item-body-item-key">This Year</div>
+                  <div class="item-body-item-value">{{ batEnergy.yearDisChargeEnergy }}kWh</div>
+                </div>
+                <div class="item-body-item">
+                  <div class="item-body-item-key">Lifetime</div>
+                  <div class="item-body-item-value">{{ batEnergy.allDisChargeEnergy }}kWh</div>
+                </div>
+              </common-flex>
+            </div>
+          </common-flex>
           <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
             <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
@@ -532,7 +580,7 @@
 <script>
 import * as echarts from 'echarts'
 
-import { listDevice, infoDevice, addBatchDevice, setDevice, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
+import { listDevice, infoDevice, addBatchDevice, batEnergy, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
 let deviceNavInfo = {}
 let batteryInstance = null
 let pvInstance = null
@@ -941,6 +989,7 @@ export default {
     },
   },
   data() {
+    const that = this
     return {
       stepActive: 1,
       startNetShow: true,
@@ -982,11 +1031,11 @@ export default {
       activePhotovoltaic: false,
       batteryHis: {
         batteryType: 'Voltage',
-        dateVal: new Date()
+        dateVal: new Date(that.UTC_START_OF(this.base.timeZone))
       },
       pvHis: {
         pvType: 'Voltage',
-        dateVal: new Date()
+        dateVal: new Date(that.UTC_START_OF(this.base.timeZone))
       },
       batListInstance: [],
       batList: [],
@@ -1004,6 +1053,7 @@ export default {
         delFlag: 0,
         siteCode: ''
       },
+      batEnergy: {},
       listDev: [],
       curDevInfo: {},
       currentItem: null,
@@ -1052,24 +1102,6 @@ export default {
             'Current': '',
             'Voltage': '',
             'Power': ''
-          },
-        },
-        {
-          'title': 'Charging Energy',
-          'info': {
-            'Today': '',
-            'This Month': '',
-            'This Year': '',
-            'Lifetime': ''
-          },
-        },
-        {
-          'title': 'Discharging Energy',
-          'info': {
-            'Today': '',
-            'This Month': '',
-            'This Year': '',
-            'Lifetime': ''
           },
         },
         {
@@ -1159,6 +1191,7 @@ export default {
         deviceNavInfo = {}
         this.queryParams.siteCode = this.$route.query?.siteCode
         this.getList()
+        this.getBatEnergy()
       },
       immediate: true
     },
@@ -1378,12 +1411,12 @@ export default {
     },
     getBatHisData() {
       this.requestLoading()
-      let format = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
+      let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
       let params = {
-        siteCode: this.queryParams.siteCode,
         sn: this.sn,
-        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
-        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
+        siteCode: this.queryParams.siteCode,
+        startTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
       }
       batHistoryData(params).then(res => {
         batData = res.data
@@ -1428,12 +1461,12 @@ export default {
     },
     getPvHisData() {
       this.requestLoading()
-      let format = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
+      let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
       let params = {
-        siteCode: this.queryParams.siteCode,
         sn: this.sn,
-        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
-        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
+        siteCode: this.queryParams.siteCode,
+        startTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
       }
       pvHistoryData(params).then(res => {
         // console.log('hisPv', res.data)
@@ -1821,6 +1854,14 @@ export default {
         }
       }
     },
+    getBatEnergy() {
+      let params = {
+        siteCode: this.queryParams.siteCode
+      }
+      batEnergy(params).then(res => {
+        this.batEnergy = res.data
+      })
+    },
     getList() {
       this.navBar = {}
       this.batList = []
@@ -1941,42 +1982,6 @@ export default {
           ],
           [
             {
-              key: 'Today',
-              value: 'dayChargeEnergy'
-            },
-            {
-              key: 'This Month',
-              value: 'monthChargeEnergy'
-            },
-            {
-              key: 'This Year',
-              value: 'yearChargeEnergy'
-            },
-            {
-              key: 'Lifetime',
-              value: 'allChargeEnergy'
-            },
-          ],
-          [
-            {
-              key: 'Today',
-              value: 'dayDisChargeEnergy'
-            },
-            {
-              key: 'This Month',
-              value: 'monthDisChargeEnergy'
-            },
-            {
-              key: 'This Year',
-              value: 'yearDisChargeEnergy'
-            },
-            {
-              key: 'Lifetime',
-              value: 'allDisChargeEnergy'
-            },
-          ],
-          [
-            {
               key: 'Lifetime',
               value: '' // 没有
             }
@@ -2030,11 +2035,11 @@ export default {
               this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
             } else if (k.key === 'New installation or not') {
               this.batteryInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
-            } else if (index === 4 || index === 3) {
+            } else if (index === 2 || index === 1) {
               if (+this.curDevInfo.installation === 2 && k.key === 'Lifetime') {
                 this.batteryInfo[index]['info'][k.key] = '--'
               } else {
-                if (index === 3) {
+                if (index === 1) {
                   let resStr = ''
                   resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
                   this.batteryInfo[index]['info'][k.key] = resStr
@@ -2134,7 +2139,7 @@ export default {
           i.forEach(k => {
             if (k.key === 'Session Started') {
               if (+this.curDevInfo.status === 1) {
-                if (this.curDevInfo[k.value]) this.chargeInfo[index]['info'][k.key] = this.DATE_FORMAT('M/d/yyyy hh:mm', this.curDevInfo[k.value] * 1000)
+                if (this.curDevInfo[k.value]) this.chargeInfo[index]['info'][k.key] = this.UTC_DATE_FORMAT(this.curDevInfo[k.value], this.base.timeZone)
                 else this.chargeInfo[index]['info'][k.key] = '--'
               } else {
                 this.chargeInfo[index]['info'][k.key] = '--'
@@ -2503,6 +2508,46 @@ export default {
   }
   .pvChart {
     height: 55vh;
+  }
+  .total-box {
+    margin-bottom: 27px;
+    padding: 0 24px 30px;
+    border-radius: 2px;
+    border: 1px solid #D8DCE6;
+    .item {
+      width: calc(100% / 2 - 40px);
+      margin-top: 24px;
+      &-title {
+        font-weight: 700;
+        line-height: 26px;
+        border-bottom: 1px solid #D8DCE6;
+      }
+      &-body {
+        max-width: 1200px;
+        >:nth-child(1) {
+          flex: 1 0 0;
+        }
+        >:nth-child(2) {
+          flex: 1.5 0 0;
+        }
+        &-item {
+          margin-top: 12px;
+          line-height: 26px;
+          font-size: 14px;
+          &-key {
+            color: #828282;
+          }
+          &-value {
+            color: #000;
+            font-weight: 500;
+          }
+        }
+        .charge {
+          flex-grow: 0;
+          width: calc(100% / 4);
+        }
+      }
+    }
   }
   .bat-item {
     margin-right: 80px;

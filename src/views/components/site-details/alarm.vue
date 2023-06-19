@@ -48,13 +48,13 @@
         </el-table-column>
         <el-table-column label="Alarm Start Time" prop="createTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime , base.timeZone) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Alarm Recovery Time" prop="" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.recoveryTime && row.recoveryTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.recoveryTime) }}</span>
+            <span v-if="row.recoveryTime && row.recoveryTime !== '--'">{{ UTC_DATE_FORMAT(+row.recoveryTime , base.timeZone) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

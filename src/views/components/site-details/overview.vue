@@ -143,11 +143,11 @@
                   <span class="comp-overview-row-col-card-content-weather">Wind SE,{{ weatherData.windSpeed }}km/h<br>
                     Humidity {{ weatherData.humidity }}%<br>
                     Sunrise at
-                    <span v-if="weatherData.sunrise">{{ DATE_FORMAT('hh:mm:ss', weatherData.sunrise * 1000) }}</span>
+                    <span v-if="weatherData.sunrise">{{ sunriseUTC }}</span>
                     <span v-else>--</span>
                     <br>
                     Sunset at
-                    <span v-if="weatherData.sunset">{{ DATE_FORMAT('hh:mm:ss', weatherData.sunset * 1000) }}</span>
+                    <span v-if="weatherData.sunset">{{ sunsetUTC }}</span>
                     <span v-else>--</span>
                     <br>
                   </span>
@@ -324,7 +324,7 @@ export default {
     }
   },
   data() {
-    const dateVal = new Date()
+    const dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
     const that = this
     return {
       weatherCodeEnum,
@@ -536,6 +536,8 @@ export default {
       this.getOnline()
       if (this.flag) return this.flag = false
       if (this.dateType === 'date') {
+        this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
+        this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
         this.$nextTick(() => {
           this.getDataOption()
         })
@@ -543,7 +545,7 @@ export default {
     },
     dateType(v) {
       if (v === 'date' || v === 'week') {
-        this.dateVal = new Date()
+        this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
         if (v === 'date') {
           this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
         } else {
@@ -558,19 +560,17 @@ export default {
         this.dateFormat = 'MM-dd-yyyy'
         this.displayFormat = 'MM-dd-yyyy'
       } else if (v === 'month') {
-        this.dateVal = new Date()
+        this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
         const firstDate = this.DATE_FORMAT('yyyy-M', this.dateVal) + '-1'
         this.params.startTime = firstDate
         this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
         this.dateFormat = 'yyyy-MM'
         this.displayFormat = 'MM-yyyy'
       } else if (v === 'year') {
-        this.dateVal = new Date()
+        this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
         const year = this.DATE_FORMAT('yyyy', this.dateVal)
-        this.params.startTime = `${year}-1-1`
-        let curYear = this.DATE_FORMAT('yyyy', new Date())
-        if (+year !== +curYear) this.params.endTime = `${year}-12-31`
-        else this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date())
+        this.params.startTime = `${year}-01-01`
+        this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.dateVal))
         this.dateFormat = 'yyyy'
         this.displayFormat = 'yyyy'
       }
@@ -596,6 +596,14 @@ export default {
         'year': 'year'
       }
       return arr[this.dateType]
+    },
+    sunriseUTC() {
+      if (this.base.timeZone) return (this.UTC_DATE_FORMAT(+this.weatherData.sunrise, this.base.timeZone)).slice(-5)
+      else return '--'
+    },
+    sunsetUTC() {
+      if (this.base.timeZone) return (this.UTC_DATE_FORMAT(+this.weatherData.sunset, this.base.timeZone)).slice(-5)
+      else return '--'
     }
   },
   mounted() {
@@ -679,7 +687,14 @@ export default {
     },
     getChartData() {
       this.$set(this.params, 'scope', 1)
-      homeChart(this.params).then(res => {
+      const data = {
+        startTime: (this.ISD_TIMESTAMP(`${this.params.startTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.params.endTime} 23:59:59`, this.base.timeZone)) / 1000,
+        dataType: this.params.dataType,
+        scope: this.params.scope,
+        siteCode: this.params.siteCode
+      }
+      homeChart(data).then(res => {
         const lineData = res.data.list
         this.totalPvGenerateEnergy = (lineData.reduce((sum, i) => {
           return sum + i.systemProduction
@@ -719,7 +734,14 @@ export default {
     },
     getConsumptionData() {
       this.$set(this.params, 'scope', 2)
-      homeChart(this.params).then(res => {
+      const data = {
+        startTime: (this.ISD_TIMESTAMP(`${this.params.startTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.params.endTime} 23:59:59`, this.base.timeZone)) / 1000,
+        dataType: this.params.dataType,
+        scope: this.params.scope,
+        siteCode: this.params.siteCode
+      }
+      homeChart(data).then(res => {
         const lineData = res.data.list
 
         const firstToatl = (lineData.reduce((sum, i) => {
