@@ -100,7 +100,7 @@
           min-width="100"
         >
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +row.createTime*1000) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.createTime) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
@@ -110,7 +110,7 @@
           min-width="100"
         >
           <template slot-scope="{ row }">
-            <span v-if="row.recoveryTime && row.recoveryTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +row.recoveryTime*1000) }}</span>
+            <span v-if="row.recoveryTime && row.recoveryTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.recoveryTime) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

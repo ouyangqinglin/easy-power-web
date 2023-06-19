@@ -121,7 +121,7 @@
         </el-table-column>
         <el-table-column label="Occurrence Time" prop="createTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.createTime*1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
@@ -196,7 +196,17 @@ export default {
     },
     getList() {
       this.loading = true
-      alarmList(this.queryParams).then(res => {
+      let timestamp = {
+        createTime: new Date(this.queryParams.createTime).getTime() / 1000,
+        startTime: new Date((`${this.queryParams.createTime} 00:00:00`)).getTime() / 1000,
+        endTime: new Date((`${this.queryParams.createTime} 23:59:59`)).getTime() / 1000
+      }
+      let data = {
+        ...this.queryParams, ...timestamp
+      }
+      let params
+      params = this.queryParams.createTime ? data : this.queryParams
+      alarmList(params).then(res => {
         this.list = res.rows
         this.total = res.total
         this.loading = false

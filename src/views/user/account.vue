@@ -93,14 +93,14 @@
         <el-table-column label="Remarks" align="center" show-overflow-tooltip prop="remark" />
         <el-table-column label="Creation Time" align="center" prop="createTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +row.createTime*1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Created by" align="center" prop="createBy" min-width="130" show-overflow-tooltip />
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.updateTime) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +row.updateTime*1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

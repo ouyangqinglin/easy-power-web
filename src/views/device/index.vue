@@ -78,13 +78,13 @@
         <el-table-column label="Agency" prop="agency" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Device Installed" prop="bindTime" min-width="170">
           <template slot-scope="{ row }">
-            <span v-if="row.bindTime && row.bindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.bindTime) }}</span>
+            <span v-if="row.bindTime && row.bindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.bindTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Time of Device Unbind" prop="unBindTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.unBindTime && row.unBindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.unBindTime) }}</span>
+            <span v-if="row.unBindTime && row.unBindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.unBindTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
