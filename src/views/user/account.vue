@@ -77,7 +77,12 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="User Account" align="center" prop="email" min-width="170" show-overflow-tooltip />
+        <el-table-column label="User Account" align="center" prop="email" min-width="270">
+          <template slot-scope="{ row }">
+            <span style="margin-right: 6px">{{ row.email }}</span>
+            <el-tag size="mini" :type="['', 'success', 'info'][+row.active]">{{+row.active === 1 ? 'Active' : 'Not active'}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="User" align="center" prop="userName" min-width="120" show-overflow-tooltip />
         <el-table-column label="Role" align="center" prop="rolesList" min-width="120" show-overflow-tooltip>
         </el-table-column>
