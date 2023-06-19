@@ -117,7 +117,7 @@
         </el-table-column>
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="130">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.updateTime) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.updateTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
