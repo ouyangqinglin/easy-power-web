@@ -88,7 +88,8 @@ export default {
       // 表单校验
       rules: {
         oldPassword: [
-          { required: true, message: "Please enter", trigger: "blur" }
+          { required: true, message: "Please enter", trigger: "blur" },
+          { required: true, validator: validatePass, trigger: "blur" }
         ],
         newPassword: [
           { required: true, message: "Please enter", trigger: "blur" },
