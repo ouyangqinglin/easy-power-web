@@ -352,4 +352,5 @@ export default {
     }
   }
 }
+.el-tooltip__popper{ max-width: 50% }
 </style>
