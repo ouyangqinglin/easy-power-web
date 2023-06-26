@@ -240,6 +240,7 @@ export default {
     })
   },
   mounted() {
+    console.log('test')
     this.getList()
   },
   methods: {
