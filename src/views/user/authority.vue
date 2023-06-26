@@ -67,11 +67,11 @@
             <span>{{ ['Valid', 'Invalid'][row.status] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Remarks" prop="remark" min-width="160" show-overflow-tooltip />
+        <el-table-column label="Remarks" prop="remark" min-width="160" class="my-tooltip" show-overflow-tooltip />
         <el-table-column label="Agency" prop="agency" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.updateTime) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.updateTime) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
