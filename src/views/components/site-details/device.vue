@@ -1391,7 +1391,7 @@ export default {
       }
       if (this.batteryHis.batteryType === 'Temperature') {
         let itemTwo = {
-          name: 'minTemperature',
+          name: 'minTemperature:',
           symbol: 'none',
           type: 'line',
           smooth: true,
@@ -1400,7 +1400,7 @@ export default {
           },
           data: arr2
         }
-        itemOne.name = 'maxTemperature'
+        itemOne.name = 'maxTemperature:'
         optionBat.series.push(itemTwo)
       }
       optionBat.series.push(itemOne)
