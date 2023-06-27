@@ -150,7 +150,7 @@
                   <el-row :gutter="20">
                     <el-col :span="8">
                       <el-form-item prop="24" label="Battery EodHyst(%)">
-                        <el-input style="width: auto" @blur="inputVerify(0, 100, 24)" v-model.trim="deviceBase[24]" placeholder="[0,100]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(10, 90, 24)" v-model.trim="deviceBase[24]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[24]" @click="setDevice(24)">Set</el-button>
                       </el-form-item>
                     </el-col>
