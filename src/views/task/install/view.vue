@@ -9,7 +9,7 @@
               <div>{{ base.createBy }}</div>
             </template>
             <template slot="description">
-              <div v-if="base.createTime">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(base.createTime)) }}</div>
+              <div v-if="base.createTime">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +base.createTime * 1000) }}</div>
               <div v-else>--</div>
             </template>
           </el-step>
@@ -19,7 +19,7 @@
                 <div>{{ base.installer }}</div>
               </template>
               <template slot="description">
-                <div v-if="base.startTime">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(base.startTime)) }}</div>
+                <div v-if="base.startTime">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', base.startTime * 1000) }}</div>
                 <div v-else>--</div>
               </template>
             </template>
@@ -30,7 +30,7 @@
                 <div>{{ base.installer }}</div>
               </template>
               <template slot="description">
-                <div v-if="base.endTime">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(base.endTime)) }}</div>
+                <div v-if="base.endTime">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', base.endTime * 1000) }}</div>
                 <div v-else>--</div>
               </template>
             </template>
