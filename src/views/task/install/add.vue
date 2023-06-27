@@ -91,7 +91,7 @@ export default {
           { required: true, message: 'Please enter phone', trigger: 'blur'}
         ],
         appointTime: [
-          { type: 'string', required: true, message: 'Please enter appointTime', trigger: 'blur'}
+          { type: 'string', required: true, message: 'Please enter appoint time', trigger: 'blur'}
         ],
         address: [
           { required: true, message: 'Please enter address', trigger: 'blur'}
