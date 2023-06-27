@@ -189,8 +189,8 @@ export default {
   },
   mounted() {
     baseDevice(this.$route.params.id).then(res => {
-      if (res.data.installTime) res.data.installTime = this.DATE_FORMAT('M/d/yyyy hh:mm', new Date(res.data.installTime))
-      if (res.data.unBindTime) res.data.unBindTime = this.DATE_FORMAT('M/d/yyyy hh:mm', new Date(res.data.unBindTime))
+      if (res.data.installTime) res.data.installTime = this.DATE_FORMAT('M/d/yyyy hh:mm', (+res.data.installTime) * 1000)
+      if (res.data.unBindTime) res.data.unBindTime = this.DATE_FORMAT('M/d/yyyy hh:mm', (+res.data.unBindTime) * 1000)
       res.data.region = ''
       if (res.data.city) res.data.region = `${res.data.city}`
       if (res.data.province) res.data.region = `${res.data.region}${res.data.province}`
@@ -198,7 +198,7 @@ export default {
       this.queryParams.sn = res.data.sn
       this.base = res.data
       if (+this.base.deviceType === 4) this.getList()
-      if (res.data.upgradeTime) this.currentApk.upgradeTime = this.DATE_FORMAT('M/d/yyyy hh:mm:ss', res.data.upgradeTime)
+      if (res.data.upgradeTime) this.currentApk.upgradeTime = this.DATE_FORMAT('M/d/yyyy hh:mm:ss', (+res.data.upgradeTime) * 1000)
       this.currentApk.currentVersion = res.data.version
       this.currentApk.hardVersion = res.data.hardVersion
     })
