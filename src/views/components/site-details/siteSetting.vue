@@ -136,13 +136,13 @@
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="1" label="Battery grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(0, 100, 1)" v-model.trim="deviceBase[1]" placeholder="[0,100]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(0, 100, 1)" v-model.trim="deviceBase[1]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[1]" @click="setDevice(1)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="30" label="Battery Off-grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(0, 100, 30)" v-model.trim="deviceBase[30]" placeholder="[0,100]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(0, 100, 30)" v-model.trim="deviceBase[30]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[30]" @click="setDevice(30)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -571,13 +571,15 @@ export default {
   },
   methods: {
     inputVerify(min, max, type) {
+      let arr = [1, 30]
       if (!Number.isInteger(+this.deviceBase[type])) {
         this.deviceBase[type] = ''
         this.rules[+type][0].message = 'Please enter the number'
         this.rules[+type][0].required = true
       } else if (+this.deviceBase[type] > max || +this.deviceBase[type] < min) {
         this.deviceBase[type] = ''
-        this.rules[+type][0].message = `Please enter the number in [${min}, ${max}]`
+        if (arr.includes(+type)) this.rules[+type][0].message = ' '
+        else this.rules[+type][0].message = `Please enter the number in [${min}, ${max}]`
         this.rules[+type][0].required = true
       } else {
         this.rules[+type][0].required = false
