@@ -19,6 +19,7 @@
           :type="inputType"
           auto-complete="off"
           placeholder="Please enter"
+          @input="verifyPsw($event,'loginForm', 'password')"
           @keyup.enter.native="handleLogin"
           @paste.native.capture.prevent
           @copy.native.capture.prevent
@@ -57,6 +58,7 @@
       <el-form-item prop="pass" label="New Password">
         <el-input
           v-model="modifyForm.pass"
+          @input="verifyPsw($event,'modifyForm', 'pass')"
           :type="inputNew"
           auto-complete="off"
           placeholder="Please enter"
@@ -72,6 +74,7 @@
       <el-form-item prop="checkPass" label="Password Again">
         <el-input
           v-model="modifyForm.checkPass"
+          @input="verifyPsw($event,'modifyForm', 'checkPass')"
           :type="inputAgain"
           auto-complete="off"
           placeholder="Please enter"
@@ -126,6 +129,7 @@
                   @copy.native.capture.prevent
                   @paste.native.capture.prevent
                   placeholder="Please enter"
+                  @input="verifyPsw($event,'forgetForm', 'password')"
                   v-model="forgetForm.password">
           <template #suffix>
             <svg-icon v-if="eyesNew" @click.native="eyesNew = !eyesNew" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
@@ -137,7 +141,9 @@
                     @copy.native.capture.prevent
                     label="Password Again"
                     prop="againPassword">
-        <el-input :type="inputAgain" placeholder="Please enter" v-model="forgetForm.againPassword">
+        <el-input :type="inputAgain" placeholder="Please enter"
+                  @input="verifyPsw($event,'forgetForm', 'againPassword')"
+                  v-model="forgetForm.againPassword">
           <template #suffix>
             <svg-icon v-if="eyesAgain" @click.native="eyesAgain = !eyesAgain" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
             <svg-icon v-else @click.native="eyesAgain = !eyesAgain" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
@@ -295,6 +301,9 @@ export default {
     this.getCookie()
   },
   methods: {
+    verifyPsw(v, base, str) {
+      this[base][str] = v.replace(/\s+/g,"")
+    },
     backLogin() {
       this.forgetShow = true
       Object.keys(this.forgetForm).forEach(i => {

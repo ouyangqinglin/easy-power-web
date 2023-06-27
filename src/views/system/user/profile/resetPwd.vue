@@ -4,7 +4,8 @@
       <el-input
         @paste.native.capture.prevent
         @copy.native.capture.prevent
-        v-model="user.oldPassword" placeholder="Please enter"
+        v-model.trim="user.oldPassword" placeholder="Please enter"
+        @input="verifyPsw($event,'oldPassword')"
         :type="inputOne">
         <template #suffix>
           <svg-icon v-if="eyes" @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
@@ -16,7 +17,8 @@
       <el-input
         @paste.native.capture.prevent
         @copy.native.capture.prevent
-        v-model="user.newPassword" placeholder="Please enter"
+        v-model.trim="user.newPassword" placeholder="Please enter"
+        @input="verifyPsw($event,'newPassword')"
         :type="inputTwo">
         <template #suffix>
           <svg-icon v-if="eyesTwo" @click.native="eyesTwo = !eyesTwo" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
@@ -27,7 +29,8 @@
     <el-form-item label="Please confirm" prop="confirmPassword">
       <el-input @paste.native.capture.prevent
                 @copy.native.capture.prevent
-                v-model="user.confirmPassword" placeholder="Please enter"
+                v-model.trim="user.confirmPassword" placeholder="Please enter"
+                @input="verifyPsw($event,'confirmPassword')"
                 :type="inputThr">
         <template #suffix>
           <svg-icon v-if="eyesThree" @click.native="eyesThree = !eyesThree" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
@@ -103,6 +106,9 @@ export default {
     };
   },
   methods: {
+    verifyPsw(v, str) {
+      this.user[str] = v.replace(/\s+/g,"")
+    },
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
