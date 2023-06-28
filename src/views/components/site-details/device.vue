@@ -1943,6 +1943,7 @@ export default {
         this.curDevInfo = deviceNavInfo[this.sn]
         this.tempInfo()
       } else this.getDeviceInfo()
+      if (pvInstance) pvInstance.dispose()
     },
     getDeviceInfo() {
       let data = {
