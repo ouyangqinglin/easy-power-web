@@ -596,7 +596,14 @@ for (let i = 1; i < 25; i++) {
 const optionBat = {
   tooltip: {
     trigger: 'axis',
-    position: function (pt) {
+    position: function (pt, param) {
+      if (pt[0] > 960) {
+        if (param.length > 1) {
+          if (param[0].value === 'NaN') return [pt[0] - 100, pt[1] - 10]
+          else return [pt[0] - 220, pt[1] - 10]
+        }
+        else return [pt[0] - 100, pt[1] - 10]
+      }
       return [pt[0] + 20, pt[1] - 10];
     },
     formatter(v) {
@@ -713,7 +720,11 @@ const optionBat = {
 const optionPv = {
   tooltip: {
     trigger: 'axis',
-    position: function (pt) {
+    position: function (pt, param) {
+      if (pt[0] > 960) {
+        if (param[0].value === 'NaN') return [pt[0] - 100, pt[1] - 10];
+        else return [pt[0] - 140, pt[1] - 10];
+      }
       return [pt[0] + 20, pt[1] - 10];
     },
     formatter(v) {

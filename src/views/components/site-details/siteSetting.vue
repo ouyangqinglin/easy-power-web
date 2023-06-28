@@ -247,7 +247,7 @@
                 <el-table-column label="No." type="index" />
                 <el-table-column label="Time" prop="">
                   <template slot-scope="{ row }">
-                    <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime, base.timeZone) }}</span>
+                    <span v-if="row.createTime && row.createTime !== '--'">{{ row.createTime }}</span>
                     <span v-else>--</span>
                   </template>
                 </el-table-column>

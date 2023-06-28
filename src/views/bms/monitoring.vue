@@ -110,12 +110,18 @@ const option = {
   tooltip: {
     trigger: 'axis',
     position: function (pt, params) {
+      let xDis
+      if (pt[0] > 960) {
+        if (params[0].value === 'NaN') xDis = pt[0] - 100
+        else xDis = pt[0] - 150
+      }
+      else xDis = pt[0] + 20
       let height = viewH / 30
       let offsetTop = Math.max(pt[1] - height * (params.length), 0)
       if (params.length > 3) {
-        if (params.length > 12 && viewH < 950) return [pt[0] + 20, offsetTop - 80]
-        else return [pt[0] + 20, offsetTop]
-      } else return [pt[0] + 20, pt[1] - 30];
+        if (params.length > 12 && viewH < 950) return [xDis, offsetTop - 80]
+        else return [xDis, offsetTop]
+      } else return [xDis, pt[1] - 30];
     },
     formatter(p) {
       if (p[0].value === 'NaN') return 'No data'
