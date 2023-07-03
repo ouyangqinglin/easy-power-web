@@ -58,7 +58,7 @@
               <el-input @input="checkPhone" maxlength="20" v-model="base[i.prop]"></el-input>
             </template>
             <template v-else>
-              <el-input :class="{smallPlace: i.prop === 'password'}"  :placeholder="i.placeholder" v-model="base[i.prop]"></el-input>
+              <el-input :class="{smallPlace: i.prop === 'password'}" @input="verifyPsw"  :placeholder="i.placeholder" v-model.trim="base[i.prop]"></el-input>
             </template>
           </el-form-item>
         </template>
@@ -120,7 +120,7 @@ export default {
       if (value === '') {
         callback(new Error('8-16 digital words, at least two of them: letters / numbers / symbols'));
       } else {
-        const reg = /(?!.*\s)(?!^[\u4e00-\u9fa5]+$)(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,16}$/
+        const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)(?![^a-zA-Z0-9]+$)[^\u4e00-\u9fa5 ]{8,16}$/
         if (reg.test(value)) {
           callback()
         } else callback(new Error('8-16 digital words, at least two of them: letters / numbers / symbols'))
@@ -248,6 +248,9 @@ export default {
     }
   },
   methods: {
+    verifyPsw(v) {
+      this.base.password = v.replace(/\s+/g,"")
+    },
     checkPhone() {
       this.base.phone = this.PHONE_REG(this.base.phone)
     },

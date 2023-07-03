@@ -77,7 +77,12 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="User Account" align="center" prop="email" min-width="170" show-overflow-tooltip />
+        <el-table-column label="User Account" align="center" prop="email" min-width="270">
+          <template slot-scope="{ row }">
+            <span style="margin-right: 6px">{{ row.email }}</span>
+            <el-tag size="mini" :type="['', 'success', 'info'][+row.active]">{{+row.active === 1 ? 'Active' : 'Not active'}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="User" align="center" prop="userName" min-width="120" show-overflow-tooltip />
         <el-table-column label="Role" align="center" prop="rolesList" min-width="120" show-overflow-tooltip>
         </el-table-column>
@@ -93,14 +98,14 @@
         <el-table-column label="Remarks" align="center" show-overflow-tooltip prop="remark" />
         <el-table-column label="Creation Time" align="center" prop="createTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +row.createTime*1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Created by" align="center" prop="createBy" min-width="130" show-overflow-tooltip />
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.updateTime) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', +row.updateTime*1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>

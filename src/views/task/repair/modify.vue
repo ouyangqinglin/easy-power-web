@@ -45,7 +45,7 @@
           <el-input maxlength="50" v-model="base.title" type="text" />
         </el-form-item>
         <el-form-item prop="remark" label="Fault Description">
-          <el-input maxlength="200" v-model="base.remark" show-word-limit type="textarea" />
+          <el-input maxlength="2000" v-model="base.remark" show-word-limit type="textarea" />
         </el-form-item>
         <common-flex>
           <el-form-item prop="type" label="Task Type" style="margin-right: 90px">
@@ -65,7 +65,6 @@
           <el-form-item prop="appointTime" label="Time of Appointment" style="margin-right: 90px">
             <el-date-picker style="width: 100%" type="datetime" format="M/d/yyyy HH:mm"
                             v-model="base.appointTime"
-                            value-format="yyyy-MM-dd HH:mm:ss"
                             size="medium" />
           </el-form-item>
         </common-flex>
@@ -145,7 +144,7 @@ export default {
           { required: true, message: 'Please enter', trigger: 'blur'}
         ],
         appointTime: [
-          { type: 'string', required: true, message: 'Please enter', trigger: 'blur' }
+          { required: true, message: 'Please enter', trigger: 'blur' }
         ],
         uid: [
           { required: true, message: 'Please select', trigger: ['blur', 'change']}
@@ -165,6 +164,7 @@ export default {
   created() {
     this.id = this.$route.params?.id
     getTaskInfo(this.id).then(res => {
+      if (res.data.appointTime) res.data.appointTime = this.DATE_FORMAT('M/d/yyyy hh:mm', +res.data.appointTime * 1000)
       this.base = res.data
       this.repairmanInfo.id = res.data.installUid
       this.getReCustomer(this.base.siteCode)
@@ -209,7 +209,7 @@ export default {
           uid: this.base.uid,
           installUid: this.repairmanInfo.id,
           remark: this.base.remark,
-          appointTime: this.DATE_FORMAT('yyyy-MM-dd hh:mm:ss', new Date(this.base.appointTime)),
+          appointTime: new Date(this.base.appointTime).getTime() / 1000,
           phone: this.base.phone,
           title: this.base.title,
           siteCode: this.base.siteCode,

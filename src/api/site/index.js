@@ -86,3 +86,12 @@ export function warnList(params) {
     params,
   })
 }
+
+// 时区列表
+export function timeZoneList(params) {
+  return request({
+    url: '/zone/list',
+    method: 'get',
+    params,
+  })
+}

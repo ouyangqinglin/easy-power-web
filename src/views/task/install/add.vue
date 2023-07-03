@@ -91,7 +91,7 @@ export default {
           { required: true, message: 'Please enter phone', trigger: 'blur'}
         ],
         appointTime: [
-          { type: 'string', required: true, message: 'Please enter appointTime', trigger: 'blur'}
+          { type: 'string', required: true, message: 'Please enter appoint time', trigger: 'blur'}
         ],
         address: [
           { required: true, message: 'Please enter address', trigger: 'blur'}
@@ -182,7 +182,7 @@ export default {
           uid: this.base.id,
           installUid: this.installerInfo.id,
           remark: this.base.remark,
-          appointTime: this.base.appointTime,
+          appointTime: new Date(this.base.appointTime).getTime() / 1000,
           phone: this.base.phone,
           agencyId: this.base.agencyId
         }

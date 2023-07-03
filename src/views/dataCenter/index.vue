@@ -44,7 +44,7 @@
       />
     </el-card>
     <Add v-if="addShow" @refresh="getList" :show.sync="addShow" />
-    <Details @refresh="getList" :id="id" :type="toastType" :show.sync="show" />
+    <Details v-if="show" @refresh="getList" :id="id" :type="toastType" :show.sync="show" />
   </div>
 </template>
 

@@ -5,19 +5,20 @@
         <div class="comp-site-info-card-title">Site Profile</div>
         <el-button type="primary" @click="modify">Edit</el-button>
       </common-flex>
-      <el-form class="comp-site-info-card-form" :model="base">
+      <el-form class="comp-site-info-card-form" :model="base" disabled>
         <el-form-item :prop="i.prop" v-for="i of formList" :key="i.prop">
           <template slot="label"><span>{{ i.label }}</span></template>
           <template v-if="i.prop === 'siteStatus'">
-            <el-input disabled v-model="['Completed', 'Commissioning'][+base[i.prop] - 1]"></el-input>
+            <el-input v-model="['Completed', 'Commissioning'][+base[i.prop] - 1]"></el-input>
           </template>
           <template v-else-if="i.prop === 'address'">
-            <el-input type="textarea" autosize disabled v-model="base[i.prop]"></el-input>
+            <el-input type="textarea" autosize v-model="base[i.prop]"></el-input>
           </template>
           <template v-else>
-            <el-input disabled v-model="base[i.prop]"></el-input>
+            <el-input v-model="base[i.prop]"></el-input>
           </template>
         </el-form-item>
+        <el-form-item label="timeZone" prop="timeZone"><el-input v-model="base.timeZone"></el-input></el-form-item>
       </el-form>
     </el-card>
     <el-card class="comp-site-info-card">
@@ -60,6 +61,11 @@
             <el-input :disabled="index > 0 && index < 5" v-model="copyBase[i.prop]"></el-input>
           </template>
         </el-form-item>
+        <el-form-item label="timeZone" style="margin-right: 60px" prop="timeZone">
+          <el-select style="width: 100%" v-model="copyBase.timeZone">
+            <el-option v-for="i of timeZoneArr" :label="i.label" :value="i.timeZone" :key="i.id"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div class="mapBox" id="mapBox" />
       <common-flex style="margin-top: 30px" justify="center">
@@ -72,7 +78,7 @@
 
 <script>
 import countryList from '../../../../public/country.json'
-import { updateSite } from "@/api/site"
+import { updateSite, timeZoneList } from "@/api/site"
 import { Loader } from "@googlemaps/js-api-loader"
 const loader = new Loader({
   apiKey: "AIzaSyBKQp9U9gHx7dLGYs6XBZiukvXZsM0JpMw", //之前的key
@@ -156,6 +162,7 @@ export default {
       copyBase: {},
       timer: null,
       moveTimer: null,
+      timeZoneArr: [],
     }
   },
   watch: {
@@ -214,6 +221,7 @@ export default {
     },
     modify() {
       this.show = true
+      if (!this.timeZoneArr.length) this.getTimeZoneList()
       if (!this.google) this.initMap()
       if (this.region.country) {
         let item = this.countryList.find(i => i.name === this.region.country)
@@ -223,7 +231,21 @@ export default {
         let item = this.proList.find(i => i.name === this.region.province)
         if (item) this.cityList = item.city
       }
-
+    },
+    getTimeZoneList() {
+      const params = {
+        pageNum: 1,
+        pageSize: 1000,
+      }
+      timeZoneList(params).then(res => {
+        const arr = res.rows
+        if (arr.length) {
+          for (let i = 0; i < arr.length; i++) {
+            arr[i].label = `(${(arr[i].utcTime)}) ${arr[i].timeZone.replace('/', ',')}`
+          }
+        }
+        this.timeZoneArr = arr
+      })
     },
     beforeClose() {
       this.show = false
@@ -246,6 +268,7 @@ export default {
           data.country = this.region.country
           data.province = this.region.province
           data.city = this.region.city
+          data.timeZone = this.copyBase.timeZone
           data.region = `${this.region.city},${this.region.province},${this.region.country}`
           if (v) {
             updateSite(data).then(res => {

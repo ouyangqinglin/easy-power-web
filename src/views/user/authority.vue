@@ -67,7 +67,7 @@
             <span>{{ ['Valid', 'Invalid'][row.status] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Remarks" prop="remark" min-width="160" show-overflow-tooltip />
+        <el-table-column label="Remarks" prop="remark" min-width="160" class="my-tooltip" show-overflow-tooltip />
         <el-table-column label="Agency" prop="agency" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="160">
           <template slot-scope="{ row }">
@@ -251,8 +251,9 @@ export default {
     modifyOpen(item) {
       this.getMenu(item.roleId)
       Object.keys(this.modifyInfo).forEach(i => {
-        if (item[i] && item[i] !== '--') {
-          if (i === 'status') this.modifyInfo[i] = +item[i]
+        if (item[i]) {
+          if (item[i] === '--') this.modifyInfo[i] = ''
+          else if (i === 'status') this.modifyInfo[i] = +item[i]
           else this.modifyInfo[i] = item[i]
         }
       })

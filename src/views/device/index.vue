@@ -5,7 +5,7 @@
         <el-tab-pane name="4" :label="`Stick Logger (${stickTotal})`"></el-tab-pane>
         <el-tab-pane name="1" :label="`Inverter (${inverterTotal})`"></el-tab-pane>
         <el-tab-pane name="2" :label="`Battery (${batteryTotal})`"></el-tab-pane>
-        <el-tab-pane name="3" :label="`EV charger (${chargeTotal})`"></el-tab-pane>
+        <el-tab-pane name="3" :label="`EV Charger (${chargeTotal})`"></el-tab-pane>
         <el-tab-pane name="6" :label="`Photovoltaic (${pvTotal})`"></el-tab-pane>
       </el-tabs>
     </el-card>
@@ -78,13 +78,13 @@
         <el-table-column label="Agency" prop="agency" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Device Installed" prop="bindTime" min-width="170">
           <template slot-scope="{ row }">
-            <span v-if="row.bindTime && row.bindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.bindTime) }}</span>
+            <span v-if="row.bindTime && row.bindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.bindTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Time of Device Unbind" prop="unBindTime" min-width="160">
           <template slot-scope="{ row }">
-            <span v-if="row.unBindTime && row.unBindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.unBindTime) }}</span>
+            <span v-if="row.unBindTime && row.unBindTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.unBindTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
@@ -112,7 +112,7 @@ import { listDevice } from '@/api/device'
 const deviceType = {
     '1': 'Inverter',
     '2': 'Battery',
-    '3': 'EV charger',
+    '3': 'EV Charger',
     '4': 'Stick Logger',
     '6': 'Photovoltaic'
   }
@@ -156,7 +156,7 @@ export default {
         if (list.length) {
           list.forEach(i => str += i)
           this.hoverWarn = str
-        }
+        } else  this.hoverWarn = '--'
       })
 
     },

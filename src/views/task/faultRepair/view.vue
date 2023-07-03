@@ -111,8 +111,8 @@ export default {
     this.id = this.$route.params?.id
     getTaskInfo(this.id).then(res => {
       let temp = res.data
-      if (temp.createTime) temp.createTime = this.DATE_FORMAT('M/d/yyyy hh:mm', new Date(temp.createTime))
-      if (temp.endTime) temp.endTime = this.DATE_FORMAT('M/d/yyyy hh:mm', new Date(temp.endTime))
+      if (temp.createTime) temp.createTime = this.DATE_FORMAT('M/d/yyyy hh:mm', +temp.createTime * 1000)
+      if (temp.endTime) temp.endTime = this.DATE_FORMAT('M/d/yyyy hh:mm', +temp.endTime * 1000)
       this.base = temp
     })
   },

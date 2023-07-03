@@ -11,13 +11,13 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item class="second-item" label="Time of Installed：" prop="createTime">
+          <el-form-item class="second-item" label="Local time：">
             <el-date-picker
               clearable
-              v-model="queryParams.createTime"
+              v-model="queryTime"
               type="date"
               format="M/d/yyyy"
-              value-format="yyyy-M-d"
+              value-format="yyyy-MM-dd"
               placeholder="">
             </el-date-picker>
           </el-form-item>
@@ -30,7 +30,7 @@
         </common-flex>
       </el-form>
       <el-form :inline="true" size="small">
-        <el-form-item class="region" label="Region" prop="province">
+        <el-form-item class="region" label="Region：" prop="province">
           <el-select
             :disabled="!(queryParams.province && queryParams.country)"
             v-model="queryParams.city"
@@ -99,7 +99,14 @@
         <el-table-column label="Country/Area" align="center" prop="country" min-width="140" show-overflow-tooltip />
         <el-table-column label="Time of Installed" align="center" prop="createTime" min-width="130">
           <template slot-scope="{ row }">
-            <span>{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+            <span v-if="row.createTime && row.createTime !== '--'">{{ UTC_DATE_FORMAT(+row.createTime, row.timeZone) }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Local time" align="center" prop="createTime" min-width="140">
+          <template slot-scope="{ row }">
+            <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.createTime * 1000) }}</span>
+            <span v-else>--</span>
           </template>
         </el-table-column>
         <el-table-column label="Agency" align="center" prop="agentName" min-width="140" show-overflow-tooltip />
@@ -110,7 +117,7 @@
         </el-table-column>
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="130">
           <template slot-scope="{ row }">
-            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.updateTime) }}</span>
+            <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.updateTime * 1000) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
@@ -150,6 +157,7 @@ export default {
   dicts: ['site_status'],
   data() {
     return {
+      queryTime: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -172,7 +180,6 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        createTime: '',
         siteName: null,
         address: null,
         cover: null,
@@ -211,6 +218,9 @@ export default {
     };
   },
   watch: {
+    queryTime(v) {
+      if (!v) this.queryParams.startTime = this.queryParams.endTime = ''
+    },
     'queryParams.country': {
       handler(v) {
         this.optionsParams.country = v
@@ -227,8 +237,6 @@ export default {
     }
   },
   created() {
-
-    // 24 寸左右 分辨率1920 * 1080 以上 HDMI+VGA接口
     this.getList()
     this.getAddressOption()
   },
@@ -271,6 +279,10 @@ export default {
     },
     /** 查询站点列表 */
     getList() {
+      if (this.queryTime) {
+        this.queryParams.startTime = new Date((`${this.queryTime} 00:00:00`)).getTime() / 1000
+        this.queryParams.endTime = new Date((`${this.queryTime} 23:59:59`)).getTime() / 1000
+      }
       this.loading = true;
       listSite(this.queryParams).then(response => {
         response.rows.forEach(i => {
@@ -299,7 +311,6 @@ export default {
         monthProduce: null,
         yearProduce: null,
         allProduce: null,
-        createTime: null,
         updateTime: null,
         peakPower: null,
         status: 0,
@@ -325,6 +336,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParams.country = this.queryParams.province = this.queryParams.city = null
+      this.queryTime = ''
+      this.queryParams.startTime = this.queryParams.endTime = ''
       this.resetForm("queryForm");
       this.handleQuery();
     },

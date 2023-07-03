@@ -136,13 +136,13 @@
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="1" label="Battery grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 90, 1)" v-model.trim="deviceBase[1]" placeholder="[10,90]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(0, 100, 1)" v-model.trim="deviceBase[1]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[1]" @click="setDevice(1)">Set</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
                       <el-form-item prop="30" label="Battery Off-grid DOD(%)">
-                        <el-input style="width: auto" @blur="inputVerify(10, 90, 30)" v-model.trim="deviceBase[30]" placeholder="[10,90]"></el-input>
+                        <el-input style="width: auto" @blur="inputVerify(0, 100, 30)" v-model.trim="deviceBase[30]" placeholder="[10,90]"></el-input>
                         <el-button type="primary" plain style="margin-left: 10px" :disabled="!deviceBase[30]" @click="setDevice(30)">Set</el-button>
                       </el-form-item>
                     </el-col>
@@ -247,7 +247,7 @@
                 <el-table-column label="No." type="index" />
                 <el-table-column label="Time" prop="">
                   <template slot-scope="{ row }">
-                    <span v-if="row.createTime && row.createTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', row.createTime) }}</span>
+                    <span v-if="row.createTime && row.createTime !== '--'">{{ row.createTime }}</span>
                     <span v-else>--</span>
                   </template>
                 </el-table-column>
@@ -571,13 +571,15 @@ export default {
   },
   methods: {
     inputVerify(min, max, type) {
+      let arr = [1, 30]
       if (!Number.isInteger(+this.deviceBase[type])) {
         this.deviceBase[type] = ''
         this.rules[+type][0].message = 'Please enter the number'
         this.rules[+type][0].required = true
       } else if (+this.deviceBase[type] > max || +this.deviceBase[type] < min) {
         this.deviceBase[type] = ''
-        this.rules[+type][0].message = `Please enter the number in [${min}, ${max}]`
+        if (arr.includes(+type)) this.rules[+type][0].message = ' '
+        else this.rules[+type][0].message = `Please enter the number in [${min}, ${max}]`
         this.rules[+type][0].required = true
       } else {
         this.rules[+type][0].required = false
@@ -607,7 +609,6 @@ export default {
         }
         timeList.push(item)
       }
-      this.openLoading()
       let params = {
         type: 34,
         siteCode: this.siteCode,
@@ -615,13 +616,19 @@ export default {
       }
       deviceSet(params).then(res => {
         console.log('时间设置', res)
-        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) this.$modal.alertError(res.msg)
-        else this.$modal.msgSuccess('Succeeded!')
-      }).catch((err) => {
-        this.$modal.alertError(err.msg || 'failed!')
-      }).finally(() => {
-        this.setLoading.close()
-        this.getDeviceSet()
+        if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) {
+          this.$modal.msgError(res.msg)
+          this.getDeviceSet()
+        } else {
+          let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
+          if (+res.data === 3) {
+            this.openLoading()
+            this.getOrderRes()
+          } else {
+            this.$modal.msgError(statusList[+res.data])
+            this.getDeviceSet()
+          }
+        }
       })
     },
     confirmSetDevice(type) {
@@ -724,9 +731,16 @@ export default {
       })
     },
     getList() {
-      this.queryParams.createTime = this.DATE_FORMAT('yyyy-M-d', this.queryParams.createTime)
+      this.queryParams.createTime = this.DATE_FORMAT('yyyy-MM-dd', this.queryParams.createTime)
       this.loading = true
-      setRecodeList(this.queryParams).then(res => {
+      let data = {
+        pageNum: this.queryParams.pageNum,
+        pageSize: this.queryParams.pageSize,
+        siteCode: this.queryParams.siteCode,
+        startTime: (this.ISD_TIMESTAMP(`${this.queryParams.createTime} 00:00:00`, this.base.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.queryParams.createTime} 23:59:59`, this.base.timeZone)) / 1000,
+      }
+      setRecodeList(data).then(res => {
         this.list = res.rows
         this.total = res.total
       }).finally(() => {

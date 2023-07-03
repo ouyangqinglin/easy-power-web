@@ -181,7 +181,7 @@ export default {
           uid: this.base.customer,
           installUid: this.repairmanInfo.id,
           remark: this.base.remark,
-          appointTime: this.base.appointTime,
+          appointTime: new Date(this.base.appointTime).getTime() / 1000,
           phone: this.base.phone,
           title: this.base.title,
           siteCode: this.base.siteCode,

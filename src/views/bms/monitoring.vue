@@ -16,7 +16,7 @@
               <div class="value">{{ base.sn || '--' }}</div>
             </el-col>
             <el-col :span="6">
-              <div class="label">Capacity (Wh)</div>
+              <div class="label">Capacity (kWh)</div>
               <div class="value">{{ base.capacity || '--' }}</div>
             </el-col>
             <el-col :span="6">
@@ -110,12 +110,18 @@ const option = {
   tooltip: {
     trigger: 'axis',
     position: function (pt, params) {
+      let xDis
+      if (pt[0] > 960) {
+        if (params[0].value === 'NaN') xDis = pt[0] - 100
+        else xDis = pt[0] - 150
+      }
+      else xDis = pt[0] + 20
       let height = viewH / 30
       let offsetTop = Math.max(pt[1] - height * (params.length), 0)
       if (params.length > 3) {
-        if (params.length > 12 && viewH < 950) return [pt[0] + 20, offsetTop - 80]
-        else return [pt[0] + 20, offsetTop]
-      } else return [pt[0] + 20, pt[1] - 30];
+        if (params.length > 12 && viewH < 950) return [xDis, offsetTop - 80]
+        else return [xDis, offsetTop]
+      } else return [xDis, pt[1] - 30];
     },
     formatter(p) {
       if (p[0].value === 'NaN') return 'No data'
@@ -271,8 +277,8 @@ export default {
     }
   },
   mounted() {
-    if(this.$route.params.info) localStorage.setItem('info', this.$route.params.info)
-    let info = JSON.parse(localStorage.getItem('info'))
+    if(this.$route.params.info) localStorage.setItem(`info${this.$route.params.id}`, this.$route.params.info)
+    let info = JSON.parse(localStorage.getItem(`info${this.$route.params.id}`))
     this.voltageList = info.cellVList
     if (info.cellVList.length) {
       this.curSeries = []
@@ -282,8 +288,8 @@ export default {
     this.envTList = info.envTList
     this.mosTList = info.mOSTList
     let params = {
-      sn: localStorage.getItem('sn'),
-      siteCode: localStorage.getItem('siteCode'),
+      sn: localStorage.getItem(`sn${this.$route.params.id}`),
+      siteCode: localStorage.getItem(`siteCode${this.$route.params.id}`),
     }
     infoDevice(params).then(res => {
       this.base = {...info, ...res.data}
@@ -325,8 +331,8 @@ export default {
       this.requestLoading()
       let format = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
       let params = {
-        sn: localStorage.getItem('sn'),
-        siteCode: localStorage.getItem('siteCode'),
+        sn: localStorage.getItem(`sn${this.$route.params.id}`),
+        siteCode: localStorage.getItem(`siteCode${this.$route.params.id}`),
         startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
         endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
       }
@@ -350,7 +356,7 @@ export default {
         for(let k = 0; k < this.curSeries.length; k++) {
           let arr = []
           for(let i = 0; i < dataList.length; i++) {
-            arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(2))
+            arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(3))
           }
           let item = {
             name: `T${this.curSeries[k]+1}`,
@@ -370,7 +376,7 @@ export default {
           // cell_v1_avg
           let arr = []
           for(let i = 0; i < dataList.length; i++) {
-            arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(2))
+            arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(3))
           }
           let item = {
             name: `Cell${this.curSeries[k]+1}`,
