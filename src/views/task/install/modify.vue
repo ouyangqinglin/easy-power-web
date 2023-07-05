@@ -59,9 +59,6 @@
           <template v-else-if="i.prop === 'status'">
             <el-input disabled v-model="['', 'Pending', 'Processing', 'Complete'][base[i.prop]]"></el-input>
           </template>
-          <template v-else-if="i.prop === 'address'">
-            <el-input v-model="base[i.prop]" show-word-limit type="textarea" maxlength="50"></el-input>
-          </template>
           <template v-else-if="i.prop === 'phone'">
             <el-input @input="checkPhone" v-model="base[i.prop]" type="text" maxlength="20"></el-input>
           </template>
