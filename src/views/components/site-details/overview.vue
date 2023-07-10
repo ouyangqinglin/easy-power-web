@@ -534,7 +534,6 @@ export default {
       }
       this.getWeatherData(params)
       this.getOnline()
-      if (this.flag) return this.flag = false
       if (this.dateType === 'date') {
         this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
         this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
@@ -547,7 +546,7 @@ export default {
       if (v === 'date' || v === 'week') {
         this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
         if (v === 'date') {
-          this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
+          this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
         } else {
           const startStampTime = (new Date(this.dateVal)).getTime() - 6 * 24 * 60 * 60 * 1000
           this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
@@ -607,9 +606,6 @@ export default {
     }
   },
   mounted() {
-    this.flag = true
-    this.params.siteCode = this.$route.query?.siteCode
-    this.getDataOption()
     window.addEventListener('resize', this.changeSize)
   },
   beforeDestroy() {
@@ -634,7 +630,6 @@ export default {
     getDataOption() {
       this.barProduction = echarts.init(document.getElementById('barProduction'))
       this.barConsumption = echarts.init(document.getElementById('barConsumption'))
-      this.params.endTime = this.params.startTime = this.DATE_FORMAT('yyyy-M-d', new Date())
       this.getChartData()
       this.getConsumptionData()
     },
