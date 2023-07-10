@@ -642,10 +642,10 @@ export default {
     },
     sureDate(v) {
       if (v) {
-        if (this.dateType === 'date') this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', v)
+        if (this.dateType === 'date') this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', v)
         else if (this.dateType === 'week') {
           const endStampTime = (new Date(v[0])).getTime() +  6 * 24 * 60 * 60 * 1000
-          this.params.endTime = this.DATE_FORMAT('yyyy-M-d', endStampTime)
+          this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', endStampTime)
           let v1, v2
           v1 = this.DATE_FORMAT('MM-dd-yyyy', this.params.startTime)
           v2 = this.DATE_FORMAT('MM-dd-yyyy', this.params.endTime)
@@ -662,10 +662,10 @@ export default {
           this.params.startTime = startTime
           this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', endStampTime)
         } else {
-          this.params.startTime = `${v}-1-1`
+          this.params.startTime = `${v}-01-01`
           let curYear = this.DATE_FORMAT('yyyy', new Date())
           if (+v !== +curYear) this.params.endTime = `${v}-12-31`
-          else this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date())
+          else this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date())
         }
       }
       setTimeout(() => {
