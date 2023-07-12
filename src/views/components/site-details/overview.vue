@@ -699,10 +699,6 @@ export default {
           return sum + i.export / 1000
         }, 0)).toFixed(2)
 
-        const familyUsedTotal = (lineData.reduce((sum, i) => {
-          return sum + i.used / 1000
-        }, 0)).toFixed(2)
-
         if (this.totalPvGenerateEnergy && this.totalPvGenerateEnergy !== '0.00') {
           const exportPercent = ((netDischargeEnergyTotal / (+this.totalPvGenerateEnergy / 1000)) * 100).toFixed(0)
 

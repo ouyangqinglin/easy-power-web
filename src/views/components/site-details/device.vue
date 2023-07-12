@@ -378,7 +378,7 @@
       <el-form @submit.native.prevent v-if="addDialogInfo[4]">
         <div class="dialog-form">
           <el-form-item label="SN">
-            <el-input maxlength="20" @change="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="verifySn($event, 4)" @change="change(4)" :disabled="addDialogInfo[4].disabled" v-model.trim="addDialogInfo[4].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <div style="margin-top: 15px; cursor: pointer" v-if="!addDialogInfo[4].disabled" @click="deleteSn(4)"><img style="width: 20px" :src="require('@img/site/delete.svg')" alt=""></div>
         </div>
@@ -396,7 +396,7 @@
       <el-form @submit.native.prevent v-if="addDialogInfo[1]" style="margin-top: 16px">
         <div class="dialog-form">
           <el-form-item label="SN">
-            <el-input maxlength="20" @change="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="verifySn($event, 1)" @change="change(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="Rated Power (kW)">
             <el-input maxlength="20" @input="checkCapacity(1)" :disabled="addDialogInfo[1].disabled" v-model.trim="addDialogInfo[1].nameplateCapacity" placeholder="Please enter"></el-input>
@@ -425,7 +425,7 @@
             <div class="dialog-form">
 <!--              11111-->
               <el-form-item label="SN">
-                <el-input maxlength="20" @change="change(2, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+                <el-input maxlength="20" @input="verifySn($event, 2, k)" @change="change(2, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
               </el-form-item>
               <el-form-item label="Capacity (kWh)">
                 <el-input @input="checkCapacity(2, k)" type="text" :disabled="i.disabled" v-model.trim="i.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
@@ -453,7 +453,7 @@
         </common-flex>
         <div class="dialog-form" v-for="(i, k) of addDialogInfo[3]">
           <el-form-item label="SN">
-            <el-input maxlength="20" @change="change(3, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+            <el-input maxlength="20" @input="verifySn($event, 3, k)" @change="change(3, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
           </el-form-item>
           <el-form-item label="New installation or not">
             <el-select style="width: 100%" :disabled="i.disabled" @change="checkInstall(3, k)" v-model="i.installation" placeholder="Please select">
@@ -480,7 +480,7 @@
             <div class="dialog-form" >
               <el-form-item label="SN">
                 <!--            1111111-->
-                <el-input maxlength="20" @change="change(6, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
+                <el-input maxlength="20" @input="verifySn($event, 6, k)" @change="change(6, k)" :disabled="i.disabled" v-model.trim="i.serialNumber" placeholder="Please enter the serial number"></el-input>
               </el-form-item>
               <el-form-item label="Capacity (kW)">
                 <el-input @input="checkCapacity(6, k)" type="text" :disabled="i.disabled" v-model.trim="i.nameplateCapacity" placeholder="Please enter the capacity"></el-input>
@@ -1744,8 +1744,11 @@ export default {
         }
       }
     },
+    verifySn(e, deviceType, index) {
+      if ([2, 3, 6].includes(deviceType)) this.addDialogInfo[deviceType][index].serialNumber = e.replace(/[^u4e00-u9fa5w]/g,'')
+      else this.addDialogInfo[deviceType].serialNumber = e.replace(/[^u4e00-u9fa5w]/g,'')
+    },
     change(deviceType, index) {
-      // 1111111111
       let sn = ''
       if ([2, 3, 6].includes(deviceType)) {
         sn = this.addDialogInfo[deviceType][index].serialNumber.replace(/\s*/g,"")
