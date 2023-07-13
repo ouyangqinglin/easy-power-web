@@ -1910,6 +1910,7 @@ export default {
           if (+list[i]['deviceType'] === 6) this.pvList.push(list[i])
           if (+list[i]['deviceType'] === 3) this.pileList.push(list[i])
         }
+
         if (this.batList.length) this.batCur = this.batList[0].serialNumber
         if (this.pvList.length) this.curPv = this.pvList[0].serialNumber
         if (this.pileList.length) this.curPile = this.pileList[0].serialNumber
@@ -1932,7 +1933,7 @@ export default {
               optionBatSoc.series[0].data[0].value = 0
               optionBatSoc.series[0].data[1].value = 1
             } else {
-              this.batList[i]['soc'] = (this.batList[i]['curEnergy'] / this.batList[i]['capacity']) * 100 + '%'
+              this.batList[i]['soc'] = this.batList[i]['soc'] + '%'
               optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy'] / this.batList[i]['capacity']
               optionBatSoc.series[0].data[1].value = 1 - (this.batList[i]['curEnergy'] / this.batList[i]['capacity'])
             }
