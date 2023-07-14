@@ -1745,8 +1745,8 @@ export default {
       }
     },
     verifySn(e, deviceType, index) {
-      if ([2, 3, 6].includes(deviceType)) this.addDialogInfo[deviceType][index].serialNumber = e.replace(/[^u4e00-u9fa5w]/g,'')
-      else this.addDialogInfo[deviceType].serialNumber = e.replace(/[^u4e00-u9fa5w]/g,'')
+      if ([2, 3, 6].includes(deviceType)) this.addDialogInfo[deviceType][index].serialNumber = e.replace(/[^a-zA-Z0-9]/g, "")
+      else this.addDialogInfo[deviceType].serialNumber = e.replace(/[^a-zA-Z0-9]/g, "")
     },
     change(deviceType, index) {
       let sn = ''
