@@ -82,7 +82,7 @@ export default {
     },
     getDetails() {
       getSite(this.params).then(res => {
-        res.data.installTime = this.DATE_FORMAT('M/d/yyyy hh:mm', (res.data.installTime) * 1000)
+        res.data.installTime = this.UTC_DATE_FORMAT(res.data.installTime, res.data.timeZone)
         let regionStr = ''
         if (res.data.city) regionStr += res.data.city + ','
         if (res.data.province) regionStr += res.data.province + ','
