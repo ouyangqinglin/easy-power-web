@@ -7,6 +7,11 @@
             <el-form-item label="Version：" prop="versionNum">
               <el-input clearable placeholder="Please enter" v-model="queryParams.versionNum"></el-input>
             </el-form-item>
+            <el-form-item label="File Type：" prop="fileType">
+              <el-select placeholder="All" v-model="queryParams.fileType" style="width: 300px">
+                <el-option v-for="i of fileTypeOptions" :key="i.value" :label="i.label" :value="i.value"></el-option>
+              </el-select>
+            </el-form-item>
           </common-flex>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">Query</el-button>
@@ -26,6 +31,11 @@
         <el-table-column label="No." align="center" width="60">
           <template slot-scope="scope">
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="File Type" prop="fileType" min-width="160">
+          <template slot-scope="{ row }">
+            <dict-tag :options="dict.type.file_type" :value="row.fileType"></dict-tag>
           </template>
         </el-table-column>
         <el-table-column label="Version" prop="versionNum"></el-table-column>
@@ -58,9 +68,16 @@
       <el-dialog :visible.sync="show" title="Newly Build"
                  :before-close="beforeClose"
                  :close-on-click-modal ="false"
-                 width="46%">
-        <el-form @submit.native.prevent label-width="100" :model="base" :rules="rules" ref="formRef">
-          <el-row>
+                 width="56%">
+        <el-form @submit.native.prevent label-position="top" label-width="100" :model="base" :rules="rules" ref="formRef">
+          <el-row :gutter="16">
+            <el-col :span="10">
+              <el-form-item label="File Type" prop="fileType">
+                <el-select style="width: 100%" v-model="base.fileType" placeholder="please select">
+                  <el-option v-for="i of fileTypeOptions" :key="i.value" :label="i.label" :value="i.value"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
             <el-col :span="10">
               <el-form-item label="Version" prop="versionNum">
                 <el-input maxLength="8" placeholder="Please enter" v-model="base.versionNum"></el-input>
@@ -69,7 +86,7 @@
           </el-row>
           <el-row>
             <el-col :span="10">
-              <el-form-item label="Firmware package" class="posr" prop="file">
+              <el-form-item label="Firmware package" class="posr fileType" prop="file">
                 <div class="upload-wrap posa"
                      :style="{cursor: fileName ? 'not-allowed' : 'pointer', backgroundColor: fileName ? 'rgba(62, 188, 212, .6)' : 'rgba(62, 188, 212, 1)'}">
                   <input @change="changeFile" id="file" class="file-ele" type="file"
@@ -85,7 +102,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="Remarks">
+          <el-form-item label="Remarks" style="margin-top: 24px">
             <el-input type="textarea" show-word-limit maxlength="200" v-model="base.remark" placeholder="Please enter"></el-input>
           </el-form-item>
         </el-form>
@@ -103,6 +120,7 @@ import {uploadFile, versionList} from "@/api/remote";
 
 export default {
   name: "pages-remote",
+  dicts: ['file_type'],
   data() {
     const validateVersion = (rule, value, callback) => {
       if (value === '') {
@@ -125,14 +143,41 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        versionNum: ''
+        versionNum: '',
+        fileType: ''
       },
+      fileTypeOptions: [
+        {
+          value: 0,
+          label: 'Communication module software upgrade package'
+        },
+        {
+          value: 18,
+          label: 'Hybrid_app*'
+        },
+        {
+          value: 19,
+          label: 'Hybrid_boot*'
+        },
+        {
+          value: 20,
+          label: 'HybridInverter5K_app*'
+        },
+        {
+          value: 21,
+          label: 'HybridInverter5K_flash*'
+        },
+      ],
       base: {
+        fileType: '',
         versionNum: '',
         file: '',
         remark: ''
       },
       rules: {
+        fileType: [
+          { required: true, message: 'Please select', trigger: ['change', 'blur']}
+        ],
         versionNum: [
           { required: true, validator: validateVersion, trigger: 'blur'}
         ],
@@ -155,12 +200,16 @@ export default {
       }
       this.fileName = file[0].name
       this.base.file = this.fileItem.files[0]
+      if (this.base.file) this.rules.file[0].message = ''
+      else this.rules.file[0].message = 'Please upload'
+      this.rules = {...this.rules}
     },
     submit() {
       this.$refs.formRef.validate(v => {
         if (v) {
           this.$modal.loading("Uploading file...")
           const formData = new FormData()
+          formData.append("fileType", this.base.fileType)
           formData.append("file", this.base.file)
           formData.append("versionNum", this.base.versionNum)
           formData.append("remark", this.base.remark)
@@ -208,7 +257,6 @@ export default {
         this.total = res.total
       }).finally(() => {
         this.loading = false
-
       })
     },
   }
@@ -227,7 +275,7 @@ export default {
     -webkit-appearance: none !important;
   }
   .upload-wrap {
-    left: 150px;
+    left: 8px;
     top: 0;
     height: 36px;
     width: 85px;
@@ -265,6 +313,13 @@ export default {
         @include wh(16);
         cursor: pointer;
       }
+    }
+  }
+  .fileType {
+    .el-form-item__error {
+      position: absolute;
+      left: 0;
+      top: 38px;
     }
   }
 }

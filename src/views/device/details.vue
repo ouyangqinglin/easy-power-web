@@ -96,6 +96,11 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
+        <el-table-column label="File Type" prop="fileType" min-width="160">
+          <template slot-scope="{ row }">
+            <dict-tag :options="dict.type.file_type" :value="row.fileType"></dict-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="Software version" prop="versionNum"></el-table-column>
         <el-table-column label="Operation time" prop="">
           <template slot-scope="{ row }">
@@ -123,12 +128,25 @@
                  :before-close="beforeClose"
                  :close-on-click-modal ="false"
                  width="46%">
-        <el-form :model="toastData" :rules="toastRules" ref="toastRef">
-          <el-form-item label="Version" prop="newVersion">
-            <el-select v-model="toastData.newVersion">
-              <el-option v-for="(i, k) of newVersionList" :value="i" :label="i" :key="k"></el-option>
-            </el-select>
-          </el-form-item>
+        <el-form :model="toastData" :rules="toastRules" ref="toastRef" label-position="top">
+          <el-row>
+            <el-col :span="10">
+              <el-form-item label="File Type" prop="fileType">
+                <el-select @change="changeFileType" v-model="toastData.fileType" style="width: 300px;">
+                  <el-option v-for="(i, k) of fileTypeOptions" :value="i.value" :label="i.label" :key="k"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="10">
+              <el-form-item label="Version" prop="newVersion">
+                <el-select v-model="toastData.newVersion" style="width: 300px;">
+                  <el-option v-for="(i, k) of newVersionList" :value="i" :label="i" :key="k"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
         <common-flex justify="center">
           <el-button type="primary" @click="submit">Submit</el-button>
@@ -144,18 +162,45 @@ import { baseDevice } from '@/api/device'
 import {versionNew, versionRecord, versionUpgrade} from "@/api/remote";
 export default {
   name: "comp-details",
+  dicts: ['file_type'],
   data() {
     return {
       toastData: {
-        newVersion: ''
+        newVersion: '',
+        fileType: 0,
       },
       toastRules: {
         newVersion: [
+          { required: true, trigger: 'change', message: 'Please select'}
+        ],
+        fileType: [
           { required: true, trigger: 'change', message: 'Please select'}
         ]
       },
       newVersionList: [],
       show: false,
+      fileTypeOptions: [
+        {
+          value: 0,
+          label: 'Communication module software upgrade package'
+        },
+        {
+          value: 18,
+          label: 'Hybrid_app*'
+        },
+        {
+          value: 19,
+          label: 'Hybrid_boot*'
+        },
+        {
+          value: 20,
+          label: 'HybridInverter5K_app*'
+        },
+        {
+          value: 21,
+          label: 'HybridInverter5K_flash*'
+        },
+      ],
       currentApk: {
         currentVersion: '',
         hardVersion: '',
@@ -204,13 +249,18 @@ export default {
     })
   },
   methods: {
+    changeFileType() {
+      this.getVersionList()
+      this.toastData.newVersion = ''
+    },
     submit() {
       this.$refs.toastRef.validate(v => {
         if (v) {
           this.$modal.loading("Upgrading")
           let data = {
             sn: this.queryParams.sn,
-            version: this.toastData.newVersion
+            version: this.toastData.newVersion,
+            fileType: this.toastData.fileType
           }
           versionUpgrade(data).then(res => {
             console.log('Upgrade', res)
@@ -226,23 +276,25 @@ export default {
       })
     },
     abort() {
-      this.show = false
-      this.toastData.newVersion = ''
+      this.beforeClose()
     },
     openShow() {
       this.show = true
-      if (!this.newVersionList.length) {
-        let version = {
-          versionNum: this.currentApk.currentVersion || '0.0.0'
-        }
-        versionNew(version).then(res => {
-          this.newVersionList = res.data
-        })
+      this.getVersionList()
+    },
+    getVersionList() {
+      let version = {
+        versionNum: this.currentApk.currentVersion || '0.0.0',
+        fileType: this.toastData.fileType
       }
+      versionNew(version).then(res => {
+        this.newVersionList = res.data
+      })
     },
     beforeClose() {
       this.show = false
       this.toastData.newVersion = ''
+      this.toastData.fileType = 0
     },
     cancel() {
       history.go(-1)
