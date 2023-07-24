@@ -24,7 +24,7 @@
             <el-checkbox style="width: calc(100% / 4); margin-top: 12px" v-for="(i, k) in batInfo" :label="i.value" :key="k">{{ i.label }}</el-checkbox>
           </el-checkbox-group>
         </div>
-        <div class="drawer-main-info">
+        <div class="drawer-main-info" v-if="cellFlag">
           <strong>Battery cells monitoring</strong>
           <el-checkbox-group v-model="checkedCell" @change="changeCheckCell">
             <el-checkbox style="width: calc(100% / 4); margin-top: 12px" v-for="(i, k) in batCell" :label="i.value" :key="k">{{ i.label }}</el-checkbox>
@@ -361,6 +361,9 @@ export default {
     },
     dataList() {
       return [this.voltageList, this.cellTList, this.envTList, this.mosTList][+this.dataType]
+    },
+    cellFlag() {
+      return this.voltageList.length && this.cellTList.length && this.envTList.length && this.mosTList.length
     }
   },
   watch: {
@@ -395,7 +398,7 @@ export default {
         }
       })
       this.dynamicExcelHead = item
-    },
+    }
   },
   mounted() {
     let vList = [], cTList = [], eTList = [], mTList = []
