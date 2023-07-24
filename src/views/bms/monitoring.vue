@@ -382,14 +382,14 @@ export default {
     },
     checkedCell(v) {
       let item = {}
-      v.forEach(i => {
-        let one = this.batCell.find(k => k.value === i)
+      this.checkedInfo.forEach(i => {
+        let one = this.batInfo.find(k => k.value === i)
         if (one) {
           item[`${one.label}`] = `${one.value}`
         }
       })
-      this.checkedInfo.forEach(i => {
-        let one = this.batInfo.find(k => k.value === i)
+      v.forEach(i => {
+        let one = this.batCell.find(k => k.value === i)
         if (one) {
           item[`${one.label}`] = `${one.value}`
         }
