@@ -167,7 +167,7 @@ export default {
     return {
       toastData: {
         newVersion: '',
-        fileType: 0,
+        fileType: 0
       },
       toastRules: {
         newVersion: [

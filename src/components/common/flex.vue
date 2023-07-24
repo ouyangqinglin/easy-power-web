@@ -53,6 +53,9 @@ export default {
         case 'space-around':
           c.push('jcsa')
           break
+        case 'space-evenly':
+          c.push('jcse')
+          break
         case 'flex-start':
           c.push('jcfs')
           break
@@ -113,6 +116,7 @@ export default {
   }
   &.jc {
     &sb { justify-content: space-between }
+    &se { justify-content: space-evenly }
     &sa { justify-content: space-around }
     &fs { justify-content: flex-start }
     &fe { justify-content: flex-end }

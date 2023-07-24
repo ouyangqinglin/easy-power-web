@@ -1,5 +1,46 @@
 <template>
   <div class="pages-monitoring app-container">
+    <el-drawer
+      :visible.sync="drawer">
+      <strong slot="title" style="color: #000">Choose the fields to export</strong>
+      <div class="drawer-main">
+        <common-flex align="center">
+          <div style="flex: 1">
+            <el-date-picker
+              format="MM-dd-yyyy"
+              value-format="yyyy-MM-dd"
+              v-model="dateVal"
+              type="date"
+              @change="getData()"
+            />
+          </div>
+          <div style="flex: 1">
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Select all field</el-checkbox>
+          </div>
+        </common-flex>
+        <div class="drawer-main-info">
+          <strong>Battery Info</strong>
+          <el-checkbox-group v-model="checkedInfo" @change="changeCheckInfo">
+            <el-checkbox style="width: calc(100% / 4); margin-top: 12px" v-for="(i, k) in batInfo" :label="i.value" :key="k">{{ i.label }}</el-checkbox>
+          </el-checkbox-group>
+        </div>
+        <div class="drawer-main-info">
+          <strong>Battery cells monitoring</strong>
+          <el-checkbox-group v-model="checkedCell" @change="changeCheckCell">
+            <el-checkbox style="width: calc(100% / 4); margin-top: 12px" v-for="(i, k) in batCell" :label="i.value" :key="k">{{ i.label }}</el-checkbox>
+          </el-checkbox-group>
+        </div>
+        <common-flex justify="center" style="margin-top: 120px">
+          <download-excel :data="excelData" :fields="excelHead" :name="excelName">
+            <el-button type="primary">Export</el-button>
+          </download-excel>
+          <el-button style="margin-left: 24px" @click="cancelExport">Cancel</el-button>
+        </common-flex>
+      </div>
+    </el-drawer>
+    <common-flex @click.native="drawer = true" justify="center" align="center" class="pages-monitoring-export">
+      <img :src="require('@img/export.svg')" alt="">
+    </common-flex>
     <el-card>
       <strong slot="header">Battery Info</strong>
       <common-flex style="width: 100%">
@@ -230,6 +271,49 @@ export default {
   data() {
     let dateVal = new Date()
     return {
+      batCell: [],
+      batInfo: [
+        {
+          label: 'SOH(%)',
+          value: 'soh'
+        },
+        {
+          label: 'SOC(%)',
+          value: 'storeSoc'
+        },
+        {
+          label: 'Power(kW)',
+          value: 'storeChargePower'
+        },
+        {
+          label: 'Voltage(V)',
+          value: 'storeVoltage'
+        },
+        {
+          label: 'Current(A)',
+          value: 'storeCurrent'
+        },
+        {
+          label: 'Cell Highest_T (°C)',
+          value: 'maxTemperature'
+        },
+        {
+          label: 'Cell Lowest_T(°C)',
+          value: 'minTemperature'
+        },
+      ],
+      checkedInfo: [],
+      checkedCell: [],
+      isIndeterminate: true,
+      checkAll: false,
+      drawer: false,
+      excelName: '',
+      excelData: [],
+      solidExcelHead: {
+        'Time': 'time',
+        'Serial Number': 'sn'
+      },
+      dynamicExcelHead: {},
       curItem: -1,
       curSeries: [],
       show: false,
@@ -272,28 +356,101 @@ export default {
     }
   },
   computed: {
+    excelHead() {
+      return {...this.solidExcelHead, ...this.dynamicExcelHead}
+    },
     dataList() {
       return [this.voltageList, this.cellTList, this.envTList, this.mosTList][+this.dataType]
     }
   },
+  watch: {
+    checkedInfo(v) {
+      let item = {}
+      v.forEach(i => {
+        let one = this.batInfo.find(k => k.value === i)
+        if (one) {
+          item[`${one.label}`] = `${one.value}`
+        }
+      })
+      this.checkedCell.forEach(i => {
+        let one = this.batCell.find(k => k.value === i)
+        if (one) {
+          item[`${one.label}`] = `${one.value}`
+        }
+      })
+      this.dynamicExcelHead = item
+    },
+    checkedCell(v) {
+      let item = {}
+      v.forEach(i => {
+        let one = this.batCell.find(k => k.value === i)
+        if (one) {
+          item[`${one.label}`] = `${one.value}`
+        }
+      })
+      this.checkedInfo.forEach(i => {
+        let one = this.batInfo.find(k => k.value === i)
+        if (one) {
+          item[`${one.label}`] = `${one.value}`
+        }
+      })
+      this.dynamicExcelHead = item
+    },
+  },
   mounted() {
+    let vList = [], cTList = [], eTList = [], mTList = []
     if(this.$route.params.info) localStorage.setItem(`info${this.$route.params.id}`, this.$route.params.info)
     let info = JSON.parse(localStorage.getItem(`info${this.$route.params.id}`))
     this.voltageList = info.cellVList
     if (info.cellVList.length) {
       this.curSeries = []
       this.curSeries.push(0)
+      for(let i = 0; i < info.cellVList.length; i++) {
+        let item = {
+          label: `Cell${i+1}-Voltage(V)`,
+          value: `cell_v${i+1}_avg`
+        }
+        vList.push(item)
+      }
     }
     this.cellTList = info.cellTList
+    if (this.cellTList.length) {
+      for(let i = 0; i < this.cellTList.length; i++) {
+        let item = {
+          label: `T${i+1}-Cell_T(°C)`,
+          value: `cell_t${i+1}_avg`
+        }
+        cTList.push(item)
+      }
+    }
     this.envTList = info.envTList
+    if (this.envTList.length) {
+      for(let i = 0; i < this.envTList.length; i++) {
+        let item = {
+          label: `T${i+1}-Env_T(°C)`,
+          value: `env_t${i+1}_avg`
+        }
+        eTList.push(item)
+      }
+    }
     this.mosTList = info.mOSTList
+    if (this.mosTList.length) {
+      for(let i = 0; i < this.mosTList.length; i++) {
+        let item = {
+          label: `T${i+1}-MOS_T(°C)`,
+          value: `mos_t${i+1}_avg`
+        }
+        mTList.push(item)
+      }
+    }
     let params = {
       sn: localStorage.getItem(`sn${this.$route.params.id}`),
       siteCode: localStorage.getItem(`siteCode${this.$route.params.id}`),
     }
+    this.excelName = `${params.sn}.xls`
+    this.batCell = [...vList, ...cTList, ...eTList, ...mTList]
     infoDevice(params).then(res => {
       this.base = {...info, ...res.data}
-      console.log('base', this.base)
       let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]
       arr.forEach((item, index) => {
         if (item || item === 0) this.infoList[index]['value'] = item
@@ -313,6 +470,37 @@ export default {
     next()
   },
   methods: {
+    cancelExport() {
+      this.drawer = false
+      this.checkedInfo = []
+      this.checkedCell = []
+      this.checkAll = false
+      this.isIndeterminate = true
+    },
+    changeCheckInfo() {
+      let chooseAll = [...this.checkedInfo, ...this.checkedCell]
+      this.checkAll = chooseAll.length === (this.batCell.length + this.batInfo.length)
+      this.isIndeterminate = chooseAll.length > 0 && chooseAll.length < (this.batCell.length + this.batInfo.length)
+    },
+    changeCheckCell() {
+      let chooseAll = [...this.checkedInfo, ...this.checkedCell]
+      this.checkAll = chooseAll.length === (this.batCell.length + this.batInfo.length)
+      this.isIndeterminate = chooseAll.length > 0 && chooseAll.length < (this.batCell.length + this.batInfo.length)
+    },
+    handleCheckAllChange(v) {
+      this.isIndeterminate  = false
+      if (v) {
+        this.batCell.forEach(i => {
+          this.checkedCell.push(i.value)
+        })
+        this.batInfo.forEach(i => {
+          this.checkedInfo.push(i.value)
+        })
+      } else {
+        this.checkedCell = []
+        this.checkedInfo = []
+      }
+    },
     changeType() {
       if (this.dataList.length) {
         this.curSeries = [0]
@@ -340,8 +528,11 @@ export default {
         dataList = res.data
         option.xAxis[0].data = []
         for(let i = 0; i < dataList.length; i++) {
+          dataList[i].sn = params.sn
+          dataList[i].time = this.DATE_FORMAT('MM-dd-yyyy hh:mm:ss', (+dataList[i].time) * 1000)
           option.xAxis[0].data.push(dataList[i].timestamp)
         }
+        this.excelData = dataList
         this.initCanvas()
       }).finally(() => {
         this.loading.close()
@@ -424,6 +615,15 @@ export default {
 
 <style lang="scss">
 .pages-monitoring {
+  &-export {
+    @include wh(48);
+    position: fixed;
+    top: 20%;
+    right: 2px;
+    background-color: #3EBCD4;
+    border-radius: 4px 0 0 4px;
+    cursor: pointer;
+  }
   .label {
     color: #828282;
     line-height: 32px;
@@ -513,6 +713,17 @@ export default {
     background-color: #8be186;
     transition: all .3s;
     border-radius: 4px;
+  }
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding-bottom: 14px;
+  }
+  .drawer-main {
+    padding: 24px;
+    border-top: 1px #E7E7E7 solid;
+    &-info {
+      margin-top: 32px;
+    }
   }
 }
 </style>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import Cookies from 'js-cookie'
 
+import JsonExcel from 'vue-json-excel'
 import Element from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 import './assets/styles/element-variables.scss'
@@ -55,6 +56,7 @@ Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
 // 全局组件挂载
+Vue.component('downloadExcel', JsonExcel)
 Vue.component('DictTag', DictTag)
 Vue.component('CommonFlex', CommonFlex)
 Vue.component('Pagination', Pagination)
