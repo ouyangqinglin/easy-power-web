@@ -304,7 +304,7 @@ export default {
       ],
       checkedInfo: [],
       checkedCell: [],
-      isIndeterminate: true,
+      isIndeterminate: false,
       checkAll: false,
       drawer: false,
       excelName: '',
@@ -478,7 +478,7 @@ export default {
       this.checkedInfo = []
       this.checkedCell = []
       this.checkAll = false
-      this.isIndeterminate = true
+      this.isIndeterminate = false
     },
     changeCheckInfo() {
       let chooseAll = [...this.checkedInfo, ...this.checkedCell]
