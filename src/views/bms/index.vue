@@ -126,7 +126,6 @@ export default {
     },
     changeFollow(data) {
       editDevice(data).then(res => {
-        console.log(res)
         this.$modal.msgSuccess("Succeeded!")
       }).finally(() => this.getList())
     },

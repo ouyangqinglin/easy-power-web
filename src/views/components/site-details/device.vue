@@ -17,6 +17,7 @@
             <img class="device-battery" :src="require('./img/device-stick.svg')" alt=""><br>
             <span class="status-tips" v-if="+curDevInfo.net === 1">on-line</span>
             <span class="status-tips" v-else>off-line</span>
+            <router-link :to="`/device/details/${curDevInfo.id}`"><el-button type="text">Device Remote Upgrade</el-button></router-link>
           </common-flex>
           <common-flex direction="column" auto class="comp-device-card-content-right-container">
             <div class="item" v-for="i of stickInfo">
@@ -109,6 +110,9 @@
                 <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 2">Charging</span>
                 <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 3">Discharging</span>
               </template>
+              <router-link :to="{name: 'monitoring-view', params: {id: curDevInfo.id, info: curDevInfo.extInfo, sn: curDevInfo.sn, siteCode: $route.query.siteCode}}">
+                <el-button type="text">Go to BMS</el-button>
+              </router-link>
             </common-flex>
             <common-flex direction="column" auto class="comp-device-card-content-right-container">
               <div class="item" v-for="i of batteryInfo">
@@ -1969,9 +1973,9 @@ export default {
         deviceNavInfo[this.sn] = {...res.data, ...this.currentItem}
         this.curDevInfo = deviceNavInfo[this.sn]
         // status 1-充电中 2-已完成
-        if (this.curDevInfo.extInfo) {
-          this.curDevInfo.extInfo = JSON.parse(this.curDevInfo.extInfo)
-        }
+        // if (this.curDevInfo.extInfo) {
+        //   this.curDevInfo.extInfo = JSON.parse(this.curDevInfo.extInfo)
+        // }
         this.tempInfo()
       })
     },
