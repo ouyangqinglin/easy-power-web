@@ -53,6 +53,7 @@
             <el-tag v-if="!online" effect="dark">Off line</el-tag>
           </common-flex>
           <common-flex class="circle-container posr" justify="center">
+            <common-flex justify="center" align="center" class="posa offline" v-if="!online">Off line</common-flex>
 <!--            <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: +base.pvExist ? '90%' : '80%'}">-->
             <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: '90%'}">
 <!--              pv 线-->
@@ -1039,6 +1040,20 @@ export default {
            @media screen and (max-width: 1334px) {
              font-size: 12px;
            }
+         }
+         .offline {
+           padding-bottom: 54px;
+           position: absolute;
+           top: 20px;
+           left: 0;
+           width: 100%;
+           height: calc(100% - 20px);
+           background: linear-gradient(0deg, rgba(0, 0, 0, .32) 0%, rgba(84, 84, 84, .32) 100%);
+           border-radius: 8px 8px 8px 8px;
+           z-index: 2;
+           font-size: 32px;
+           font-weight: bold;
+           color: #FFFFFF;
          }
          &-box {
            width: 90%;
