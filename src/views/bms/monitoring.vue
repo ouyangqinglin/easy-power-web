@@ -38,7 +38,7 @@
         </common-flex>
       </div>
     </el-drawer>
-    <common-flex @click.native="drawer = true" justify="center" align="center" class="pages-monitoring-export">
+    <common-flex @click.native="drawer = base.export" justify="center" align="center" class="pages-monitoring-export" :style="{cursor: base.export ? 'pointer' : 'not-allowed'}">
       <img :src="require('@img/export.svg')" alt="">
     </common-flex>
     <el-card>
@@ -404,8 +404,8 @@ export default {
     let vList = [], cTList = [], eTList = [], mTList = []
     if(this.$route.params.info) localStorage.setItem(`info${this.$route.params.id}`, this.$route.params.info)
     let info = JSON.parse(localStorage.getItem(`info${this.$route.params.id}`))
-    this.voltageList = info.cellVList
-    if (info.cellVList.length) {
+    this.voltageList = info.cellVList || []
+    if (this.voltageList.length) {
       this.curSeries = []
       this.curSeries.push(0)
       for(let i = 0; i < info.cellVList.length; i++) {
@@ -416,7 +416,7 @@ export default {
         vList.push(item)
       }
     }
-    this.cellTList = info.cellTList
+    this.cellTList = info.cellTList || []
     if (this.cellTList.length) {
       for(let i = 0; i < this.cellTList.length; i++) {
         let item = {
@@ -426,7 +426,7 @@ export default {
         cTList.push(item)
       }
     }
-    this.envTList = info.envTList
+    this.envTList = info.envTList || []
     if (this.envTList.length) {
       for(let i = 0; i < this.envTList.length; i++) {
         let item = {
@@ -436,7 +436,7 @@ export default {
         eTList.push(item)
       }
     }
-    this.mosTList = info.mOSTList
+    this.mosTList = info.mOSTList || []
     if (this.mosTList.length) {
       for(let i = 0; i < this.mosTList.length; i++) {
         let item = {
@@ -625,7 +625,6 @@ export default {
     right: 2px;
     background-color: #3EBCD4;
     border-radius: 4px 0 0 4px;
-    cursor: pointer;
   }
   .label {
     color: #828282;
