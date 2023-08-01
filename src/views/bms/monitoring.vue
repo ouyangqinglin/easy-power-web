@@ -452,15 +452,7 @@ export default {
     }
     this.excelName = `${params.sn}.xls`
     this.batCell = [...vList, ...cTList, ...eTList, ...mTList]
-    infoDevice(params).then(res => {
-      this.base = {...info, ...res.data}
-      let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]
-      arr.forEach((item, index) => {
-        if (item || item === 0) this.infoList[index]['value'] = item
-        else this.infoList[index]['value'] = '--'
-      })
-    })
-    this.getData()
+    this.getInfo(info, params)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.changeSize)
@@ -473,6 +465,17 @@ export default {
     next()
   },
   methods: {
+    async getInfo(info, params) {
+      await infoDevice(params).then(res => {
+        this.base = {...info, ...res.data}
+        let arr = [this.base.soc, this.base.power, this.base.voltage, this.base.current, this.base.maxTemplate, this.base.minTemplate]
+        arr.forEach((item, index) => {
+          if (item || item === 0) this.infoList[index]['value'] = item
+          else this.infoList[index]['value'] = '--'
+        })
+      })
+      this.getData()
+    },
     cancelExport() {
       this.drawer = false
       this.checkedInfo = []
@@ -529,6 +532,7 @@ export default {
       }
       cellData(params).then(res => {
         dataList = res.data
+        this.base.export = !!(Object.keys(dataList[0])).length
         option.xAxis[0].data = []
         for(let i = 0; i < dataList.length; i++) {
           dataList[i].sn = params.sn
