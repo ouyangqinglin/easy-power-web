@@ -89,7 +89,7 @@
                 <div class="bat-pile" :id="`batPile${k}`"></div>
                 <div class="posa bat-title">
                   <div>SOC</div>
-                  <div style="text-align: center; line-height: 20px">{{ i.soc }}</div>
+                  <div style="text-align: center; line-height: 20px">{{ i.soc }}%</div>
                 </div>
               </div>
               <div class="bat-sn" :class="{curClick: batCur === i.serialNumber}">{{ i.serialNumber }}</div>
@@ -1933,11 +1933,11 @@ export default {
           for(let i = 0; i < this.batList.length; i++) {
             this.batListInstance.push(echarts.init(document.getElementById(`batPile${i}`)))
             if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) {
-              this.batList[i]['soc'] = 0 + '%'
+              this.batList[i]['soc'] = 0
               optionBatSoc.series[0].data[0].value = 0
               optionBatSoc.series[0].data[1].value = 1
             } else {
-              this.batList[i]['soc'] = this.batList[i]['soc'] + '%'
+              this.batList[i]['soc'] = this.batList[i]['soc']
               optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy'] / this.batList[i]['capacity']
               optionBatSoc.series[0].data[1].value = 1 - (this.batList[i]['curEnergy'] / this.batList[i]['capacity'])
             }
