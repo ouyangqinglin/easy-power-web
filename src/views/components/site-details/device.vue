@@ -61,11 +61,11 @@
                 </div>
                 <div class="item-body-item real">
                   <div class="item-body-item-key">Total Capacity</div>
-                  <div class="item-body-item-value">{{ batEnergy.totalCapacity || '--' }}</div>
+                  <div class="item-body-item-value">{{ batEnergy.totalCapacity || '--' }}kWh</div>
                 </div>
                 <div class="item-body-item real">
                   <div class="item-body-item-key">Status</div>
-                  <div class="item-body-item-value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+batEnergy.batteryStatus] }}kWh</div>
+                  <div class="item-body-item-value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+batEnergy.batteryStatus] }}</div>
                 </div>
               </common-flex>
             </div>
