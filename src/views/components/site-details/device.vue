@@ -2070,7 +2070,7 @@ export default {
                 this.dynamicSoc = 0
                 return
               }
-              this.batteryInfo[index]['info'][k.key] = this.curDevInfo.soc
+              this.batteryInfo[index]['info'][k.key] = this.curDevInfo.soc + '%'
               this.dynamicSoc = this.curDevInfo[k.value] / this.curDevInfo['capacity']
             } else if (k.key === 'Current') {
               if (+this.base.storeConnectStatus === 2) {
