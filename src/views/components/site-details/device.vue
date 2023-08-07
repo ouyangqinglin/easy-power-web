@@ -35,54 +35,89 @@
           </common-flex>
         </common-flex>
         <div v-else-if="+active === 2" style="flex-grow: 1">
-          <common-flex class="total-box" justify="space-between">
-            <div class="item">
-              <div class="item-title">Total Charging Energy</div>
-              <common-flex class="item-body">
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Today</div>
-                  <div class="item-body-item-value">{{ batEnergy.dayChargeEnergy }}kWh</div>
+          <div class="total-box">
+            <div class="item" style="width: 100%">
+              <div class="item-title">Real Time Data</div>
+              <common-flex class="item-body" justify="space-between" style="max-width: 100%">
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">SOC</div>
+                  <div class="item-body-item-value">{{ batEnergy.soc || '--' }}%</div>
                 </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">This Month</div>
-                  <div class="item-body-item-value">{{ batEnergy.monthChargeEnergy }}kWh</div>
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">Voltage</div>
+                  <div class="item-body-item-value">{{ batEnergy.voltage || '--' }}V</div>
                 </div>
-              </common-flex>
-              <common-flex class="item-body">
-                <div class="item-body-item">
-                  <div class="item-body-item-key">This Year</div>
-                  <div class="item-body-item-value">{{ batEnergy.yearChargeEnergy }}kWh</div>
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">Temperature</div>
+                  <div class="item-body-item-value">{{ batEnergy.temperature || '--' }}℃</div>
                 </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Lifetime</div>
-                  <div class="item-body-item-value">{{ batEnergy.allChargeEnergy }}kWh</div>
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">Power</div>
+                  <div class="item-body-item-value">{{ batEnergy.power || '--' }}kW</div>
                 </div>
-              </common-flex>
-            </div>
-            <div class="item">
-              <div class="item-title">Total Discharging Energy</div>
-              <common-flex class="item-body">
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Today</div>
-                  <div class="item-body-item-value">{{ batEnergy.dayDisChargeEnergy }}kWh</div>
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">Current</div>
+                  <div class="item-body-item-value">{{ batEnergy.current || '--' }}A</div>
                 </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">This Month</div>
-                  <div class="item-body-item-value">{{ batEnergy.monthDisChargeEnergy }}kWh</div>
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">Total Capacity</div>
+                  <div class="item-body-item-value">{{ batEnergy.totalCapacity || '--' }}</div>
                 </div>
-              </common-flex>
-              <common-flex class="item-body">
-                <div class="item-body-item">
-                  <div class="item-body-item-key">This Year</div>
-                  <div class="item-body-item-value">{{ batEnergy.yearDisChargeEnergy }}kWh</div>
-                </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Lifetime</div>
-                  <div class="item-body-item-value">{{ batEnergy.allDisChargeEnergy }}kWh</div>
+                <div class="item-body-item real">
+                  <div class="item-body-item-key">Status</div>
+                  <div class="item-body-item-value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+batEnergy.batteryStatus] }}kWh</div>
                 </div>
               </common-flex>
             </div>
-          </common-flex>
+            <common-flex justify="space-between">
+              <div class="item">
+                <div class="item-title">Total Charging Energy</div>
+                <common-flex class="item-body">
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">Today</div>
+                    <div class="item-body-item-value">{{ batEnergy.dayChargeEnergy }}kWh</div>
+                  </div>
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">This Month</div>
+                    <div class="item-body-item-value">{{ batEnergy.monthChargeEnergy }}kWh</div>
+                  </div>
+                </common-flex>
+                <common-flex class="item-body">
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">This Year</div>
+                    <div class="item-body-item-value">{{ batEnergy.yearChargeEnergy }}kWh</div>
+                  </div>
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">Lifetime</div>
+                    <div class="item-body-item-value">{{ batEnergy.allChargeEnergy }}kWh</div>
+                  </div>
+                </common-flex>
+              </div>
+              <div class="item">
+                <div class="item-title">Total Discharging Energy</div>
+                <common-flex class="item-body">
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">Today</div>
+                    <div class="item-body-item-value">{{ batEnergy.dayDisChargeEnergy }}kWh</div>
+                  </div>
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">This Month</div>
+                    <div class="item-body-item-value">{{ batEnergy.monthDisChargeEnergy }}kWh</div>
+                  </div>
+                </common-flex>
+                <common-flex class="item-body">
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">This Year</div>
+                    <div class="item-body-item-value">{{ batEnergy.yearDisChargeEnergy }}kWh</div>
+                  </div>
+                  <div class="item-body-item">
+                    <div class="item-body-item-key">Lifetime</div>
+                    <div class="item-body-item-value">{{ batEnergy.allDisChargeEnergy }}kWh</div>
+                  </div>
+                </common-flex>
+              </div>
+            </common-flex>
+          </div>
           <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
             <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
               <div class="posr">
@@ -1877,6 +1912,8 @@ export default {
         siteCode: this.queryParams.siteCode
       }
       batEnergy(params).then(res => {
+        console.log(res)
+
         this.batEnergy = res.data
       })
     },
@@ -2567,6 +2604,9 @@ export default {
           width: calc(100% / 4);
         }
       }
+    }
+    .real {
+      flex: 1 !important;
     }
   }
   .bat-item {
