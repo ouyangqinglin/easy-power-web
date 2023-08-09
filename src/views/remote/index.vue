@@ -179,7 +179,7 @@ export default {
           { required: true, message: 'Please select', trigger: ['change', 'blur']}
         ],
         versionNum: [
-          { required: true, validator: validateVersion, trigger: 'blur'}
+          { required: true, message: 'Please enter', trigger: 'blur'}
         ],
         file: [
           { required: true, message: 'Please upload', trigger: ['change', 'blur']}
