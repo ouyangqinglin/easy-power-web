@@ -12,210 +12,10 @@
         <div class="comp-device-card-content-nav">
           <div class="comp-device-card-content-nav-item" @click="changeNav(v)" :class="{ opacityTrans: active === v }" v-for="(v, k) in navBar">{{ k }}</div>
         </div>
-        <common-flex auto class="comp-device-card-content-right" v-if="+active === 4">
-          <common-flex direction="column" align="center">
-            <img class="device-battery" :src="require('./img/device-stick.svg')" alt=""><br>
-            <span class="status-tips" v-if="+curDevInfo.net === 1">on-line</span>
-            <span class="status-tips" v-else>off-line</span>
-            <router-link :to="`/device/details/${curDevInfo.id}`"><el-button type="text">Device Remote Upgrade</el-button></router-link>
-          </common-flex>
-          <common-flex direction="column" auto class="comp-device-card-content-right-container">
-            <div class="item" v-for="i of stickInfo">
-              <div class="item-title">{{ i.title }}</div>
-              <common-flex class="item-body" wrap="wrap" justify="space-between">
-                <div class="item-body-item charge" v-for="(v, k) of i.info">
-                  <div class="item-body-item-key">{{ k }}</div>
-                  <div class="item-body-item-value">{{ v || '--' }}</div>
-                </div>
-                <div style="padding: 24px 24px 0 0">
-                  <el-button type="primary" @click="configNetShow = true">Device Networking</el-button>
-                </div>
-              </common-flex>
-            </div>
-          </common-flex>
-        </common-flex>
-        <div v-else-if="+active === 2" style="flex-grow: 1">
-          <div class="total-box">
-            <div class="item" style="width: 100%">
-              <div class="item-title">Real Time Data</div>
-              <common-flex class="item-body" justify="space-between" style="max-width: 100%">
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">SOC</div>
-                  <div class="item-body-item-value">{{ batEnergy.soc || '--' }}%</div>
-                </div>
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">Voltage</div>
-                  <div class="item-body-item-value">{{ batEnergy.voltage || '--' }}V</div>
-                </div>
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">Temperature</div>
-                  <div class="item-body-item-value">{{ batEnergy.temperature || '--' }}℃</div>
-                </div>
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">Power</div>
-                  <div class="item-body-item-value">{{ batEnergy.power || '--' }}kW</div>
-                </div>
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">Current</div>
-                  <div class="item-body-item-value">{{ batEnergy.current || '--' }}A</div>
-                </div>
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">Total Capacity</div>
-                  <div class="item-body-item-value">{{ batEnergy.totalCapacity || '--' }}kWh</div>
-                </div>
-                <div class="item-body-item real">
-                  <div class="item-body-item-key">Status</div>
-                  <div class="item-body-item-value">{{ ['', 'Not charge-discharge', 'Charging', 'Discharging'][+batEnergy.batteryStatus] }}</div>
-                </div>
-              </common-flex>
-            </div>
-            <common-flex justify="space-between">
-              <div class="item">
-                <div class="item-title">Total Charging Energy</div>
-                <common-flex class="item-body">
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">Today</div>
-                    <div class="item-body-item-value">{{ batEnergy.dayChargeEnergy }}kWh</div>
-                  </div>
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">This Month</div>
-                    <div class="item-body-item-value">{{ batEnergy.monthChargeEnergy }}kWh</div>
-                  </div>
-                </common-flex>
-                <common-flex class="item-body">
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">This Year</div>
-                    <div class="item-body-item-value">{{ batEnergy.yearChargeEnergy }}kWh</div>
-                  </div>
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">Lifetime</div>
-                    <div class="item-body-item-value">{{ batEnergy.allChargeEnergy }}kWh</div>
-                  </div>
-                </common-flex>
-              </div>
-              <div class="item">
-                <div class="item-title">Total Discharging Energy</div>
-                <common-flex class="item-body">
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">Today</div>
-                    <div class="item-body-item-value">{{ batEnergy.dayDisChargeEnergy }}kWh</div>
-                  </div>
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">This Month</div>
-                    <div class="item-body-item-value">{{ batEnergy.monthDisChargeEnergy }}kWh</div>
-                  </div>
-                </common-flex>
-                <common-flex class="item-body">
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">This Year</div>
-                    <div class="item-body-item-value">{{ batEnergy.yearDisChargeEnergy }}kWh</div>
-                  </div>
-                  <div class="item-body-item">
-                    <div class="item-body-item-key">Lifetime</div>
-                    <div class="item-body-item-value">{{ batEnergy.allDisChargeEnergy }}kWh</div>
-                  </div>
-                </common-flex>
-              </div>
-            </common-flex>
-          </div>
-          <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
-            <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
-              <div class="posr">
-                <div class="bat-pile" :id="`batPile${k}`"></div>
-                <div class="posa bat-title">
-                  <div>SOC</div>
-                  <div style="text-align: center; line-height: 20px">{{ i.soc }}%</div>
-                </div>
-              </div>
-              <div class="bat-sn" :class="{curClick: batCur === i.serialNumber}">{{ i.serialNumber }}</div>
-            </div>
-          </common-flex>
-          <el-tabs v-model="activeBattery">
-            <el-tab-pane label="Details" name="first"></el-tab-pane>
-            <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
-          </el-tabs>
-          <common-flex auto class="comp-device-card-content-right" v-if="activeBattery === 'first'">
-            <common-flex direction="column" align="center">
-              <div class="posr">
-                <div v-if="+base.storeConnectStatus === 1" class="posa dynamicSoc" :style="{height: dynamicSoc * 68 + 'px'}"></div>
-                <img class="device-battery posr" style="z-index: 1" :src="require('./img/device-battery.svg')" alt=""><br>
-              </div>
-              <template v-if="+base.storeConnectStatus === 1">
-                <span class="status-tips" v-if="+curDevInfo.storeStatus === 1">Not charge-discharge</span>
-                <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 2">Charging</span>
-                <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 3">Discharging</span>
-              </template>
-              <router-link :to="{name: 'monitoring-view', params: {id: curDevInfo.id, info: curDevInfo.extInfo, sn: curDevInfo.sn, siteCode: $route.query.siteCode}}">
-                <el-button type="text">Go to BMS</el-button>
-              </router-link>
-            </common-flex>
-            <common-flex direction="column" auto class="comp-device-card-content-right-container">
-              <div class="item" v-for="i of batteryInfo">
-                <div class="item-title">{{ i.title }}</div>
-                <common-flex class="item-body">
-                  <div class="item-body-item" v-for="(v, k) of i.info">
-                    <div class="item-body-item-key">{{ k }}</div>
-                    <div class="item-body-item-value">{{ v || '--' }}</div>
-                  </div>
-                </common-flex>
-              </div>
-            </common-flex>
-          </common-flex>
-          <common-flex auto class="comp-device-card-content-right" direction="column" v-if="activeBattery === 'second'">
-            <common-flex justify="flex-end" style="margin: 40px 0 20px 0">
-              <el-radio-group size="small" v-model="batteryHis.batteryType" @change="changeBatType">
-                <el-radio-button label="Voltage"></el-radio-button>
-                <el-radio-button label="Current"></el-radio-button>
-                <el-radio-button label="Power"></el-radio-button>
-                <el-radio-button label="SOC"></el-radio-button>
-                <el-radio-button label="Temperature"></el-radio-button>
-              </el-radio-group>
-              <el-date-picker
-                size="small"
-                style="margin: 0 40px 0 10px"
-                format="MM-dd-yyyy"
-                value-format="yyyy-MM-dd"
-                @change="changeBatDate"
-                v-model="batteryHis.dateVal"
-              >
-              </el-date-picker>
-            </common-flex>
-            <div id="batteryChart" class="batteryChart"></div>
-          </common-flex>
-        </div>
-        <div v-else-if="+active === 3" style="width: 100%">
-          <el-tabs v-model="curPile" @tab-click="changeCurPile">
-            <template v-for="i of pileList">
-              <el-tab-pane :name="i.serialNumber" :label="i.serialNumber"></el-tab-pane>
-            </template>
-          </el-tabs>
-          <common-flex auto class="comp-device-card-content-right">
-            <common-flex direction="column" align="center">
-              <img class="device-battery" :src="require('./img/device-discharge.svg')" alt=""><br>
-              <el-button type="primary" size="mini" v-if="+curDevInfo.status === 1" @click="stopCharge">Stop Charging</el-button>
-              <span class="status-tips" v-else>Not connected</span>
-            </common-flex>
-            <common-flex direction="column" auto class="comp-device-card-content-right-container">
-              <div class="item" v-for="i of chargeInfo">
-                <div class="item-title">{{ i.title }}</div>
-                <common-flex class="item-body" wrap="wrap">
-                  <div class="item-body-item charge" v-for="(v, k) of i.info">
-                    <div class="item-body-item-key">{{ k }}</div>
-                    <div class="item-body-item-value">{{ v || '--' }}</div>
-                  </div>
-                </common-flex>
-              </div>
-            </common-flex>
-          </common-flex>
-        </div>
+        <StickLogger :curDevInfo="curDevInfo" :dataInfo="stickInfo" v-if="+active === 4" />
+        <Battery :base="base" :curDevInfo="curDevInfo" :dataInfo="batteryInfo" :batList="batList" v-else-if="+active === 2" :dynamicSoc="dynamicSoc" @common="emitCommon" />
+        <ChargerPile :curDevInfo="curDevInfo" :dataInfo="chargeInfo" :pileList="pileList" v-else-if="+active === 3" @common="emitCommon" />
         <div v-else-if="+active === 6" style="flex-grow: 1">
-<!--          <div style="border-bottom: 1px solid #D8DCE6">-->
-<!--            <el-tabs v-model="curPv" @tab-click="changeCurPv">-->
-<!--              <template v-for="i of pvList">-->
-<!--                <el-tab-pane :name="i.serialNumber" :label="i.serialNumber">  </el-tab-pane>-->
-<!--              </template>-->
-<!--            </el-tabs>-->
-<!--          </div>-->
           <el-tabs v-model="activePv">
             <el-tab-pane label="Details" name="first"></el-tab-pane>
             <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
@@ -309,96 +109,7 @@
             </div>
           </common-flex>
         </div>
-        <common-flex auto class="comp-device-card-content-right" v-else>
-          <common-flex direction="column" align="center">
-            <img class="device-battery" :src="require('./img/device-inverter.svg')" alt=""><br>
-<!--            <span class="status-tips" v-if="+curDevInfo.net === 1">on-line</span>-->
-<!--            <span class="status-tips" v-else>off-line</span>-->
-          </common-flex>
-          <common-flex direction="column" auto class="comp-device-card-content-right-container">
-            <div class="item">
-              <div class="item-title">Inverter Basic Info</div>
-              <common-flex class="item-body" wrap="wrap">
-                <div class="item-body-item charge">
-                  <div class="item-body-item-key">Serial Number</div>
-                  <div class="item-body-item-value">{{ inverterInfo.serialNumber }}</div>
-                </div>
-                <div class="item-body-item charge">
-                  <div class="item-body-item-key">New installation or not</div>
-                  <div class="item-body-item-value">{{ ['', 'Yes', 'No'][inverterInfo.installation] || '--' }}</div>
-                </div>
-                <div class="item-body-item charge">
-                  <div class="item-body-item-key">Rated Power (kW)</div>
-                  <div class="item-body-item-value">{{ inverterInfo.nameplateCapacity }}</div>
-                </div>
-                <div class="item-body-item charge">
-                  <div class="item-body-item-key">Lifetime</div>
-                  <div class="item-body-item-value">{{ inverterInfo.lifetime }}</div>
-                </div>
-              </common-flex>
-            </div>
-            <div class="table posr">
-              <div class="table-before posa">Grid</div>
-              <div class="table-export posa" v-if="+base.gridStatus === 1">Export</div>
-              <div class="table-export posa" v-if="+base.gridStatus === 2">Import</div>
-              <div class="table-title">Real-Time Data</div>
-              <el-table :data="inverterInfo.gridList">
-                <el-table-column label="" prop="pvNum"></el-table-column>
-                <el-table-column label="Voltage(V)" prop="v"></el-table-column>
-                <el-table-column label="Current(A)" prop="c"></el-table-column>
-                <el-table-column label="Power(kW)" prop="p"></el-table-column>
-              </el-table>
-            </div>
-            <div class="item">
-              <div class="item-title">Export Energy</div>
-              <common-flex class="item-body" wrap="wrap">
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Today</div>
-                  <div class="item-body-item-value">{{ inverterInfo.dayGridExportEnergy || '--' }}kWh</div>
-                </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">This Month</div>
-                  <div class="item-body-item-value">{{ inverterInfo.monthGridExportEnergy || '--' }}kWh</div>
-                </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">This Year</div>
-                  <div class="item-body-item-value">{{ inverterInfo.yearGridExportEnergy || '--' }}kWh</div>
-                </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Lifetime</div>
-                  <div class="item-body-item-value">{{ inverterInfo.allGridExportEnergy || '--' }}kWh</div>
-                </div>
-              </common-flex>
-            </div>
-            <div class="item">
-              <div class="item-title">Import Energy This Month</div>
-              <common-flex class="item-body" wrap="wrap">
-                <div class="item-body-item">
-                  <div class="item-body-item-key">On-Peak</div>
-                  <div class="item-body-item-value">{{ inverterInfo.gridOnPeak }}kWh</div>
-                </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Mid-Peak</div>
-                  <div class="item-body-item-value">{{ inverterInfo.gridMidPeak }}kWh</div>
-                </div>
-                <div class="item-body-item">
-                  <div class="item-body-item-key">Off-Peak</div>
-                  <div class="item-body-item-value">{{ inverterInfo.gridOffPeak }}kWh</div>
-                </div>
-              </common-flex>
-            </div>
-            <div class="table posr">
-              <div class="table-before posa">Load</div>
-              <div class="table-title">Real-Time Data</div>
-              <el-table :data="inverterInfo.loadList">
-                <el-table-column label="" prop="pvNum"></el-table-column>
-                <el-table-column label="Voltage(V)" prop="v"></el-table-column>
-                <el-table-column label="Current(A)" prop="c"></el-table-column>
-                <el-table-column label="Power(kW)" prop="p"></el-table-column>
-              </el-table>
-            </div>
-          </common-flex>
-        </common-flex>
+        <Inverter :base="base" :curDevInfo="curDevInfo" :inverterInfo="inverterInfo" v-else />
       </common-flex>
     </el-card>
     <el-dialog v-if="addShow" :visible.sync="addShow" title="Add Device"
@@ -571,190 +282,27 @@
         <el-button @click="cancelDelete">Cancel</el-button>
       </common-flex>
     </el-dialog>
-    <el-dialog v-if="configNetShow" :visible.sync="configNetShow" title="Networking"
-               :before-close="beforeClose"
-               :close-on-click-modal ="false"
-               width="30%">
-      <div style="width: 66%; margin: 0 auto" v-show="startNetShow">
-        <el-form @submit.native.prevent :model="network" :rules="networkRules" ref="networkRef">
-          <el-form-item prop="wifi">
-            <el-input v-model="network.wifi">
-              <svg-icon slot="prefix" icon-class="wifi" class="el-input__icon input-icon" />
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input :type="inputType" v-model="network.password">
-              <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
-              <template #suffix>
-                <svg-icon v-if="eyes" @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye" class="el-input__icon input-icon" />
-                <svg-icon v-else @click.native="eyes = !eyes" style="cursor: pointer; margin-right: 10px" icon-class="eye-open" class="el-input__icon input-icon" />
-              </template>
-            </el-input>
-          </el-form-item>
-        </el-form>
-        <common-flex style="margin-top: 30px" justify="center">
-          <el-button type="primary" @click="startNet">Start to configure</el-button>
-        </common-flex>
-      </div>
-      <template v-if="!startNetShow">
-        <common-flex direction="column" align="center" class="network">
-          <img src="./img/network.png" alt="">
-          <common-flex direction="column" align="flex-start">
-            <p :class="{step: stepActive === 1}">1.Device searching{{ stepActive === 1 ? '...': ''}}</p>
-            <p :class="{step: stepActive === 2}">2.Device connection{{ stepActive === 2 ? '...': ''}}</p>
-            <p :class="{step: stepActive === 3}">3.Command sending{{ stepActive === 3 ? '...': ''}}</p>
-            <p :class="{step: stepActive === 4}">4.Device networking{{ stepActive === 4 ? '...': ''}}</p>
-            <p :class="{step: stepActive === 5}">5.Server connection{{ stepActive === 5 ? '...': ''}}</p>
-            <p :class="{step: stepActive === 6}">6.Data synchronization{{ stepActive === 6 ? '...': ''}}</p>
-          </common-flex>
-          <div style="width: 90%">
-            <el-progress :percentage="percentage"></el-progress>
-          </div>
-        </common-flex>
-      </template>
-    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
-
-import { listDevice, infoDevice, addBatchDevice, batEnergy, delDevice, stopCharge, batHistoryData, pvHistoryData, netList, orderRes } from '@/api/device'
+import StickLogger from './stickLogger.vue'
+import Battery from './battery.vue'
+import ChargerPile from './chargerPile.vue'
+import Inverter from './inverter.vue'
+import { listDevice, infoDevice, addBatchDevice, delDevice, pvHistoryData, netList } from '@/api/device'
 let deviceNavInfo = {}
-let batteryInstance = null
 let pvInstance = null
-let timer = null, timerInter = null, timerNet = null
-let times = 1, timesNet = 1
-let arr = [], arr1 = [], arr5 = []
+let timer = null
+
+let arr = []
 let arrX1 = [], arrX2 = [], pv1 = [], pv2 = [], pv3 = [], pv4 = []
-let batData = [], pvData = []
+let pvData = []
 for (let i = 1; i < 25; i++) {
   arr.push(i)
   arrX1.push(i)
-}
-const optionBat = {
-  tooltip: {
-    trigger: 'axis',
-    position: function (pt, param) {
-      if (pt[0] > 960) {
-        if (param.length > 1) {
-          if (param[0].value === 'NaN') return [pt[0] - 100, pt[1] - 10]
-          else return [pt[0] - 220, pt[1] - 10]
-        }
-        else return [pt[0] - 100, pt[1] - 10]
-      }
-      return [pt[0] + 20, pt[1] - 10];
-    },
-    formatter(v) {
-      if (v[0].value === 'NaN') return 'No data'
-      if (optionBat.yAxis.name === 'kW') {
-        let t1, unit1
-        if (v[0].value < 1) {
-          t1 = `${(v[0].value * 1000).toFixed(2)}`
-          unit1 = 'W'
-        } else if (v[0].value > 1 && v[0].value < 1000) {
-          t1 = `${(+v[0].value).toFixed(2)}`
-          unit1 = 'kW'
-        } else {
-          t1 = `${(+v[0].value / 1000).toFixed(2)}`
-          unit1 = 'MW'
-        }
-        return `${v[0].name}<br>${v[0].marker} ${t1}${unit1}`
-      } else {
-        if (v.length > 1) return `${v[0].name}<br>${v[0].marker}${v[0].seriesName} ${v[0].value}<br>${v[1].marker}${v[1].seriesName} ${v[1].value}`
-        else return `${v[0].name}<br>${v[0].marker} ${v[0].value}`
-      }
-    }
-  },
-  grid: {
-    left: '5%',
-    right: '5%'
-  },
-  xAxis: [
-    {
-      type: 'category',
-      show: false,
-      boundaryGap: true,
-      data: [], // 接受接口时间点
-      position: 'bottom',
-    },
-    {
-      type: 'category',
-      boundaryGap: true,
-      data: arr,
-      position: 'bottom',
-      axisLine: {
-        lineStyle: {
-          color: '#E7E7E7'
-        }
-      },
-      axisLabel: {
-        textStyle: {
-          color: '#000'
-        }
-      },
-      axisPointer: {
-        type: 'none',
-      },
-    },
-
-  ],
-  yAxis: {
-    name: 'V',
-    type: 'value',
-    axisLine: {
-      show: false,
-    },
-    axisTick: {
-      show: false
-    },
-    splitLine: {
-      lineStyle: {
-        type: 'dashed'
-      }
-    }
-  },
-  dataZoom: [
-    {
-      showDetail: true,
-      type: 'inside',
-      height: 26,
-      bottom: 2,
-      left: '5%',
-      right: '5%',
-      start: 0,
-      // zoomOnMouseWheel: false,
-      end: 1999
-    },
-    {
-      height: 22,
-      bottom: 15,
-      left: '5%',
-      right: '5%',
-      start: 0,
-      end: 1999,
-        backgroundColor: 'white',
-        dataBackground: {
-          lineStyle: {
-            color: '#E67A73'
-          },
-          areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-              offset: 0,
-              color: 'rgba(252, 219, 218, 0.1)'
-            }, {
-              offset: 1,
-              color: 'rgb(255, 255, 255)'
-            }])
-          }
-        },
-        fillerColor: 'rgba(51, 149, 250, 0.06)',
-        handleStyle: {
-          color: '#7A84B0'
-        }
-    }
-  ],
-  series: []
 }
 const optionPv = {
   tooltip: {
@@ -1001,22 +549,6 @@ const optionPv = {
     }
   ]
 }
-const optionBatSoc = {
-  color: ['#98e69f', '#f3f3f3'],
-  series: [
-    {
-      type: 'pie',
-      radius: ['70%', '90%'],
-      labelLine: {
-        show: false
-      },
-      data: [
-        { value: 0, name: '' },
-        { value: 0, name: '' }
-      ]
-    }
-  ]
-}
 
 
 export default {
@@ -1029,34 +561,15 @@ export default {
       }
     }
   },
-  computed: {
-    inputType() {
-      return this.eyes ? 'password' : 'text'
-    },
-    percentage() {
-      let percentageList = [10, 26, 42, 58, 74, 100]
-      return percentageList[this.stepActive -1]
-    },
+  components: {
+    StickLogger,
+    Battery,
+    ChargerPile,
+    Inverter
   },
   data() {
     const that = this
     return {
-      stepActive: 1,
-      startNetShow: true,
-      network: {
-        wifi: '',
-        password: ''
-      },
-      networkRules: {
-        wifi: [
-          { required: true, message: 'Please enter', trigger: 'blur' },
-        ],
-        password: [
-          { required: true, message: 'Please enter', trigger: 'blur' },
-        ]
-      },
-      eyes: true,
-      configNetShow: false,
       inverterCapacityMsg: {},
       batCapacityMsg: {},
       pvCapacityMsg: {},
@@ -1079,31 +592,22 @@ export default {
       activeBat: false,
       activeCharger: false,
       activePhotovoltaic: false,
-      batteryHis: {
-        batteryType: 'Voltage',
-        dateVal: new Date(that.UTC_START_OF(this.base.timeZone))
-      },
       pvHis: {
         pvType: 'Voltage',
         dateVal: new Date(that.UTC_START_OF(this.base.timeZone))
       },
-      batListInstance: [],
       batList: [],
       pvList: [],
       pileList: [],
-      batCur: 0,
-      curPile: '',
       curPv: '',
-      activeBattery: 'first',
+
       activePv: 'first',
-      dynamicSoc: '',
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         delFlag: 0,
         siteCode: ''
       },
-      batEnergy: {},
       listDev: [],
       curDevInfo: {},
       currentItem: null,
@@ -1233,6 +737,7 @@ export default {
       localChangeList: {},
       waitLoading: '',
       addSubType: true,
+      dynamicSoc: 0
     }
   },
   watch: {
@@ -1241,19 +746,10 @@ export default {
         deviceNavInfo = {}
         this.queryParams.siteCode = this.$route.query?.siteCode
         this.getList()
-        this.getBatEnergy()
       },
       immediate: true
     },
-    activeBattery (v) {
-      if (v === 'second') {
-        this.$nextTick(() => {
-          batteryInstance = echarts.init(document.getElementById('batteryChart'))
-          this.getBatHisData()
-          window.addEventListener('resize', this.changeSize)
-        })
-      }
-    },
+
     activePv (v) {
       if (v === 'second') {
         if (!this.navBar['Inverter']) return
@@ -1266,29 +762,16 @@ export default {
     }
   },
   beforeDestroy() {
-    clearInterval(timerInter)
     clearTimeout(timer)
-    clearInterval(timerNet)
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
-    startNet() {
-      this.$refs.networkRef.validate(v => {
-        if (v) {
-          this.startNetShow = false
-          timerNet = setInterval(() => {
-            if (timesNet === 6) this.stepActive = 2
-            if (timesNet === 12) this.stepActive = 3
-            if (timesNet === 18) this.stepActive = 4
-            if (timesNet === 24) this.stepActive = 5
-            if (timesNet === 30) this.stepActive = 6
-            timesNet++
-            if (timesNet > 31) {
-              this.beforeClose()
-              this.$modal.alertSuccess('Configuration succeeded')
-            }
-          }, 1000)
-        }
+    requestLoading() {
+      this.waitLoading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
       })
     },
     addSn(deviceType) {
@@ -1361,125 +844,23 @@ export default {
         this[`active${str}`] = false
       }
     },
-    changeCurBat(sn) {
-      this.batCur = sn
+    emitCommon(sn) {
       this.sn = sn
-      this.activeBattery = 'first'
-      this.commonStore()
+      this.commonStore(sn)
     },
-    commonStore() {
-      this.currentItem = this.listDev.find(i => i.serialNumber === this.sn)
-      if (deviceNavInfo[this.sn]) {
-        this.curDevInfo = deviceNavInfo[this.sn]
+    commonStore(sn) {
+      this.currentItem = this.listDev.find(i => i.serialNumber === sn)
+      if (deviceNavInfo[sn]) {
+        this.curDevInfo = deviceNavInfo[sn]
         this.tempInfo()
       } else this.getDeviceInfo()
     },
     changeCurPv() {
       this.sn = this.curPv
       this.activePv = 'first'
-      this.commonStore()
+      this.commonStore(this.sn)
     },
-    changeCurPile() {
-      this.sn = this.curPile
-      this.commonStore()
-    },
-    requestLoading() {
-      this.waitLoading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-    },
-    changeBatDate() {
-      this.getBatHisData()
-    },
-    changeBatType() {
-      arr1 = []
-      let arr2 = []
-      optionBat.series = []
-      if (this.batteryHis.batteryType === 'Voltage') {
-        optionBat.yAxis.name = 'V'
-        for(let i = 0; i < batData.length; i++) {
-          arr1.push((+batData[i].storeVoltage).toFixed(2))
-        }
-      }
-      if (this.batteryHis.batteryType === 'Current') {
-        optionBat.yAxis.name = 'A'
-        for(let i = 0; i < batData.length; i++) {
-          arr1.push((+batData[i].storeCurrent).toFixed(2))
-        }
-      }
-      if (this.batteryHis.batteryType === 'Power') {
-        optionBat.yAxis.name = 'kW'
-        for(let i = 0; i < batData.length; i++) {
-          arr1.push((+batData[i].storeChargePower).toFixed(2))
-        }
-      }
-      if (this.batteryHis.batteryType === 'SOC') {
-        optionBat.yAxis.name = '%'
-        for(let i = 0; i < batData.length; i++) {
-          arr1.push((+batData[i].storeSoc).toFixed(2))
-        }
-      }
-      if (this.batteryHis.batteryType === 'Temperature') {
-        optionBat.yAxis.name = '℃'
-        for(let i = 0; i < batData.length; i++) {
-          arr1.push((+batData[i].maxTemperature).toFixed(2))
-          arr2.push((+batData[i].minTemperature).toFixed(2))
-        }
-      }
-      let itemOne = {
-        symbol: "none",
-        // name: 'A相',
-        type: 'line',
-        smooth: true,
-        itemStyle: {
-          color: '#3EBCD4'
-        },
-        data: arr1
-      }
-      if (this.batteryHis.batteryType === 'Temperature') {
-        let itemTwo = {
-          name: 'minTemperature:',
-          symbol: 'none',
-          type: 'line',
-          smooth: true,
-          itemStyle: {
-            color: '#FFB968'
-          },
-          data: arr2
-        }
-        itemOne.name = 'maxTemperature:'
-        optionBat.series.push(itemTwo)
-      }
-      optionBat.series.push(itemOne)
-      if (batteryInstance) batteryInstance.dispose()
-      batteryInstance = echarts.init(document.getElementById('batteryChart'))
-      batteryInstance.setOption(optionBat)
-      console.log('changeBat')
-    },
-    getBatHisData() {
-      this.requestLoading()
-      let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
-      let params = {
-        sn: this.sn,
-        siteCode: this.queryParams.siteCode,
-        startTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 00:00:00`, this.base.timeZone)) / 1000,
-        endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
-      }
-      batHistoryData(params).then(res => {
-        batData = res.data
-        arr5 = []
-        for(let i = 0; i < res.data.length; i++) {
-          arr5.push(res.data[i].timestamp)
-        }
-        optionBat.xAxis[0].data = arr5
-        this.changeBatType()
-      }).finally(() => {
-        this.waitLoading.close()
-      })
-    },
+
     changePvDate() {
       if (!this.navBar['Inverter']) return
       this.getPvHisData()
@@ -1534,52 +915,8 @@ export default {
     changeSize() {
       clearTimeout(timer)
       timer = setTimeout(() => {
-        if (batteryInstance) batteryInstance.resize()
         if (pvInstance) pvInstance.resize()
       }, 500)
-    },
-    getOrderRes() {
-      let data = {
-        sn: this.sn,
-      }
-      let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
-      clearInterval(timerInter)
-      timerInter = setInterval(() => {
-        times++
-        orderRes(data).then(res => {
-          if (+res.data === 3) {
-            if(times > 15) {
-              times = 1
-              clearInterval(timerInter)
-              this.getList()
-              this.waitLoading.close()
-              return this.$modal.msgError('timeout')
-            }
-            this.getOrderRes()
-          } else {
-            times = 1
-            if (+res.data === 1) {
-              this.$modal.msgSuccess('SUCCESS')
-              this.getList()
-            } else this.$modal.msgError(statusList[+res.data])
-            clearInterval(timerInter)
-            this.waitLoading.close()
-          }
-        })
-      }, 1000)
-    },
-    stopCharge() {
-      let data = {
-        siteCode: this.queryParams.siteCode,
-        sn: this.sn
-      }
-      stopCharge(data).then(res => {
-        let statusList = ['NO_RESPONSE', 'SUCCESS', 'ERROR', 'EXECUTING', 'NOT_ONLINE', 'UN_EXIST_FILE', 'SUBMIT_SUCCESS', 'NO_MATCH']
-        if (+res.data === 3) {
-          this.requestLoading()
-          this.getOrderRes()
-        } else this.$modal.msg(statusList[+res.data])
-      })
     },
     cancelDelete() {
       this.delShow = false
@@ -1731,7 +1068,6 @@ export default {
           }
         }
       }
-      // 1111111111
       let arrList = ['inverterCapacityMsg', 'batCapacityMsg', 'pvCapacityMsg', 'inverterInstallMsg', 'batInstallMsg', 'pvInstallMsg', 'chargeInstallMsg']
       for (let p = 0; p < arrList.length; p++) {
         for (let k in this[arrList[p]]) {
@@ -1762,7 +1098,6 @@ export default {
       else this.$delete(this[mapInstall[deviceType]], 'msg')
     },
     checkCapacity(deviceType, index) {
-      // 1111111111
       let msgType = deviceType === 1 ? 'inverterCapacityMsg' : deviceType === 2 ? 'batCapacityMsg' : 'pvCapacityMsg'
       const reg = /^(?!^\.)(\d*(\.\d{0,3})?)?$/
       // At most three significant decimals
@@ -1814,15 +1149,10 @@ export default {
       this.addShow = true
     },
     beforeClose() {
-      timesNet = 1
-      this.stepActive = 1
       this.addShow = false
-      this.configNetShow = false
-      this.startNetShow = true
       this.delShow = false
       this.delSubType = ''
       this.addSubType = true
-      clearInterval(timerNet)
     },
     fillAddDialog() {
       let haveTypeList = [4, 1, 2, 6, 3]
@@ -1907,16 +1237,6 @@ export default {
         }
       }
     },
-    getBatEnergy() {
-      let params = {
-        siteCode: this.queryParams.siteCode
-      }
-      batEnergy(params).then(res => {
-        console.log(res)
-
-        this.batEnergy = res.data
-      })
-    },
     getList() {
       this.navBar = {}
       this.batList = []
@@ -1951,41 +1271,18 @@ export default {
           if (+list[i]['deviceType'] === 6) this.pvList.push(list[i])
           if (+list[i]['deviceType'] === 3) this.pileList.push(list[i])
         }
-
-        if (this.batList.length) this.batCur = this.batList[0].serialNumber
         if (this.pvList.length) this.curPv = this.pvList[0].serialNumber
         if (this.pileList.length) this.curPile = this.pileList[0].serialNumber
         for(let i = 0; i < this.batList.length; i++) {
           this.batList[i]['soc'] = JSON.parse(this.batList[i].extInfo)['soc']
           this.batList[i]['curEnergy'] = JSON.parse(this.batList[i].extInfo)['soc']
           this.batList[i]['capacity'] = 100
+          if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) this.batList[i]['soc'] = 0
         }
-        if (+this.active === 2) this.$nextTick(() => this.initBatInstance())
       })
     },
-    initBatInstance() {
-      this.batListInstance = []
-      if (this.batList.length) {
-        this.$nextTick(() => {
-          for(let i = 0; i < this.batList.length; i++) {
-            this.batListInstance.push(echarts.init(document.getElementById(`batPile${i}`)))
-            if (!this.batList[i]['curEnergy'] || !this.batList[i]['capacity']) {
-              this.batList[i]['soc'] = 0
-              optionBatSoc.series[0].data[0].value = 0
-              optionBatSoc.series[0].data[1].value = 1
-            } else {
-              this.batList[i]['soc'] = this.batList[i]['soc']
-              optionBatSoc.series[0].data[0].value = this.batList[i]['curEnergy'] / this.batList[i]['capacity']
-              optionBatSoc.series[0].data[1].value = 1 - (this.batList[i]['curEnergy'] / this.batList[i]['capacity'])
-            }
-            this.batListInstance[i].setOption(optionBatSoc)
-          }
-        })
-      }
-    },
     changeNav(v) {
-      if (+v === 2 ) this.$nextTick(() => { this.initBatInstance() })
-      this.activePv = this.activeBattery = 'first'
+      this.activePv = 'first'
       this.active = v
       if ([2, 3, 6].includes(+v)) {
         let list
@@ -2010,9 +1307,6 @@ export default {
         deviceNavInfo[this.sn] = {...res.data, ...this.currentItem}
         this.curDevInfo = deviceNavInfo[this.sn]
         // status 1-充电中 2-已完成
-        // if (this.curDevInfo.extInfo) {
-        //   this.curDevInfo.extInfo = JSON.parse(this.curDevInfo.extInfo)
-        // }
         this.tempInfo()
       })
     },
