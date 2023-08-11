@@ -393,19 +393,19 @@ const rankOption = {
   tooltip: {
     show: true,
     formatter(c) {
-  let unit, v
-  if (c.value < 1) {
-    v = (+c.value * 1000).toFixed(2)
-    unit = 'Wh'
-  } else if (c.value > 1 && c.value < 1000) {
-    v = (+c.value).toFixed(2)
-    unit = 'kWh'
-  } else {
-    v = (+c.value / 1000).toFixed(2)
-    unit = 'MWh'
-  }
-  return `${c.name}: ${v} ${unit}`
-},
+      let unit, v
+      if (c.value < 1) {
+        v = (+c.value * 1000).toFixed(2)
+        unit = 'Wh'
+      } else if (c.value > 1 && c.value < 1000) {
+        v = (+c.value).toFixed(2)
+        unit = 'kWh'
+      } else {
+        v = (+c.value / 1000).toFixed(2)
+        unit = 'MWh'
+      }
+      return `${c.name}: ${v} ${unit}`
+    },
 textStyle: {
   fontSize: 10
 }
@@ -669,8 +669,6 @@ export default {
   methods: {
     changeChartSize() {
       let scaleScreen = detectZoom()
-      // console.log('scaleScreen', scaleScreen)
-      // console.log('innerHeight', innerHeight)
       if (scaleScreen > 100 && innerHeight < 1000) {
         rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 10
         rankOption.series[0].barWidth = 12
@@ -810,6 +808,7 @@ export default {
             })
           } else {
             lineData.forEach((i) => {
+              barOption.yAxis.name = 'kWh'
               xAxisData.push(i.time)
               data1.push(i.export / 1000)
               data2.push(i.used / 1000)
@@ -863,47 +862,83 @@ export default {
         },
         formatter(v) {
           let v0, v1, t1, t2, total, res, unit1, unit2, unit3
-          if (v[0]) {
-            if (v[0].value < 1) {
-              t1 = `${(v[0].value * 1000).toFixed(2)}`
-              unit1 = 'Wh'
-            } else if (v[0].value > 1 && v[0].value < 1000) {
-              t1 = `${(+v[0].value).toFixed(2)}`
-              unit1 = 'kWh'
-            } else {
-              t1 = `${(+v[0].value / 1000).toFixed(2)}`
-              unit1 = 'MWh'
+          if (barOption.yAxis.name === 'MWh') {
+            if (v[0]) {
+              if (v[0].value < 1) {
+                t1 = `${(v[0].value * 1000).toFixed(2)}`
+                unit1 = 'kWh'
+              } else if (v[0].value > 1 && v[0].value < 1000) {
+                t1 = `${(+v[0].value).toFixed(2)}`
+                unit1 = 'MWh'
+              }
+              v0 = `${v[0].marker}${v[0].seriesName}: ${t1}${unit1}`
             }
-            v0 = `${v[0].marker}${v[0].seriesName}: ${t1}${unit1}`
-          }
-          if (v[1]) {
-            if (v[1].value < 1) {
-              t2 = `${(v[1].value * 1000).toFixed(2)}`
-              unit2 = 'Wh'
-            } else if (v[1].value > 1 && v[1].value < 1000) {
-              t2 = `${(+v[1].value).toFixed(2)}`
-              unit2 = 'kWh'
-            } else {
-              t2 = `${(+v[1].value / 1000).toFixed(2)}`
-              unit2 = 'MWh'
+            if (v[1]) {
+              if (v[1].value < 1) {
+                t2 = `${(v[1].value * 1000).toFixed(2)}`
+                unit2 = 'kWh'
+              } else if (v[1].value > 1 && v[1].value < 1000) {
+                t2 = `${(+v[1].value).toFixed(2)}`
+                unit2 = 'MWh'
+              }
+              v1 = `${v[1].marker}${v[1].seriesName}：${t2}${unit2}`
             }
-            v1 = `${v[1].marker}${v[1].seriesName}：${t2}${unit2}`
-          }
-          if (v0) {
-            res = `${v0}<br>`
-            total = +v[0].value
-          }
-          if (v1) {
-            res += `${v1}<br>`
-            total += +v[1].value
-          }
-          if (+total > 1 && +total < 1000 ) unit3 = 'kWh'
-          else if (+total > 1000) {
-            unit3 = 'MWh'
-            total = +total / 1000
+            if (v0) {
+              res = `${v0}<br>`
+              total = +v[0].value
+            }
+            if (v1) {
+              res += `${v1}<br>`
+              total += +v[1].value
+            }
+            if (+total < 1 ) {
+              unit3 = 'kWh'
+              total = total * 1000
+            }
+            else unit3 = 'MWh'
           } else {
-            total = +total * 1000
-            unit3 = 'Wh'
+            if (v[0]) {
+              if (v[0].value < 1) {
+                t1 = `${(v[0].value * 1000).toFixed(2)}`
+                unit1 = 'Wh'
+              } else if (v[0].value > 1 && v[0].value < 1000) {
+                t1 = `${(+v[0].value).toFixed(2)}`
+                unit1 = 'kWh'
+              } else {
+                t1 = `${(+v[0].value / 1000).toFixed(2)}`
+                unit1 = 'MWh'
+              }
+              v0 = `${v[0].marker}${v[0].seriesName}: ${t1}${unit1}`
+            }
+            if (v[1]) {
+              if (v[1].value < 1) {
+                t2 = `${(v[1].value * 1000).toFixed(2)}`
+                unit2 = 'Wh'
+              } else if (v[1].value > 1 && v[1].value < 1000) {
+                t2 = `${(+v[1].value).toFixed(2)}`
+                unit2 = 'kWh'
+              } else {
+                t2 = `${(+v[1].value / 1000).toFixed(2)}`
+                unit2 = 'MWh'
+              }
+              v1 = `${v[1].marker}${v[1].seriesName}：${t2}${unit2}`
+            }
+            if (v0) {
+              res = `${v0}<br>`
+              total = +v[0].value
+            }
+            if (v1) {
+              res += `${v1}<br>`
+              total += +v[1].value
+            }
+            if (+total > 1 && +total < 1000 ) unit3 = 'kWh'
+            else if (+total > 1000) {
+              unit3 = 'MWh'
+              total = +total / 1000
+            } else {
+              total = +total * 1000
+              unit3 = 'Wh'
+            }
           }
           total = (+total).toFixed(2)
           return `${v[0].name}<br>${res}<span style="margin-right: 14px"></span>Total：${total}${unit3}`
