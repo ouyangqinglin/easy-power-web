@@ -96,25 +96,11 @@
       </div>
     </common-flex>
     <el-tabs v-model="activeBattery">
-      <el-tab-pane label="Details" name="first"></el-tab-pane>
-      <el-tab-pane label="Historical Information" name="second"></el-tab-pane>
+      <el-tab-pane label="Basic Info" name="first"></el-tab-pane>
+      <el-tab-pane label="Details" name="second"></el-tab-pane>
     </el-tabs>
     <common-flex auto class="comp-device-card-content-right" v-if="activeBattery === 'first'">
-      <common-flex direction="column" align="center">
-        <div class="posr">
-          <div v-if="+base.storeConnectStatus === 1" class="posa dynamicSoc" :style="{height: dynamicSoc * 68 + 'px'}"></div>
-          <img class="device-battery posr" style="z-index: 1" :src="require('./img/device-battery.svg')" alt=""><br>
-        </div>
-        <template v-if="+base.storeConnectStatus === 1">
-          <span class="status-tips" v-if="+curDevInfo.storeStatus === 1">Not charge-discharge</span>
-          <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 2">Charging</span>
-          <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 3">Discharging</span>
-        </template>
-        <router-link :to="{name: 'monitoring-view', params: {id: curDevInfo.id, info: curDevInfo.extInfo, sn: curDevInfo.sn, siteCode: $route.query.siteCode}}">
-          <el-button type="text">Go to BMS</el-button>
-        </router-link>
-      </common-flex>
-      <common-flex direction="column" auto class="comp-device-card-content-right-container">
+      <common-flex direction="column" auto class="comp-device-card-content-right-container" style="padding: 0 24px">
         <div class="item" v-for="i of dataInfo">
           <div class="item-title">{{ i.title }}</div>
           <common-flex class="item-body">
@@ -127,6 +113,45 @@
       </common-flex>
     </common-flex>
     <common-flex auto class="comp-device-card-content-right" direction="column" v-if="activeBattery === 'second'">
+      <common-flex style="border-bottom: 1px solid #D8DCE6">
+        <common-flex direction="column" align="center">
+          <div class="posr">
+            <div v-if="+base.storeConnectStatus === 1" class="posa dynamicSoc" :style="{height: dynamicSoc * 68 + 'px'}"></div>
+            <img class="device-battery posr" style="z-index: 1" :src="require('./img/device-battery.svg')" alt=""><br>
+          </div>
+          <template v-if="+base.storeConnectStatus === 1">
+            <span class="status-tips" v-if="+curDevInfo.storeStatus === 1">Not charge-discharge</span>
+            <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 2">Charging</span>
+            <span class="status-tips" v-else-if="+curDevInfo.storeStatus === 3">Discharging</span>
+          </template>
+          <router-link :to="{name: 'monitoring-view', params: {id: curDevInfo.id, info: curDevInfo.extInfo, sn: curDevInfo.sn, siteCode: $route.query.siteCode}}">
+            <el-button type="text">Go to BMS</el-button>
+          </router-link>
+        </common-flex>
+        <common-flex class="comp-device-card-content-right-container" style="flex-grow: 1">
+          <div class="item" style="flex-grow: 1">
+            <div class="item-title">Real-Time Data</div>
+            <common-flex class="item-body">
+              <div class="item-body-item">
+                <div class="item-body-item-key">Soc</div>
+                <div class="item-body-item-value">{{ curDevInfo.soc }}%</div>
+              </div>
+              <div class="item-body-item">
+                <div class="item-body-item-key">Current</div>
+                <div class="item-body-item-value">{{ curDevInfo.current }}A</div>
+              </div>
+              <div class="item-body-item">
+                <div class="item-body-item-key">Voltage</div>
+                <div class="item-body-item-value">{{ curDevInfo.voltage }}V</div>
+              </div>
+              <div class="item-body-item">
+                <div class="item-body-item-key">Power</div>
+                <div class="item-body-item-value">{{ curDevInfo.power }}kW</div>
+              </div>
+            </common-flex>
+          </div>
+        </common-flex>
+      </common-flex>
       <common-flex justify="flex-end" style="margin: 40px 0 20px 0">
         <el-radio-group size="small" v-model="batteryHis.batteryType" @change="changeBatType">
           <el-radio-button label="Voltage"></el-radio-button>
@@ -304,7 +329,6 @@ const optionBatSoc = {
 export default {
   name: 'comp-battery',
   props: {
-    dynamicSoc: Number,
     base: {
       type: Object,
       default: () => {
@@ -329,6 +353,11 @@ export default {
         return []
       }
     },
+  },
+  computed: {
+    dynamicSoc() {
+      return +this.curDevInfo.soc / 100
+    }
   },
   data() {
     const that = this

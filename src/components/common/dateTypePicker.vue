@@ -1,5 +1,5 @@
 <template>
-  <common-flex justify="flex-end" style="flex-grow: 1">
+  <common-flex class="comp-date-type-picker" justify="flex-end" style="flex-grow: 1">
     <el-radio-group v-model="dateType" style="margin-right: 5px" size="small">
       <el-radio-button label="date">Day</el-radio-button>
       <el-radio-button label="week">Week</el-radio-button>
@@ -13,7 +13,6 @@
       @change="sureDate"
       v-model="dateVal"
       :type="timeType"
-      range-separator="->"
       :format="displayFormat"
       :picker-options="closePicker"
       :value-format="dateFormat"
@@ -26,6 +25,14 @@
 <script>
 export default {
   name: 'comp-date-type-picker',
+  props: {
+    timeZone: {
+      type: String,
+      default: () => {
+        return 'Asia/Shanghai'
+      }
+    }
+  },
   computed: {
     timeType() {
       const arr = {
@@ -39,8 +46,8 @@ export default {
   },
   watch: {
     dateType(v) {
+      this.dateVal = new Date(this.UTC_START_OF(this.timeZone))
       if (v === 'date' || v === 'week') {
-        this.dateVal = new Date()
         if (v === 'date') {
           this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
         } else {
@@ -55,14 +62,12 @@ export default {
         this.dateFormat = 'MM-dd-yyyy'
         this.displayFormat = 'MM-dd-yyyy'
       } else if (v === 'month') {
-        this.dateVal = new Date()
         const firstDate = this.DATE_FORMAT('yyyy-M', this.dateVal) + '-1'
         this.params.startTime = firstDate
         this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
         this.dateFormat = 'yyyy-MM'
         this.displayFormat = 'MM-yyyy'
       } else if (v === 'year') {
-        this.dateVal = new Date()
         const year = this.DATE_FORMAT('yyyy', this.dateVal)
         this.params.startTime = `${year}-01-01`
         this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.dateVal))
@@ -76,13 +81,11 @@ export default {
         'year': 3
       }
       this.params.dataType = arr[v]
-      console.log('watch', this.params.startTime)
-      console.log('watch', this.params.endTime)
       this.$emit('emitDate', this.params)
     },
   },
   data() {
-    const dateVal = new Date()
+    const dateVal = new Date(this.UTC_START_OF(this.timeZone))
     const that = this
     return {
       closePicker: {
@@ -134,8 +137,6 @@ export default {
         if (+v !== +curYear) this.params.endTime = `${v}-12-31`
         else this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date())
       }
-      console.log('sure', this.params.startTime)
-      console.log('sure', this.params.endTime)
       this.$emit('emitDate', this.params)
     },
   }
@@ -143,5 +144,12 @@ export default {
 </script>
 
 <style lang="scss">
-
+.comp-date-type-picker {
+  .el-date-editor.el-input {
+    width: 220px;
+  }
+  .el-date-editor--daterange.el-input__inner {
+    width: 220px;
+  }
+}
 </style>

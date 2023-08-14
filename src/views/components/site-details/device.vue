@@ -650,15 +650,6 @@ export default {
       pvInfo: {},
       batteryInfo: [
         {
-          'title': 'Real-Time Data',
-          'info': {
-            'Soc': '',
-            'Current': '',
-            'Voltage': '',
-            'Power': ''
-          },
-        },
-        {
           'title': 'Battery Operation Time',
           'info': {
             'Lifetime': '',
@@ -1313,24 +1304,24 @@ export default {
     tempInfo() {
       if (+this.active === 2) {
         let arr = [
-          [
-            {
-              key: 'Soc',
-              value: 'curEnergy'
-            },
-            {
-              key: 'Current',
-              value: 'current'
-            },
-            {
-              key: 'Voltage',
-              value: 'voltage'
-            },
-            {
-              key: 'Power',
-              value: 'power'
-            },
-          ],
+          // [
+          //   {
+          //     key: 'Soc',
+          //     value: 'curEnergy'
+          //   },
+          //   {
+          //     key: 'Current',
+          //     value: 'current'
+          //   },
+          //   {
+          //     key: 'Voltage',
+          //     value: 'voltage'
+          //   },
+          //   {
+          //     key: 'Power',
+          //     value: 'power'
+          //   },
+          // ],
           [
             {
               key: 'Lifetime',
@@ -1358,39 +1349,40 @@ export default {
         ]
         arr.forEach((i, index) => {
           i.forEach(k => {
-            if (k.key === 'Soc') {
-              if(+this.base.storeConnectStatus === 2) {
-                this.batteryInfo[index]['info'][k.key] = 0
-                this.dynamicSoc = 0
-                return
-              }
-              this.batteryInfo[index]['info'][k.key] = this.curDevInfo.soc + '%'
-              this.dynamicSoc = this.curDevInfo[k.value] / this.curDevInfo['capacity']
-            } else if (k.key === 'Current') {
-              if (+this.base.storeConnectStatus === 2) {
-                this.batteryInfo[index]['info'][k.key] = 0
-                return
-              }
-              this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'A'
-            } else if (k.key === 'Voltage') {
-              if (+this.base.storeConnectStatus === 2) {
-                this.batteryInfo[index]['info'][k.key] = 0
-                return
-              }
-              this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'V'
-            } else if (k.key === 'Power') {
-              if (+this.base.storeConnectStatus === 2) {
-                this.batteryInfo[index]['info'][k.key] = 0
-                return
-              }
-              this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
-            } else if (k.key === 'New installation or not') {
+            // if (k.key === 'Soc') {
+            //   if(+this.base.storeConnectStatus === 2) {
+            //     this.batteryInfo[index]['info'][k.key] = 0
+            //     this.dynamicSoc = 0
+            //     return
+            //   }
+            //   this.batteryInfo[index]['info'][k.key] = this.curDevInfo.soc + '%'
+            //   this.dynamicSoc = this.curDevInfo[k.value] / this.curDevInfo['capacity']
+            // } else if (k.key === 'Current') {
+            //   if (+this.base.storeConnectStatus === 2) {
+            //     this.batteryInfo[index]['info'][k.key] = 0
+            //     return
+            //   }
+            //   this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'A'
+            // } else if (k.key === 'Voltage') {
+            //   if (+this.base.storeConnectStatus === 2) {
+            //     this.batteryInfo[index]['info'][k.key] = 0
+            //     return
+            //   }
+            //   this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'V'
+            // } else if (k.key === 'Power') {
+            //   if (+this.base.storeConnectStatus === 2) {
+            //     this.batteryInfo[index]['info'][k.key] = 0
+            //     return
+            //   }
+            //   this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] + 'kW'
+            // }
+            if (k.key === 'New installation or not') {
               this.batteryInfo[index]['info'][k.key] = ['', 'Yes', 'No'][this.curDevInfo[k.value]] || '--'
-            } else if (index === 2 || index === 1) {
+            } else if (index === 0 || index === 1) {
               if (+this.curDevInfo.installation === 2 && k.key === 'Lifetime') {
                 this.batteryInfo[index]['info'][k.key] = '--'
               } else {
-                if (index === 1) {
+                if (index === 0) {
                   let resStr = ''
                   resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
                   this.batteryInfo[index]['info'][k.key] = resStr
