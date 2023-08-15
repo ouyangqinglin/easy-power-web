@@ -96,10 +96,10 @@
       </div>
     </common-flex>
     <el-tabs v-model="activeBattery">
-      <el-tab-pane label="Basic Info" name="first"></el-tab-pane>
-      <el-tab-pane label="Details" name="second"></el-tab-pane>
+      <el-tab-pane label="Details" name="first"></el-tab-pane>
+      <el-tab-pane label="Basic Info" name="second"></el-tab-pane>
     </el-tabs>
-    <common-flex auto class="comp-device-card-content-right" v-if="activeBattery === 'first'">
+    <common-flex auto class="comp-device-card-content-right" v-if="activeBattery === 'second'">
       <common-flex direction="column" auto class="comp-device-card-content-right-container" style="padding: 0 24px">
         <div class="item" v-for="i of dataInfo">
           <div class="item-title">{{ i.title }}</div>
@@ -112,7 +112,7 @@
         </div>
       </common-flex>
     </common-flex>
-    <common-flex auto class="comp-device-card-content-right" direction="column" v-if="activeBattery === 'second'">
+    <common-flex auto class="comp-device-card-content-right" direction="column" v-if="activeBattery === 'first'">
       <common-flex style="border-bottom: 1px solid #D8DCE6">
         <common-flex direction="column" align="center">
           <div class="posr">
@@ -152,23 +152,26 @@
           </div>
         </common-flex>
       </common-flex>
-      <common-flex justify="flex-end" style="margin: 40px 0 20px 0">
-        <el-radio-group size="small" v-model="batteryHis.batteryType" @change="changeBatType">
-          <el-radio-button label="Voltage"></el-radio-button>
-          <el-radio-button label="Current"></el-radio-button>
-          <el-radio-button label="Power"></el-radio-button>
-          <el-radio-button label="SOC"></el-radio-button>
-          <el-radio-button label="Temperature"></el-radio-button>
-        </el-radio-group>
-        <el-date-picker
-          size="small"
-          style="margin: 0 40px 0 10px"
-          format="MM-dd-yyyy"
-          value-format="yyyy-MM-dd"
-          @change="changeBatDate"
-          v-model="batteryHis.dateVal"
-        >
-        </el-date-picker>
+      <common-flex justify="space-between" align="center">
+        <strong style="text-indent: 16px">Historical Information</strong>
+        <common-flex justify="flex-end" style="margin: 40px 0 20px 0">
+          <el-radio-group size="small" v-model="batteryHis.batteryType" @change="changeBatType">
+            <el-radio-button label="Voltage"></el-radio-button>
+            <el-radio-button label="Current"></el-radio-button>
+            <el-radio-button label="Power"></el-radio-button>
+            <el-radio-button label="SOC"></el-radio-button>
+            <el-radio-button label="Temperature"></el-radio-button>
+          </el-radio-group>
+          <el-date-picker
+            size="small"
+            style="margin: 0 40px 0 10px"
+            format="MM-dd-yyyy"
+            value-format="yyyy-MM-dd"
+            @change="changeBatDate"
+            v-model="batteryHis.dateVal"
+          >
+          </el-date-picker>
+        </common-flex>
       </common-flex>
       <div id="batteryChart" class="batteryChart"></div>
     </common-flex>
@@ -385,14 +388,17 @@ export default {
       },
       immediate: true
     },
-    activeBattery (v) {
-      if (v === 'second') {
-        this.$nextTick(() => {
-          batteryInstance = echarts.init(document.getElementById('batteryChart'))
-          this.getBatHisData()
-          window.addEventListener('resize', this.changeSize)
-        })
-      }
+    activeBattery: {
+      handler(v) {
+        if (v === 'first') {
+          this.$nextTick(() => {
+            batteryInstance = echarts.init(document.getElementById('batteryChart'))
+            this.getBatHisData()
+            window.addEventListener('resize', this.changeSize)
+          })
+        }
+      },
+      immediate: true
     },
   },
   mounted() {

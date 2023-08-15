@@ -1,5 +1,5 @@
 <template>
-  <common-flex class="comp-date-type-picker" justify="flex-end" style="flex-grow: 1">
+  <common-flex class="comp-date-type-picker" wrap="wrap">
     <el-radio-group v-model="dateType" style="margin-right: 5px" size="small">
       <el-radio-button label="date">Day</el-radio-button>
       <el-radio-button label="week">Week</el-radio-button>
@@ -23,17 +23,14 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: 'comp-date-type-picker',
-  props: {
-    timeZone: {
-      type: String,
-      default: () => {
-        return 'Asia/Shanghai'
-      }
-    }
-  },
   computed: {
+    ...mapState({
+      'timeZone': state => state.user.timeZone,
+    }),
     timeType() {
       const arr = {
         'date': 'date',
@@ -49,11 +46,11 @@ export default {
       this.dateVal = new Date(this.UTC_START_OF(this.timeZone))
       if (v === 'date' || v === 'week') {
         if (v === 'date') {
-          this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
+          this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.dateVal))
         } else {
           const startStampTime = (new Date(this.dateVal)).getTime() - 6 * 24 * 60 * 60 * 1000
-          this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
-          this.params.startTime = this.DATE_FORMAT('yyyy-M-d', startStampTime)
+          this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.dateVal))
+          this.params.startTime = this.DATE_FORMAT('yyyy-MM-dd', startStampTime)
           let v1, v2
           v1 = this.DATE_FORMAT('MM-dd-yyyy', this.params.startTime)
           v2 = this.DATE_FORMAT('MM-dd-yyyy', this.params.endTime)
@@ -62,9 +59,9 @@ export default {
         this.dateFormat = 'MM-dd-yyyy'
         this.displayFormat = 'MM-dd-yyyy'
       } else if (v === 'month') {
-        const firstDate = this.DATE_FORMAT('yyyy-M', this.dateVal) + '-1'
+        const firstDate = this.DATE_FORMAT('yyyy-MM', this.dateVal) + '-01'
         this.params.startTime = firstDate
-        this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
+        this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
         this.dateFormat = 'yyyy-MM'
         this.displayFormat = 'MM-yyyy'
       } else if (v === 'year') {
@@ -81,18 +78,22 @@ export default {
         'year': 3
       }
       this.params.dataType = arr[v]
-      this.$emit('emitDate', this.params)
+      const data = {
+        startTime: (this.ISD_TIMESTAMP(`${this.params.startTime} 00:00:00`, this.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.params.endTime} 23:59:59`, this.timeZone)) / 1000,
+        dataType: this.params.dataType,
+      }
+      this.$emit('emitDate', data)
     },
   },
   data() {
-    const dateVal = new Date(this.UTC_START_OF(this.timeZone))
     const that = this
     return {
       closePicker: {
         onPick(a) {
           that.$refs.dataEnd.handleClose()
           setTimeout(() => {
-            that.params.startTime = that.DATE_FORMAT('yyyy-M-d', a.minDate)
+            that.params.startTime = that.DATE_FORMAT('yyyy-MM-dd', a.minDate)
             that.dateVal = []
             that.dateVal.push(that.params.startTime)
             that.sureDate(that.dateVal)
@@ -101,14 +102,17 @@ export default {
       },
       params: {
         dataType: 1, // {Number} 数据统计分组方式 1-按小时分组 2-按日分组 3-按月分组 4-按照每15分钟分组
-        startTime: '', // {String} 示例值：2022-7-19
+        startTime: '', // {String} 示例值：2022-07-19
         endTime: ''
       },
       dateType: 'date',
-      dateVal: dateVal,
+      dateVal: '',
       displayFormat: 'MM-dd-yyyy',
-      dateFormat: 'yyyy-M-d',
+      dateFormat: 'yyyy-MM-dd',
     }
+  },
+  created() {
+    this.dateVal = new Date(this.UTC_START_OF(this.timeZone))
   },
   methods: {
     sureDate(v) {
@@ -122,7 +126,7 @@ export default {
         this.dateVal = [v1, v2]
       } else if (this.dateType === 'month') {
         const maxMonth = [1, 3, 5, 7, 8, 10, 12]
-        const month = this.DATE_FORMAT('M', new Date(this.dateVal))
+        const month = this.DATE_FORMAT('MM', new Date(this.dateVal))
         const startTime = `${v}-01`
         let endStampTime
         if (maxMonth.includes(+month)) {
@@ -137,7 +141,12 @@ export default {
         if (+v !== +curYear) this.params.endTime = `${v}-12-31`
         else this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date())
       }
-      this.$emit('emitDate', this.params)
+      const data = {
+        startTime: (this.ISD_TIMESTAMP(`${this.params.startTime} 00:00:00`, this.timeZone)) / 1000,
+        endTime: (this.ISD_TIMESTAMP(`${this.params.endTime} 23:59:59`, this.timeZone)) / 1000,
+        dataType: this.params.dataType,
+      }
+      this.$emit('emitDate', data)
     },
   }
 }

@@ -50,10 +50,12 @@
         <el-card class="comp-overview-row-col-card">
           <common-flex class="comp-overview-row-col-card-title" justify="space-between">
             <div>Real-time power</div>
-            <el-tag v-if="!online" effect="dark">Off line</el-tag>
+            <el-tag style="background-color: #F8696A; border-color: #F8696A" v-if="!online" effect="dark">Off line</el-tag>
           </common-flex>
           <common-flex class="circle-container posr" justify="center">
-            <common-flex justify="center" align="center" class="posa offline" v-if="!online">Off line</common-flex>
+            <common-flex justify="center" align="center" class="posa offline" v-if="!online">
+              <div class="posa">Off line</div>
+            </common-flex>
 <!--            <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: +base.pvExist ? '90%' : '80%'}">-->
             <common-flex justify="center" align="center" class="circle-container-box posr" :style="{height: '90%'}">
 <!--              pv 线-->
@@ -333,7 +335,7 @@ export default {
         onPick(a) {
           that.$refs.dataEnd.handleClose()
           setTimeout(() => {
-            that.params.startTime = that.DATE_FORMAT('yyyy-M-d', a.minDate)
+            that.params.startTime = that.DATE_FORMAT('yyyy-MM-dd', a.minDate)
             that.dateVal = []
             that.dateVal.push(that.params.startTime)
             that.sureDate(that.dateVal)
@@ -547,11 +549,11 @@ export default {
       if (v === 'date' || v === 'week') {
         this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
         if (v === 'date') {
-          this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
+          this.params.startTime = this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.dateVal))
         } else {
           const startStampTime = (new Date(this.dateVal)).getTime() - 6 * 24 * 60 * 60 * 1000
-          this.params.endTime = this.DATE_FORMAT('yyyy-M-d', new Date(this.dateVal))
-          this.params.startTime = this.DATE_FORMAT('yyyy-M-d', startStampTime)
+          this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.dateVal))
+          this.params.startTime = this.DATE_FORMAT('yyyy-MM-dd', startStampTime)
           let v1, v2
           v1 = this.DATE_FORMAT('MM-dd-yyyy', this.params.startTime)
           v2 = this.DATE_FORMAT('MM-dd-yyyy', this.params.endTime)
@@ -561,9 +563,9 @@ export default {
         this.displayFormat = 'MM-dd-yyyy'
       } else if (v === 'month') {
         this.dateVal = new Date(this.UTC_START_OF(this.base.timeZone))
-        const firstDate = this.DATE_FORMAT('yyyy-M', this.dateVal) + '-1'
+        const firstDate = this.DATE_FORMAT('yyyy-MM', this.dateVal) + '-01'
         this.params.startTime = firstDate
-        this.params.endTime = this.DATE_FORMAT('yyyy-M-d', this.dateVal)
+        this.params.endTime = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
         this.dateFormat = 'yyyy-MM'
         this.displayFormat = 'MM-yyyy'
       } else if (v === 'year') {
@@ -653,7 +655,7 @@ export default {
           this.dateVal = [v1, v2]
         } else if (this.dateType === 'month') {
           const maxMonth = [1, 3, 5, 7, 8, 10, 12]
-          const month = this.DATE_FORMAT('M', new Date(this.dateVal))
+          const month = this.DATE_FORMAT('MM', new Date(this.dateVal))
           const startTime = `${v}-01`
           let endStampTime
           if (maxMonth.includes(+month)) {
@@ -1051,9 +1053,13 @@ export default {
            background: linear-gradient(0deg, rgba(0, 0, 0, .32) 0%, rgba(84, 84, 84, .32) 100%);
            border-radius: 8px 8px 8px 8px;
            z-index: 2;
-           font-size: 32px;
-           font-weight: bold;
-           color: #FFFFFF;
+           div {
+             right: 4px;
+             top: 4px;
+             font-size: 32px;
+             font-weight: bold;
+             color: #FFFFFF;
+           }
          }
          &-box {
            width: 90%;

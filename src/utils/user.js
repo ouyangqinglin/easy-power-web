@@ -34,3 +34,17 @@ export function getUserId(v) {
 export function setUserId(v) {
   return window.localStorage.setItem('userId', v)
 }
+
+export function getTimeZone(v) {
+  return window.localStorage.getItem('timeZone')
+}
+export function setTimeZone(v) {
+  return window.localStorage.setItem('timeZone', v)
+}
+
+export function getUtc(v) {
+  return window.localStorage.getItem('utc')
+}
+export function setUtc(v) {
+  return window.localStorage.setItem('utc', v)
+}

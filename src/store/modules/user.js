@@ -1,6 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import {getUserType, setUserType, getChangePassword, setChangePassword, getAgencyName, setAgencyName, getAgencyId, setAgencyId, getUserId, setUserId} from '@/utils/user'
+import {getUserType, setUserType, getChangePassword, setChangePassword, getAgencyName, setAgencyName, getAgencyId, setAgencyId, getUserId, setUserId, getTimeZone, setTimeZone, getUtc, setUtc} from '@/utils/user'
 
 const user = {
   state: {
@@ -15,7 +15,9 @@ const user = {
     permissions: [],
     userType: getUserType(),
     agency: getAgencyName(),
-    changePassword: getChangePassword()
+    changePassword: getChangePassword(),
+    timeZone: getTimeZone(),
+    utc: getUtc()
   },
 
   mutations: {
@@ -54,6 +56,12 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_TIME_ZONE: (state, timeZone) => {
+      state.timeZone = timeZone
+    },
+    SET_UTC: (state, utc) => {
+      state.utc = utc
     }
   },
 
@@ -66,6 +74,10 @@ const user = {
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
+          setUtc(res.utcTime)
+          commit('SET_UTC', res.utcTime)
+          setTimeZone(res.timeZone)
+          commit("SET_TIME_ZONE", res.timeZone)
           setToken(res.token)
           commit('SET_TOKEN', res.token)
           setUserType(res.userType)
