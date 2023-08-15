@@ -34,7 +34,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-card style="margin-top: 20px">
+    <el-card>
       <AlarmRank />
     </el-card>
   </div>
