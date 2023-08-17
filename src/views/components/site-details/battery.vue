@@ -1,5 +1,5 @@
 <template>
-  <div style="flex-grow: 1">
+  <div class="comp-battery" style="flex-grow: 1">
     <div class="total-box">
       <div class="item" style="width: 100%">
         <div class="item-title">Real Time Data</div>
@@ -86,6 +86,7 @@
     <common-flex style="border-bottom: 1px solid #D8DCE6; margin-bottom: 15px;" wrap="wrap">
       <div class="bat-item" v-for="(i, k) of batList" :key="k" @click="changeCurBat(i.serialNumber)">
         <div class="posr">
+          <div class="posa offline"><el-tag size="mini" style="background-color: #F8696A; border-color: #F8696A" effect="dark" v-if="!i.net">Off line</el-tag></div>
           <div class="bat-pile" :id="`batPile${k}`"></div>
           <div class="posa bat-title">
             <div>SOC</div>
@@ -96,6 +97,7 @@
       </div>
     </common-flex>
     <el-tabs v-model="activeBattery">
+<!--      默认1.0 全部展示-->
       <el-tab-pane label="Details" name="first"></el-tab-pane>
       <el-tab-pane label="Basic Info" name="second"></el-tab-pane>
     </el-tabs>
@@ -543,5 +545,12 @@ export default {
 </script>
 
 <style lang="scss">
-
+.comp-battery {
+  .offline {
+    left: 50%;
+    top: 6px;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+}
 </style>

@@ -74,6 +74,7 @@ export default {
 <style lang="scss">
 .pages-analysis-fault {
   .time-zone {
+    margin-bottom: 8px;
     @include nFont(12 #909399)
   }
   .echarts-card {
