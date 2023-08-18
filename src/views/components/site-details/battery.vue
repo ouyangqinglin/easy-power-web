@@ -97,8 +97,8 @@
       </div>
     </common-flex>
     <el-tabs v-model="activeBattery">
-<!--      默认1.0 全部展示-->
-      <el-tab-pane label="Details" name="first"></el-tab-pane>
+<!--      非1.5通信盒（1.0通信棒或1.5mini盒）则Details该模块不显-->
+      <el-tab-pane label="Details" name="first" v-if="detailsFlag"></el-tab-pane>
       <el-tab-pane label="Basic Info" name="second"></el-tab-pane>
     </el-tabs>
     <common-flex auto class="comp-device-card-content-right" v-if="activeBattery === 'second'">
@@ -370,9 +370,9 @@ export default {
     return {
       waitLoading: '',
       batListInstance: [],
-      sn: '',
       batEnergy: {},
-      batCur: 0,
+      batCur: '',
+      detailsFlag: true,
       activeBattery: 'first',
       batteryHis: {
         batteryType: 'Voltage',
@@ -383,8 +383,13 @@ export default {
   watch: {
     batList: {
       handler(v) {
+        console.log(v)
+        // 设备类型 1-1.5 2-mini  3-1.0
         if (v.length) {
           this.batCur = v[0].serialNumber
+          let curBat = this.batList.find(i => i.serialNumber === this.batCur)
+          this.detailsFlag = +curBat.type === 1
+          this.activeBattery = +curBat.type === 1 ? 'first' : 'second'
           this.$nextTick(() => this.initBatInstance())
         }
       },
@@ -537,7 +542,10 @@ export default {
     },
     changeCurBat(sn) {
       this.batCur = sn
-      this.activeBattery = 'first'
+      let curBat = this.batList.find(i => i.serialNumber === this.batCur)
+      this.detailsFlag = +curBat.type === 1
+      this.activeBattery = +curBat.type === 1 ? 'first' : 'second'
+      if (this.detailsFlag) this.getBatHisData()
       this.$emit('common', sn)
     },
   }
