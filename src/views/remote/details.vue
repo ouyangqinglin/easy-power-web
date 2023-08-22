@@ -77,7 +77,7 @@
             <el-table-column label="Remarks" prop="remark"></el-table-column>
             <el-table-column label="Creation Time" prop="createTime">
               <template slot-scope="{row}">
-                <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(base.createTime))}}</span>
+                <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(row.createTime))}}</span>
               </template>
             </el-table-column>
             <el-table-column label="Creation By" prop="createBy"></el-table-column>
@@ -126,7 +126,7 @@
             <el-table-column label="Remarks" prop="remark"></el-table-column>
             <el-table-column label="Operation Time" prop="createTime">
               <template slot-scope="{row}">
-                <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(base.createTime))}}</span>
+                <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(row.createTime))}}</span>
               </template>
             </el-table-column>
             <el-table-column label="Task Name" prop="name"></el-table-column>
@@ -200,7 +200,7 @@
         </el-table-column>
         <el-table-column label="Operation Time" prop="createTime">
           <template slot-scope="{row}">
-            <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(base.createTime))}}</span>
+            <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(row.createTime))}}</span>
           </template>
         </el-table-column>
       </el-table>
