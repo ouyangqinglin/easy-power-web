@@ -6,10 +6,16 @@
     </common-flex>
     <el-row :gutter="16">
       <el-col :span="12">
-        <div class="charts" id="rankOne"></div>
+        <div class="charts">
+          <div v-if="showOne" class="charts" id="rankOne"></div>
+          <NoData v-else />
+        </div>
       </el-col>
       <el-col :span="12">
-        <div class="charts" id="rankTwo"></div>
+        <div class="charts">
+          <div v-if="showTwo" class="charts" id="rankTwo"></div>
+          <NoData v-else />
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -62,7 +68,7 @@ let optionOne = {
     },
   },
   yAxis: {
-    data: lineAxis,
+    data: [],
     type: 'category',
     axisLine: {
       lineStyle: {
@@ -194,7 +200,7 @@ let optionTwo = {
     },
   },
   yAxis: {
-    data: lineAxis,
+    data: [],
     type: 'category',
     axisLine: {
       lineStyle: {
@@ -291,6 +297,12 @@ let optionTwo = {
 export default {
   name: 'comp-analysis-fault-rank',
   components: {DateTypePicker},
+  data() {
+    return {
+      showOne: true,
+      showTwo: true,
+    }
+  },
   computed: {
     ...mapState({
       'timeZone': state => state.user.timeZone,
@@ -303,8 +315,6 @@ export default {
       endTime: (this.ISD_TIMESTAMP(`${startTime} 23:59:59`, this.timeZone)) / 1000,
       dataType: 1,
     }
-    chartsInstanceOne = echarts.init(document.getElementById('rankOne'))
-    chartsInstanceTwo = echarts.init(document.getElementById('rankTwo'))
     this.getAlarmRank(data)
     this.getSiteAlarmRank(data)
     window.addEventListener('resize', this.change)
@@ -315,24 +325,46 @@ export default {
   methods: {
     getAlarmRank(data) {
       optionOne.series[0].data = []
+      optionOne.yAxis.data = []
       alarmNameArr = []
       alarmRank(data).then(res => {
-        res.data.forEach(i => {
-          optionOne.series[0].data.unshift(i.num)
-          alarmNameArr.push(i.name)
-        })
-        chartsInstanceOne.setOption(optionOne)
+        if (res.data.length) {
+          this.showOne = true
+          this.$nextTick(() => {
+            if (!chartsInstanceOne) chartsInstanceOne = echarts.init(document.getElementById('rankOne'))
+            res.data.forEach((i, index) => {
+              optionOne.yAxis.data.push(res.data.length - index)
+              optionOne.series[0].data.unshift(i.num)
+              alarmNameArr.push(i.name)
+            })
+            chartsInstanceOne.setOption(optionOne)
+          })
+        } else {
+          this.showOne = false
+          chartsInstanceOne = null
+        }
       })
     },
     getSiteAlarmRank(data) {
       optionTwo.series[0].data = []
+      optionTwo.yAxis.data = []
       siteNameArr = []
       siteAlarmRank(data).then(res => {
-        res.data.forEach(i => {
-          optionTwo.series[0].data.unshift(i.num)
-          siteNameArr.push(i.name)
-        })
-        chartsInstanceTwo.setOption(optionTwo)
+        if (res.data.length) {
+          this.showTwo = true
+          this.$nextTick(() => {
+            if (!chartsInstanceTwo) chartsInstanceTwo = echarts.init(document.getElementById('rankTwo'))
+            res.data.forEach((i, index) => {
+              optionTwo.yAxis.data.push(res.data.length - index)
+              optionTwo.series[0].data.unshift(i.num)
+              siteNameArr.push(i.name)
+            })
+            chartsInstanceTwo.setOption(optionTwo)
+          })
+        } else {
+          this.showTwo = false
+          chartsInstanceTwo = null
+        }
       })
     },
     change() {

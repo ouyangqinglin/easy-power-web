@@ -5,8 +5,11 @@
       <DateTypePicker @emitDate="getDateParams" />
     </common-flex>
     <div class="posr">
-      <div class="posa total num">{{ total }}</div>
-      <div id="pile" class="pile"></div>
+      <div class="posa total num" v-if="show">{{ total }}</div>
+      <div class="pile">
+        <div id="pile" class="pile" v-if="show"></div>
+        <NoData v-else />
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +56,7 @@ export default {
   data() {
     return {
       total: 0,
+      show: true
     }
   },
   computed: {
@@ -61,7 +65,6 @@ export default {
     })
   },
   mounted() {
-    pileInstance = echarts.init(document.getElementById('pile'))
     let startTime = this.DATE_FORMAT('yyyy-MM-dd', new Date(this.UTC_START_OF(this.timeZone)))
     const data = {
       startTime: (this.ISD_TIMESTAMP(`${startTime} 00:00:00`, this.timeZone)) / 1000,
@@ -83,12 +86,18 @@ export default {
         warnItem = res.data.find(i => +i.type === 1)
         faultItem = res.data.find(i => +i.type === 2)
         this.total = res.data.reduce((pre, cur) => {
-          return pre + cur.num
+          return pre + cur?.num
         }, 0)
-        option.series[0].data[0].value = noticeItem.num
-        option.series[0].data[1].value = warnItem.num
-        option.series[0].data[2].value = faultItem.num
-        pileInstance.setOption(option)
+        this.show = this.total !== 0
+        if (this.show) {
+          this.$nextTick(() => {
+            if (!pileInstance) pileInstance = echarts.init(document.getElementById('pile'))
+            option.series[0].data[0].value = noticeItem?.num || 0
+            option.series[0].data[1].value = warnItem?.num || 0
+            option.series[0].data[2].value = faultItem?.num || 0
+            pileInstance.setOption(option)
+          })
+        } else pileInstance = null
       })
     },
     change() {
