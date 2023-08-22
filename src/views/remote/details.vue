@@ -113,9 +113,9 @@
                 <span>{{['', 'Manual', 'Automatic'][+row.upgradeType]}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Upgrade Version" prop="currentVersion">
+            <el-table-column label="Upgrade Version" prop="versionNum">
               <template slot-scope="{row}">
-                <span>{{ row.oldVersion }}->{{row.currentVersion}}</span>
+                <span>{{ row.oldVersion }}->{{row.versionNum}}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status" prop="status">
@@ -188,9 +188,9 @@
             <span>{{ row.sn }}/{{['Off line', 'Online'][+row.net]}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Upgrade Version" prop="currentVersion">
+        <el-table-column label="Upgrade Version" prop="versionNum">
           <template slot-scope="{row}">
-            <span>{{ row.oldVersion }}->{{row.currentVersion}}</span>
+            <span>{{ row.oldVersion }}->{{row.versionNum}}</span>
           </template>
         </el-table-column>
         <el-table-column label="Status" prop="status">
