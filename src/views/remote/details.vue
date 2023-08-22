@@ -63,7 +63,7 @@
               </template>
             </el-table-column>
             <el-table-column label="Task ID" prop="code"></el-table-column>
-            <el-table-column label="Task Name" prop="name"></el-table-column>
+            <el-table-column label="Task Name" prop="taskName"></el-table-column>
             <el-table-column label="QTY of Site" prop="num">
               <template slot-scope="{row}">
                 <span style="color: #3EBCD4; cursor: pointer" @click="lookNum(row.code)">{{row.num}}</span>
@@ -115,7 +115,7 @@
             </el-table-column>
             <el-table-column label="Upgrade Version" prop="currentVersion">
               <template slot-scope="{row}">
-                <span v-if="row.oldVersion && row.currentVersion">{{ row.oldVersion }}->{{row.currentVersion}}</span>
+                <span>{{ row.oldVersion }}->{{row.currentVersion}}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status" prop="status">
@@ -190,7 +190,7 @@
         </el-table-column>
         <el-table-column label="Upgrade Version" prop="currentVersion">
           <template slot-scope="{row}">
-            <span v-if="row.oldVersion && row.currentVersion">{{ row.oldVersion }}->{{row.currentVersion}}</span>
+            <span>{{ row.oldVersion }}->{{row.currentVersion}}</span>
           </template>
         </el-table-column>
         <el-table-column label="Status" prop="status">
