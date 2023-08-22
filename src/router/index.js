@@ -188,6 +188,19 @@ export const constantRoutes = [
         meta: { title: 'My Details', icon: 'user' }
       }
     ]
+  },
+  {
+    path: '',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/remote/details/:id',
+        component: () => import('@/views/remote/details'),
+        name: 'Remote upgrade',
+        meta: { title: 'Details', icon: 'site' }
+      }
+    ]
   }
 ]
 

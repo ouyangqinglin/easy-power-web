@@ -33,27 +33,33 @@
             {{ (+queryParams.pageNum - 1) * (+queryParams.pageSize) + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="File Type" prop="fileType" min-width="160">
+        <el-table-column label="File Type" prop="fileType" min-width="260">
           <template slot-scope="{ row }">
             <dict-tag :options="dict.type.file_type" :value="row.fileType"></dict-tag>
           </template>
         </el-table-column>
         <el-table-column label="Version" prop="versionNum"></el-table-column>
-        <el-table-column label="Firmware package" prop="name" show-overflow-tooltip>
+        <el-table-column label="Firmware Name" prop="name" show-overflow-tooltip min-width="140"></el-table-column>
+        <el-table-column label="Firmware package" prop="name" show-overflow-tooltip min-width="140">
           <template slot-scope="{ row }">
             <el-link :href="`${baseUrl}${row.path}`" :underline="false" target="_blank">
               <span style="color: #3EBCD4">{{ row.name }}</span>
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="Remarks" prop="remark" show-tooltip-when-overflow />
-        <el-table-column label="Upload Time" prop="">
+        <el-table-column label="Version description" prop="remark" min-width="150" show-tooltip-when-overflow />
+        <el-table-column label="Upload Time" prop="updateTime" min-width="140">
           <template slot-scope="{ row }">
             <span v-if="row.updateTime && row.updateTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm:ss', row.updateTime) }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="Upload by" prop="updateBy"></el-table-column>
+        <el-table-column label="Upload by" prop="updateBy" min-width="150"></el-table-column>
+        <el-table-column fixed="right" label="Operation" width="100">
+          <template slot-scope="{ row }">
+            <router-link :to="`/remote/details/${row.id}`"><el-button type="text">Details</el-button></router-link>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
@@ -70,7 +76,7 @@
                  :close-on-click-modal ="false"
                  width="56%">
         <el-form @submit.native.prevent label-position="top" label-width="100" :model="base" :rules="rules" ref="formRef">
-          <el-row :gutter="16">
+          <el-row :gutter="24">
             <el-col :span="10">
               <el-form-item label="File Type" prop="fileType">
                 <el-select style="width: 100%" v-model="base.fileType" placeholder="please select">
@@ -84,7 +90,12 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="24">
+            <el-col :span="10">
+              <el-form-item label="Firmware Name" prop="name">
+                <el-input placeholder="Please enter" v-model="base.name"></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="10">
               <el-form-item label="Firmware package" class="posr fileType" prop="file">
                 <div class="upload-wrap posa"
@@ -102,7 +113,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="Remarks" style="margin-top: 24px">
+          <el-form-item label="Version description" style="margin-top: 24px">
             <el-input type="textarea" show-word-limit maxlength="200" v-model="base.remark" placeholder="Please enter"></el-input>
           </el-form-item>
         </el-form>
@@ -172,6 +183,7 @@ export default {
         fileType: '',
         versionNum: '',
         file: '',
+        name: '',
         remark: ''
       },
       rules: {
@@ -179,6 +191,9 @@ export default {
           { required: true, message: 'Please select', trigger: ['change', 'blur']}
         ],
         versionNum: [
+          { required: true, message: 'Please enter', trigger: 'blur'}
+        ],
+        name: [
           { required: true, message: 'Please enter', trigger: 'blur'}
         ],
         file: [
@@ -213,6 +228,7 @@ export default {
           formData.append("file", this.base.file)
           formData.append("versionNum", this.base.versionNum)
           formData.append("remark", this.base.remark)
+          formData.append("name", this.base.name)
           uploadFile(formData).then(res => {
             if (+res.code === 200) {
               this.$modal.closeLoading()
