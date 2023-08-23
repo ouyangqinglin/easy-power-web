@@ -129,7 +129,7 @@
                 <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(row.createTime))}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Task Name" prop="name"></el-table-column>
+            <el-table-column label="Task Name" prop="taskName"></el-table-column>
             <el-table-column label="Agency" prop="agency"></el-table-column>
           </el-table>
           <pagination
