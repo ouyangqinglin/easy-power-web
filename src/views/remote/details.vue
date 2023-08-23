@@ -63,7 +63,7 @@
               </template>
             </el-table-column>
             <el-table-column label="Task ID" prop="code"></el-table-column>
-            <el-table-column label="Task Name" prop="taskName"></el-table-column>
+            <el-table-column label="Task Name" prop="name"></el-table-column>
             <el-table-column label="QTY of Site" prop="num">
               <template slot-scope="{row}">
                 <span style="color: #3EBCD4; cursor: pointer" @click="lookNum(row.code)">{{row.num}}</span>
@@ -74,7 +74,7 @@
                 <span>{{ ['', 'In progress', 'To be started', 'Completed'][+row.status] }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Remarks" prop="remark"></el-table-column>
+            <el-table-column label="Remarks" prop="remarks"></el-table-column>
             <el-table-column label="Creation Time" prop="createTime">
               <template slot-scope="{row}">
                 <span>{{DATE_FORMAT('M/d/yyyy hh:mm:ss', new Date(row.createTime))}}</span>
