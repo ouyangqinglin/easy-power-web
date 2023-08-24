@@ -86,7 +86,7 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="Version" prop="versionNum">
-                <el-input maxLength="8" placeholder="Please enter" v-model="base.versionNum"></el-input>
+                <el-input placeholder="Please enter" v-model="base.versionNum"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
