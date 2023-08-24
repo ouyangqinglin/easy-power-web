@@ -9,16 +9,16 @@
           <div class="date">Currently Open</div>
         </el-col>
         <el-col :span="6">
-          <div class="num">{{ total.year }}</div>
-          <div class="date">This Year</div>
+          <div class="num">{{ total.day }}</div>
+          <div class="date">Today</div>
         </el-col>
         <el-col :span="6">
           <div class="num">{{ total.month }}</div>
           <div class="date">This Month</div>
         </el-col>
         <el-col :span="6">
-          <div class="num">{{ total.day }}</div>
-          <div class="date">today</div>
+          <div class="num">{{ total.year }}</div>
+          <div class="date">This Year</div>
         </el-col>
       </el-row>
     </el-card>
