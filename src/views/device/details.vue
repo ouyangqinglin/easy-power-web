@@ -159,7 +159,7 @@
 
 <script>
 import { baseDevice } from '@/api/device'
-import {versionNew, versionRecord, versionUpgrade} from "@/api/remote";
+import {versionNew, versionRecord, versionUpgrade} from "@/api/remote"
 export default {
   name: "comp-details",
   dicts: ['file_type'],
