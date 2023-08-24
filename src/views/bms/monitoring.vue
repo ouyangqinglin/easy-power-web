@@ -109,7 +109,7 @@
         <el-radio-button label="2">Env_T(°C)</el-radio-button>
         <el-radio-button label="3">MOS_T(°C)</el-radio-button>
       </el-radio-group>
-      <common-flex wrap="wrap" class="flex-container" style="max-height: 250px; overflow-y: scroll">
+      <common-flex wrap="wrap" class="flex-container" style="max-height: 250px; overflow-y: auto">
         <common-flex class="item" v-for="(i, k) of dataList"
                      :class="{activeBorder: curSeries.includes(k)}"
                      :key="k" @click.native="changeSeries(k)">
