@@ -99,9 +99,9 @@ export default {
           roleName: this.item.roleName,
           menuCheckStrictly: false,
           deptCheckStrictly: true,
-          flag: false,
-
+          flag: false
         }
+        this.$modal.loading()
         modifyAuthority(data).then(res => {
           if (+res.code === 200) {
             this.$message({
@@ -111,7 +111,7 @@ export default {
             this.beforeClose()
             this.$emit('refresh')
           }
-        })
+        }).finally(() => this.$modal.closeLoading());
       }
 
     },

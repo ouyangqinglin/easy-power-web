@@ -146,6 +146,7 @@ export default {
       })
     },
     add(data) {
+      this.$modal.loading()
       addAgency(data).then(res => {
         if (+res.code === 200) {
           // Add successfully!
@@ -156,9 +157,10 @@ export default {
           this.beforeClose()
           this.$emit('refresh')
         }
-      })
+      }).finally(() => this.$modal.closeLoading())
     },
     modify(data) {
+      this.$modal.loading()
       modifyAgency(data).then(res => {
         if (+res.code === 200) {
           // Add successfully!
@@ -169,7 +171,7 @@ export default {
           this.beforeClose()
           this.$emit('refresh')
         }
-      })
+      }).finally(() => this.$modal.closeLoading());
     },
   }
 }

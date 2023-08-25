@@ -3,7 +3,7 @@
     <el-card class="comp-site-info-card">
       <common-flex justify="space-between">
         <div class="comp-site-info-card-title">Site Profile</div>
-        <el-button type="primary" @click="modify">Edit</el-button>
+        <el-button v-has-permi="['ati:site:edit']" type="primary" @click="modify">Edit</el-button>
       </common-flex>
       <el-form class="comp-site-info-card-form" :model="base" disabled>
         <el-form-item :prop="i.prop" v-for="i of formList" :key="i.prop">
@@ -271,6 +271,7 @@ export default {
           data.timeZone = this.copyBase.timeZone
           data.region = `${this.region.city},${this.region.province},${this.region.country}`
           if (v) {
+            this.$modal.loading()
             updateSite(data).then(res => {
               if (+res.code === 200) {
                 this.$message({
@@ -280,8 +281,7 @@ export default {
                 this.$emit('refresh')
                 this.beforeClose()
               }
-            })
-
+            }).finally(() => this.$modal.closeLoading());
           }
         })
       })

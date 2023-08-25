@@ -615,7 +615,6 @@ export default {
         timeList
       }
       deviceSet(params).then(res => {
-        console.log('时间设置', res)
         if ([1002, 10030, 10031, 10032, 10033].includes(+res.code)) {
           this.$modal.msgError(res.msg)
           this.getDeviceSet()
@@ -791,6 +790,7 @@ export default {
           this.checkOffList = []
         }
       } else if (type === 2) {
+      } else if (type === 2) {
         if (this.checkMidList.length) {
           this.checkMidList.forEach(i => {
             let indexOf
@@ -896,7 +896,7 @@ export default {
         midPeakList,
         onPeakList
       }
-
+      this.$modal.loading()
       siteSettingSubmit(data).then(res => {
         if (+res.code === 200) {
           this.$message({
@@ -907,7 +907,7 @@ export default {
             this.getSetting()
           }, 500)
         }
-      })
+      }).finally(() => this.$modal.closeLoading());
     },
   }
 }

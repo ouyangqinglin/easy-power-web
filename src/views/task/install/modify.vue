@@ -217,6 +217,7 @@ export default {
           phone: this.base.phone,
           id: this.id
         }
+        this.$modal.loading()
         modifyTask(data).then(res => {
           if (+res.code === 200) {
             // Add successfully!
@@ -228,7 +229,7 @@ export default {
               this.$router.push('/task/install')
             }, 500)
           }
-        })
+        }).finally(() => this.$modal.closeLoading())
       }
     },
   }

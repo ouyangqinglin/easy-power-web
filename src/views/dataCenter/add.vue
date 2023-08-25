@@ -131,12 +131,13 @@ export default {
     submit() {
       this.$refs.formBase.validate(v => {
         if (v) {
+          this.$modal.loading()
           add(this.addBase).then(res => {
             if (+res.code === 200) {
               this.beforeClose()
               this.$emit('refresh')
             }
-          })
+          }).finally(() => this.$modal.closeLoading())
         }
       })
     },

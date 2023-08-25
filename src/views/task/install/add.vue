@@ -186,9 +186,9 @@ export default {
           phone: this.base.phone,
           agencyId: this.base.agencyId
         }
+        this.$modal.loading()
         createTask(data).then(res => {
           if (+res.code === 200) {
-            // Add successfully!
             this.$message({
               type: 'success',
               message: 'Succeeded!'
@@ -197,7 +197,7 @@ export default {
               this.$router.push('/task/install')
             }, 500)
           }
-        })
+        }).finally(() => this.$modal.closeLoading())
       }
     },
   }

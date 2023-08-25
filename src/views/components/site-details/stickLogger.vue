@@ -15,9 +15,6 @@
               <div class="item-body-item-key">{{ k }}</div>
               <div class="item-body-item-value">{{ v || '--' }}</div>
             </div>
-            <div style="padding: 24px 24px 0 0">
-              <el-button type="primary" @click="configNetShow = true">Device Networking</el-button>
-            </div>
           </common-flex>
         </div>
       </common-flex>

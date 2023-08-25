@@ -187,6 +187,7 @@ export default {
           siteCode: this.base.siteCode,
           agencyId: this.base.agencyId
         }
+        this.$modal.loading()
         createTask(data).then(res => {
           if (+res.code === 200) {
             this.$message({
@@ -197,7 +198,7 @@ export default {
               this.$router.push('/task/repair')
             }, 500)
           }
-        })
+        }).finally(() => this.$modal.closeLoading())
       }
     },
     cancel() {

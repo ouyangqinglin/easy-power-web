@@ -128,6 +128,7 @@ export default {
             id: +this.id,
             finishDesc: this.reason.closeReason
           }
+          this.$modal.loading()
           finishClosed(data).then(res => {
             if (+res.code === 200) {
               this.$message({
@@ -138,7 +139,7 @@ export default {
                 this.cancel()
               }, 500)
             }
-          })
+          }).finally(() => this.$modal.closeLoading())
         }
       })
     },

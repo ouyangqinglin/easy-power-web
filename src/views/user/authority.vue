@@ -264,11 +264,12 @@ export default {
     },
     deleteRole(ids) {
       this.$modal.confirm(`Please confirm whether to delete`).then(function() {
+        this.$modal.loading()
         return delRole(ids)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess("Deleted!")
-      }).catch(() => {})
+      }).finally(() => this.$modal.closeLoading())
     },
     beforeClose() {
       this.addShow = false
@@ -285,6 +286,7 @@ export default {
       })
     },
     addSubmit() {
+      this.$modal.loading()
       addRole(this.addInfo).then(res => {
         if (+res.code === 200) {
           this.$message({
@@ -294,9 +296,10 @@ export default {
           this.getList()
           this.beforeClose()
         }
-      })
+      }).finally(() => this.$modal.closeLoading())
     },
     modifySubmit() {
+      this.$modal.loading()
       updateRole(this.modifyInfo).then(res => {
         if (+res.code === 200) {
           this.$message({
@@ -306,7 +309,7 @@ export default {
           this.getList()
           this.beforeCloseModify()
         }
-      })
+      }).finally(() => this.$modal.closeLoading())
     },
     handleQuery() {
       this.queryParams.pageNum = 1

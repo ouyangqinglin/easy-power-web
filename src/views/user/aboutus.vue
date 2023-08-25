@@ -84,6 +84,7 @@ export default {
     save() {
       this.$refs.baseForm.validate(v => {
         if (v) {
+          this.$modal.loading()
           editContact(this.base).then(res => {
             if (+res.code === 200) {
               this.$message({
@@ -91,7 +92,10 @@ export default {
                 message: 'Succeeded!'
               })
             }
-          }).finally(() => this.cancel())
+          }).finally(() => {
+            this.cancel()
+            this.$modal.closeLoading()
+          })
         }
       })
     },

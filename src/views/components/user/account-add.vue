@@ -318,6 +318,7 @@ export default {
             roleIds: this.base.roleIds,
             allowedSourceList: this.base.allowedSource
           }
+          this.$modal.loading()
           addAtiUser(data).then(res => {
             if (+res.code === 200) {
               // Add successfully!
@@ -328,7 +329,7 @@ export default {
               this.beforeClose()
               this.$emit('refresh')
             }
-          })
+          }).finally(() => this.$modal.closeLoading());
         }
       })
     },

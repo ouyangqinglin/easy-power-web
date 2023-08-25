@@ -916,6 +916,7 @@ export default {
       this.delDialogInfo.sn = ''
     },
     delDevice() {
+      this.$modal.loading()
       delDevice(this.delDialogInfo.id).then(res => {
         if (+res.code === 200) {
           this.$message({
@@ -925,7 +926,7 @@ export default {
           this.cancelDelete()
           this.getList()
         }
-      })
+      }).finally(() => this.$modal.closeLoading());
     },
     chooseSn() {
       this.delSubType = 'primary'

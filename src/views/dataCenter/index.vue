@@ -77,11 +77,12 @@ export default {
   methods: {
     deleteItem(id) {
       this.$modal.confirm('Delete the data will cause users in the data center to be unable to log in to the app. Please be cautious!').then(() => {
+        this.$modal.loading()
         return del(id)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess("Deleted!")
-      }).catch(() => {})
+      }).finally(() => this.$modal.closeLoading())
     },
     handleQuery() {
       this.queryParams.pageNum = 1

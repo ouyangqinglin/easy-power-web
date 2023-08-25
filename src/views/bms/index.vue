@@ -119,15 +119,17 @@ export default {
       if (type === 2) {
         this.$modal.confirm(`Please confirm whether to cancel`).then(() => {
           this.changeFollow(data)
-        }).then(() => {
-          this.getList()
-        }).catch(() => {})
+        })
       } else this.changeFollow(data)
     },
     changeFollow(data) {
+      this.$modal.loading()
       editDevice(data).then(res => {
         this.$modal.msgSuccess("Succeeded!")
-      }).finally(() => this.getList())
+      }).finally(() => {
+        this.$modal.closeLoading()
+        this.getList()
+      })
     },
     handleQuery() {
       this.queryParams.pageNum = 1

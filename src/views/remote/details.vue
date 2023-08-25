@@ -377,13 +377,14 @@ export default {
             snList,
             versionId: this.id
           }
+          this.$modal.loading()
           addUpgradeTask(data).then(res => {
             if (+res.code === 200) {
               this.$modal.msgSuccess('Succeed')
               this.getUpgradeTaskList()
               this.closeAdd()
             }
-          })
+          }).finally(() => this.$modal.closeLoading())
         }
       })
     },
@@ -422,13 +423,14 @@ export default {
       let data = {
         taskCode: this.numParams.taskCode
       }
+      this.$modal.loading()
       againUpgrade(data).then(res => {
         if (+res.code === 200) {
           this.$modal.msgSuccess('Succeed')
           this.getNumList()
           this.getUpgradeNum()
         }
-      })
+      }).finally(() => this.$modal.closeLoading())
     },
     resetGetNumList() {
       this.numParams.name = ''
@@ -472,11 +474,12 @@ export default {
       })
     },
     getNumList() {
+      this.$modal.loading()
       upgradeTaskRecord({...this.numParams, versionId: this.id }).then(res => {
         this.numList = res.rows
         this.numParams.total = res.total
         this.show = true
-      })
+      }).finally(() => this.$modal.closeLoading())
     },
     lookNum(code) {
       this.numParams.taskCode = code
