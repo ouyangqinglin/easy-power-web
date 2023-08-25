@@ -243,7 +243,7 @@ export default {
   mounted() {
     this.getRoleList()
     if (+this.$store.state.user.agencyId !== -1) {
-      this.base.agentUid = this.$store.state.user.agencyId
+      this.base.agencyId = this.$store.state.user.agencyId
       this.base.agentName = this.$store.state.user.agency || '--'
     }
   },
