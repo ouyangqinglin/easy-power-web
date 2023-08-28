@@ -99,6 +99,7 @@
             <img class="posa trend" :src="require('@img/site/trend.svg')" alt="">
           </div>
         </common-flex>
+        </common-flex>
       </common-flex>
     </el-card>
     <el-card style="margin-top: 24px">
@@ -363,7 +364,7 @@ export default {
       return [this.voltageList, this.cellTList, this.envTList, this.mosTList][+this.dataType]
     },
     cellFlag() {
-      return this.voltageList.length && this.cellTList.length && this.envTList.length && this.mosTList.length
+      return this.voltageList.length || this.cellTList.length || this.envTList.length || this.mosTList.length
     }
   },
   watch: {

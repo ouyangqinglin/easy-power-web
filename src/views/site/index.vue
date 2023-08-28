@@ -1,33 +1,44 @@
 <template>
   <div class="app-container pages-site">
     <el-card class="pages-site-header" >
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-        <common-flex>
-          <el-form-item label="Site Name：" prop="siteName">
-            <el-input
-              v-model="queryParams.siteName"
-              placeholder="Please enter a name"
-              clearable
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item class="second-item" label="Local time：">
-            <el-date-picker
-              clearable
-              v-model="queryTime"
-              type="date"
-              format="M/d/yyyy"
-              value-format="yyyy-MM-dd"
-              placeholder="">
-            </el-date-picker>
-          </el-form-item>
-          <common-flex style="flex: 1" justify="flex-end">
-            <el-form-item>
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="120px">
+        <el-row type="flex" justify="space-between">
+          <el-col :span="6">
+            <el-form-item label="Site Name：" prop="siteName">
+              <el-input
+                v-model="queryParams.siteName"
+                placeholder="Please enter a name"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="Local time：">
+              <el-date-picker
+                clearable
+                v-model="queryTime"
+                type="date"
+                format="M/d/yyyy"
+                value-format="yyyy-MM-dd"
+                placeholder="">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="Communication Module：" prop="bound" label-width="200px">
+              <el-select v-model="queryParams.bound" placeholder="All">
+                <el-option v-for="i of boundOption" :label="i.label" :value="i.value" :key="i.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <common-flex justify="flex-end">
               <el-button type="primary" @click="handleQuery">Query</el-button>
               <el-button @click="resetQuery">Reset</el-button>
-            </el-form-item>
-          </common-flex>
-        </common-flex>
+            </common-flex>
+          </el-col>
+        </el-row>
       </el-form>
       <el-form :inline="true" size="small">
         <el-form-item class="region" label="Region：" prop="province">
@@ -94,6 +105,12 @@
           </template>
         </el-table-column>
         <el-table-column label="Site Code" align="center" prop="siteCode" min-width="130" />
+        <el-table-column label="Installation Status" align="center" prop="status" min-width="140">
+          <template slot-scope="{ row }">
+            <dict-tag :options="dict.type.site_status" :value="row.status" />
+          </template>
+        </el-table-column>
+        <el-table-column label="Communication Module" align="center" prop="" min-width="180"></el-table-column>
         <el-table-column label="City" align="center" prop="city" show-overflow-tooltip />
         <el-table-column label="Province" align="center" prop="province" min-width="120" show-overflow-tooltip />
         <el-table-column label="Country/Area" align="center" prop="country" min-width="140" show-overflow-tooltip />
@@ -110,11 +127,6 @@
           </template>
         </el-table-column>
         <el-table-column label="Agency" align="center" prop="agentName" min-width="140" show-overflow-tooltip />
-        <el-table-column label="Installation Status" align="center" prop="status" min-width="140">
-          <template slot-scope="{ row }">
-            <dict-tag :options="dict.type.site_status" :value="row.status" />
-          </template>
-        </el-table-column>
         <el-table-column label="Last update Time" align="center" prop="updateTime" min-width="130">
           <template slot-scope="{ row }">
             <span v-if="row.updateTime && row.updateTime !== '--'">{{ UTC_DATE_FORMAT(+row.updateTime, row.timeZone) }}</span>
@@ -166,8 +178,6 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
-      // 显示搜索条件
-      showSearch: true,
       // 总条数
       total: 0,
       // 站点表格数据
@@ -176,8 +186,19 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      boundOption: [
+        {
+          label: 'Bound',
+          value: '1'
+        },
+        {
+          label: 'Unbound',
+          value: '2'
+        },
+      ],
       // 查询参数
       queryParams: {
+        bound: '',
         pageNum: 1,
         pageSize: 10,
         siteName: null,
@@ -401,12 +422,6 @@ export default {
 
 <style lang="scss">
 .pages-site {
-  .el-form-item__label {
-    min-width: 160px;
-  }
-  .second-item {
-    margin-left: 60px;
-  }
   .region {
     margin-bottom: 0;
   }
