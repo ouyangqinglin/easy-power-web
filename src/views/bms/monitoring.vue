@@ -363,7 +363,7 @@ export default {
       return [this.voltageList, this.cellTList, this.envTList, this.mosTList][+this.dataType]
     },
     cellFlag() {
-      return this.voltageList.length && this.cellTList.length && this.envTList.length && this.mosTList.length
+      return this.voltageList.length || this.cellTList.length || this.envTList.length || this.mosTList.length
     }
   },
   watch: {
