@@ -5,7 +5,7 @@
         <img class="device-battery" :src="require('./img/device-stick.svg')" alt=""><br>
         <span class="status-tips" v-if="+curDevInfo.net === 1">on-line</span>
         <span class="status-tips" v-else>off-line</span>
-        <router-link :to="`/device/details/${curDevInfo.id}`"><el-button type="text">Device Remote Upgrade</el-button></router-link>
+        <router-link :to="`/device/details/${curDevInfo.id}`"><el-button type="text">Device Remote<br> Upgrade</el-button></router-link>
       </common-flex>
       <common-flex direction="column" auto class="comp-device-card-content-right-container">
         <div class="item" v-for="i of dataInfo">
