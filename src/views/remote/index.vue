@@ -93,7 +93,7 @@
           <el-row :gutter="24">
             <el-col :span="10">
               <el-form-item label="Firmware Name" prop="name">
-                <el-input placeholder="Please enter" v-model="base.name"></el-input>
+                <el-input placeholder="Please enter" v-model="base.name" maxlength="50"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">

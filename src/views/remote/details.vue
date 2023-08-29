@@ -221,7 +221,7 @@
                width="66%">
       <el-form label-position="top" :model="addModal" :rules="rules" ref="addModal">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="Task Name" prop="name">
               <el-input maxlength="50" type="text" placeholder="Please enter" v-model.trim="addModal.name"></el-input>
             </el-form-item>
