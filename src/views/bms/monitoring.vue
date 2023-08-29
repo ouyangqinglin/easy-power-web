@@ -11,7 +11,6 @@
               value-format="yyyy-MM-dd"
               v-model="dateVal"
               type="date"
-              @change="getData()"
             />
           </div>
           <div style="flex: 1">
@@ -38,9 +37,9 @@
         </common-flex>
       </div>
     </el-drawer>
-    <common-flex @click.native="drawer = base.export" justify="center" align="center" class="pages-monitoring-export" :style="{cursor: base.export ? 'pointer' : 'not-allowed'}">
-      <img :src="require('@img/export.svg')" alt="">
-    </common-flex>
+<!--    <common-flex @click.native="drawer = base.export" justify="center" align="center" class="pages-monitoring-export" :style="{cursor: base.export ? 'pointer' : 'not-allowed'}">-->
+<!--      <img :src="require('@img/export.svg')" alt="">-->
+<!--    </common-flex>-->
     <el-card>
       <strong slot="header">Battery Info</strong>
       <common-flex style="width: 100%">
@@ -109,160 +108,21 @@
         <el-radio-button label="2">Env_T(°C)</el-radio-button>
         <el-radio-button label="3">MOS_T(°C)</el-radio-button>
       </el-radio-group>
-      <common-flex wrap="wrap" class="flex-container" style="max-height: 250px; overflow-y: auto">
+      <common-flex wrap="wrap" class="flex-container" style="max-height: 550px; overflow-y: auto">
         <common-flex class="item" v-for="(i, k) of dataList"
-                     :class="{activeBorder: curSeries.includes(k)}"
-                     :key="k" @click.native="changeSeries(k)">
+                     :key="k">
           <div class="item-label">{{ +dataType ? `T${k+1}(℃)` : `Cell${k+1}(V)` }}</div>
           <div class="item-value">{{ i }}</div>
         </common-flex>
       </common-flex>
-      <div class="chart-container posr" v-if="dataList && dataList.length">
-        <div class="posa date-comp">
-          <el-date-picker
-            format="MM-dd-yyyy"
-            value-format="yyyy-MM-dd"
-            v-model="dateVal"
-            type="date"
-            @change="getData()"
-          />
-        </div>
-        <div class="line" id="line"></div>
-      </div>
-      <div class="chart-container" style="height: 200px" v-else>
-        <no-data />
-      </div>
     </el-card>
     <Trend :show.sync="show" :dataKey="curItem" />
   </div>
 </template>
 
 <script>
-import {cellData, infoDevice} from '@/api/device'
+import {infoDevice} from '@/api/device'
 import Trend from '@/views/components/monitor/trend.vue'
-import * as echarts from "echarts"
-let arr = [], chartIns = null, timer = null, dataList = []
-let viewH = window.innerHeight
-for (let i = 0; i < 24; i++) {
-  arr.push(i)
-}
-const color = ['#f47226', '#4498ee', '#44c333', '#f31926', '#9c28e0', '#56e6e5', '#a96e1e', '#f0e140', '#f785f6', '#113464', '#3261e0', '#b1b22f', '#4e8e2f', '#ebb563', '#f78989', '#a6a9ad']
-const option = {
-  tooltip: {
-    trigger: 'axis',
-    position: function (pt, params) {
-      let xDis
-      if (pt[0] > 960) {
-        if (params[0].value === 'NaN') xDis = pt[0] - 100
-        else xDis = pt[0] - 150
-      }
-      else xDis = pt[0] + 20
-      let height = viewH / 30
-      let offsetTop = Math.max(pt[1] - height * (params.length), 0)
-      if (params.length > 3) {
-        if (params.length > 12 && viewH < 950) return [xDis, offsetTop - 80]
-        else return [xDis, offsetTop]
-      } else return [xDis, pt[1] - 30];
-    },
-    formatter(p) {
-      if (p[0].value === 'NaN') return 'No data'
-      else {
-        let str = ''
-        for(let i = 0; i < p.length; i++) {
-          if (i === 0) str += `${p[i]['name']}<br>${p[i]['marker']}${p[i]['seriesName']}：${p[i]['value']}<br>`
-          else str += `${p[i]['marker']}${p[i]['seriesName']}：${p[i]['value']}<br>`
-        }
-        return str
-      }
-    },
-  },
-  grid: {
-    left: '3%',
-    right: '3%'
-  },
-  xAxis: [
-    {
-      type: 'category',
-      show: false,
-      data: [], // 接受接口时间点数组
-      position: 'bottom',
-    },
-    {
-      type: 'category',
-      data: arr,
-      position: 'bottom',
-      axisLine: {
-        lineStyle: {
-          color: '#E7E7E7'
-        }
-      },
-      axisLabel: {
-        textStyle: {
-          color: '#000'
-        }
-      },
-      axisPointer: {
-        type: 'none',
-      },
-    },
-
-  ],
-  yAxis: {
-    name: 'V',
-    type: 'value',
-    axisLine: {
-      show: false,
-    },
-    axisTick: {
-      show: false
-    },
-    splitLine: {
-      lineStyle: {
-        type: 'dashed'
-      }
-    }
-  },
-  dataZoom: [
-    {
-      showDetail: true,
-      type: 'inside',
-      height: 26,
-      bottom: 2,
-      left: '3%',
-      right: '3%',
-      start: 0,
-      end: 1999
-    },
-    {
-      height: 22,
-      bottom: 15,
-      left: '3%',
-      right: '3%',
-      start: 0,
-      end: 1999,
-      backgroundColor: 'white',
-      dataBackground: {
-        lineStyle: {
-          color: '#E67A73'
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0,
-            color: 'rgba(252, 219, 218, 0.1)'
-          }, {
-            offset: 1,
-            color: 'rgb(255, 255, 255)'
-          }])
-        }
-      },
-      fillerColor: 'rgba(51, 149, 250, 0.06)',
-      handleStyle: {
-        color: '#7A84B0'
-      }
-    }
-  ],
-  series: []
-}
 export default {
   name: "pages-monitoring",
   components: {
@@ -454,16 +314,6 @@ export default {
     this.batCell = [...vList, ...cTList, ...eTList, ...mTList]
     this.getInfo(info, params)
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.changeSize)
-    clearTimeout(timer)
-  },
-  beforeRouteLeave(to, from, next) {
-    if (this.loading) this.loading.close()
-    this.flag = false
-    clearTimeout(timer)
-    next()
-  },
   methods: {
     async getInfo(info, params) {
       await infoDevice(params).then(res => {
@@ -474,7 +324,6 @@ export default {
           else this.infoList[index]['value'] = '--'
         })
       })
-      this.getData()
     },
     cancelExport() {
       this.drawer = false
@@ -510,7 +359,6 @@ export default {
     changeType() {
       if (this.dataList.length) {
         this.curSeries = [0]
-        this.initCanvas()
       } else this.curSeries = []
     },
     requestLoading() {
@@ -521,101 +369,10 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
     },
-    getData() {
-      this.requestLoading()
-      let format = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
-      let params = {
-        sn: localStorage.getItem(`sn${this.$route.params.id}`),
-        siteCode: localStorage.getItem(`siteCode${this.$route.params.id}`),
-        startTimeLong: (new Date(`${format} 00:00:00`).getTime()) / 1000,
-        endTimeLong: (new Date(`${format} 23:59:59`).getTime()) / 1000
-      }
-      cellData(params).then(res => {
-        dataList = res.data
-        this.base.export = !!(Object.keys(dataList[0])).length
-        option.xAxis[0].data = []
-        for(let i = 0; i < dataList.length; i++) {
-          dataList[i].sn = params.sn
-          dataList[i].time = this.DATE_FORMAT('MM-dd-yyyy hh:mm:ss', (+dataList[i].time) * 1000)
-          option.xAxis[0].data.push(dataList[i].timestamp)
-        }
-        this.excelData = dataList
-        this.initCanvas()
-      }).finally(() => {
-        this.loading.close()
-      })
-
-    },
-    initCanvas() {
-      option.series = []
-      if (+this.dataType) {
-        option.yAxis.name = '℃'
-        const list = ['', 'cell', 'env', 'mos']
-        for(let k = 0; k < this.curSeries.length; k++) {
-          let arr = []
-          for(let i = 0; i < dataList.length; i++) {
-            arr.push((+dataList[i][`${list[+this.dataType]}_t${k+1}_avg`]).toFixed(3))
-          }
-          let item = {
-            name: `T${this.curSeries[k]+1}`,
-            symbol: "none",
-            type: 'line',
-            smooth: true,
-            itemStyle: {
-              color: color[this.curSeries[k]]
-            },
-            data: arr // 接受接口数据值数组
-          }
-          option.series.push(item)
-        }
-      } else {
-        option.yAxis.name = 'V'
-        for(let k = 0; k < this.curSeries.length; k++) {
-          // cell_v1_avg
-          let arr = []
-          for(let i = 0; i < dataList.length; i++) {
-            arr.push((+dataList[i][`cell_v${k+1}_avg`]).toFixed(3))
-          }
-          let item = {
-            name: `Cell${this.curSeries[k]+1}`,
-            symbol: "none",
-            type: 'line',
-            smooth: true,
-            itemStyle: {
-              color: color[this.curSeries[k]]
-            },
-            data: arr // 接受接口数据值数组
-          }
-          option.series.push(item)
-        }
-      }
-      if (!this.curSeries.length) return
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-        if(chartIns) chartIns.dispose()
-        this.$nextTick(() => {
-          if (this.flag) {
-            chartIns = echarts.init(document.getElementById('line'))
-            if(chartIns) chartIns.setOption(option)
-            window.addEventListener('resize', this.changeSize)
-          }
-        })
-      }, 500)
-    },
-    changeSize() {
-      if(chartIns) chartIns.resize()
-    },
     changeItem(k) {
       this.curItem = k
       this.show = true
     },
-    changeSeries(k) {
-      if (this.curSeries.includes(k)) {
-        if (this.curSeries.length !== 1) this.curSeries.splice(this.curSeries.indexOf(k), 1)
-      } else this.curSeries.push(k)
-      this.curSeries = this.curSeries.sort((a, b) => a - b)
-      this.initCanvas()
-    }
   }
 }
 </script>
