@@ -9,6 +9,7 @@
             <el-tab-pane label="Device" name="Device"></el-tab-pane>
             <el-tab-pane label="Alarm" name="Alarm"></el-tab-pane>
             <el-tab-pane label="Settings" name="OtherSettings"></el-tab-pane>
+            <el-tab-pane label="Firmware Update" name="Firmware"></el-tab-pane>
           </el-tabs>
         </el-col>
         <el-col :span="12">
@@ -36,11 +37,12 @@ import Overview from '@/views/components/site-details/overview'
 import SiteInfo from '@/views/components/site-details/siteInfo'
 import Device from '@/views/components/site-details/device'
 import Alarm from '@/views/components/site-details/alarm'
+import Firmware from '@/views/components/site-details/firmware'
 import OtherSettings from '@/views/components/site-details/siteSetting'
 
 export default {
   name: "site-details",
-  components: { Overview, SiteInfo, Device, OtherSettings, Alarm },
+  components: { Overview, SiteInfo, Device, OtherSettings, Alarm, Firmware },
   data() {
     return {
       refreshDate: '',
@@ -61,7 +63,8 @@ export default {
         'siteInfo': 'SiteInfo',
         'Device': 'Device',
         'OtherSettings': 'OtherSettings',
-        'Alarm': 'Alarm'
+        'Alarm': 'Alarm',
+        'Firmware': 'Firmware'
       }
       return arr[this.activeName] || 'overview'
     }

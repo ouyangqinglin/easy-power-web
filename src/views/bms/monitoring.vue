@@ -98,6 +98,7 @@
             <img class="posa trend" :src="require('@img/site/trend.svg')" alt="">
           </div>
         </common-flex>
+        </common-flex>
       </common-flex>
     </el-card>
     <el-card style="margin-top: 24px">

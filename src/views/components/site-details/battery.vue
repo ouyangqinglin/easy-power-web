@@ -383,7 +383,6 @@ export default {
   watch: {
     batList: {
       handler(v) {
-        console.log(v)
         // 设备类型 1-1.5 2-mini  3-1.0
         if (v.length) {
           this.batCur = v[0].serialNumber

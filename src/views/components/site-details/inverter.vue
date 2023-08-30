@@ -27,6 +27,23 @@
           </div>
         </common-flex>
       </div>
+      <div class="item">
+        <div class="item-title">Device Current Version</div>
+        <common-flex class="item-body" wrap="wrap">
+          <div class="item-body-item">
+            <div class="item-body-item-key">Software version</div>
+            <div class="item-body-item-value">{{ inverterInfo.currentVersion || '--' }}</div>
+          </div>
+          <div class="item-body-item">
+            <div class="item-body-item-key">Hardware version</div>
+            <div class="item-body-item-value">{{ ['', 'Yes', 'No'][inverterInfo.hardVersion] || '--' }}</div>
+          </div>
+          <div class="item-body-item">
+            <div class="item-body-item-key">Upgrade Time</div>
+            <div class="item-body-item-value">{{ inverterInfo.upgradeTime || '--' }}</div>
+          </div>
+        </common-flex>
+      </div>
       <div class="table posr">
         <div class="table-before posa">Grid</div>
         <div class="table-export posa" v-if="+base.gridStatus === 1">Export</div>
