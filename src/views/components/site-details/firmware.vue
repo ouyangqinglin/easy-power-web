@@ -172,7 +172,8 @@ export default {
     getVersionList() {
       let version = {
         versionNum: this.currentApk.currentVersion || '0.0.0',
-        fileType: this.toastData.fileType
+        fileType: this.toastData.fileType,
+        siteCode: this.$route.query?.siteCode
       }
       versionNew(version).then(res => {
         this.newVersionList = res.data

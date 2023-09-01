@@ -45,7 +45,7 @@
           <el-input maxlength="50" v-model="base.title" type="text" />
         </el-form-item>
         <el-form-item prop="remark" label="Fault Description">
-          <el-input maxlength="2000" v-model="base.remark" show-word-limit type="textarea" />
+          <el-input maxlength="200" v-model="base.remark" show-word-limit type="textarea" />
         </el-form-item>
         <common-flex>
           <el-form-item prop="type" label="Task Type" style="margin-right: 90px">
