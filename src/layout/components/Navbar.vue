@@ -23,7 +23,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/user/profile">
+          <router-link to="/user/profile" v-if="userName !== 'white@163.com'">
             <el-dropdown-item>My Details</el-dropdown-item>
           </router-link>
 <!--          <el-dropdown-item @click.native="setting = true">-->
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
@@ -61,6 +61,9 @@ export default {
     RuoYiDoc
   },
   computed: {
+    ...mapState({
+      'userName': (state) => state.user.name
+    }),
     ...mapGetters([
       'sidebar',
       'avatar',

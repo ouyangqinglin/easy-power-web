@@ -110,9 +110,9 @@
                     <el-col :span="4">
                       <el-form-item prop="25" label="Battery awaken"><el-switch v-model="deviceBase[25]" @change="setDevice(25)" /></el-form-item>
                     </el-col>
-                    <el-col :span="4">
-                      <el-form-item prop="13" label="Anti reflux"><el-switch v-model="deviceBase[13]" @change="setDevice(13)" /></el-form-item>
-                    </el-col>
+<!--                    <el-col :span="4">-->
+<!--                      <el-form-item prop="13" label="Anti reflux"><el-switch v-model="deviceBase[13]" @change="setDevice(13)" /></el-form-item>-->
+<!--                    </el-col>-->
                     <el-col :span="4">
                       <el-form-item prop="31" label="ARC enable"><el-switch v-model="deviceBase[31]" @change="setDevice(31)" /></el-form-item>
                     </el-col>

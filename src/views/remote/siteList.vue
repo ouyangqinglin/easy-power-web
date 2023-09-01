@@ -6,7 +6,7 @@
     <el-form @submit.native.prevent :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <common-flex justify="space-between">
         <div>
-          <el-form-item label="Site" prop="siteName">
+          <el-form-item label="Site:" prop="siteName">
             <el-input
               v-model="queryParams.siteName"
               placeholder="Please enter"
@@ -15,7 +15,7 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="Agency" prop="agency">
+          <el-form-item label="Agency:" prop="agency">
             <el-input
               v-model="queryParams.agency"
               placeholder="Please enter"

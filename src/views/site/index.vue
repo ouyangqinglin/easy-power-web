@@ -26,8 +26,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="Communication Module：" prop="bound" label-width="200px">
-              <el-select v-model="queryParams.bound" placeholder="All">
+            <el-form-item label="Communication Module：" prop="loggerExist" label-width="200px">
+              <el-select v-model="queryParams.loggerExist" placeholder="All">
                 <el-option v-for="i of boundOption" :label="i.label" :value="i.value" :key="i.value"></el-option>
               </el-select>
             </el-form-item>
@@ -110,7 +110,11 @@
             <dict-tag :options="dict.type.site_status" :value="row.status" />
           </template>
         </el-table-column>
-        <el-table-column label="Communication Module" align="center" prop="" min-width="180"></el-table-column>
+        <el-table-column label="Communication Module" align="center" prop="" min-width="180">
+          <template slot-scope="{ row }">
+            <span>{{['Unbound', 'Bound'][+row.loggerExist]}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="City" align="center" prop="city" show-overflow-tooltip />
         <el-table-column label="Province" align="center" prop="province" min-width="120" show-overflow-tooltip />
         <el-table-column label="Country/Area" align="center" prop="country" min-width="140" show-overflow-tooltip />
@@ -189,16 +193,16 @@ export default {
       boundOption: [
         {
           label: 'Bound',
-          value: '1'
+          value: 1
         },
         {
           label: 'Unbound',
-          value: '2'
+          value: 0
         },
       ],
       // 查询参数
       queryParams: {
-        bound: '',
+        loggerExist: '',
         pageNum: 1,
         pageSize: 10,
         siteName: null,
@@ -308,7 +312,7 @@ export default {
       listSite(this.queryParams).then(response => {
         response.rows.forEach(i => {
           Object.keys(i).forEach(k => {
-            if (!i[k]) i[k] = '--'
+            if (!i[k] && k !== 'loggerExist') i[k] = '--'
           })
         })
         this.siteList = response.rows;

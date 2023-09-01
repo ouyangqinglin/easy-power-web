@@ -18,9 +18,11 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label="Firmware package:" prop="name" label-width="160px">
-              <el-link :href="`${baseUrl}${base.path}`" :underline="false" target="_blank">
-                <span style="color: #3EBCD4">{{ base.name }}</span>
-              </el-link>
+              <el-tooltip :content="base.name" placement="top">
+                <el-link :href="`${baseUrl}${base.path}`" :underline="false" target="_blank">
+                  <div style="width: 400px; color: #3EBCD4" class="ellipsis">{{base.name}}</div>
+                </el-link>
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="9">
@@ -96,7 +98,7 @@
               <el-input clearable prefix-icon="el-icon-search" @input="searchList()" v-model.trim="queryParams.name" placeholder="Please enter a task name or site name"></el-input>
             </el-col>
             <el-col :span="2">
-              <el-button type="primary" @click="excelExport"><svg-icon style="width: 20px" icon-class="download"></svg-icon></el-button>
+              <el-button type="primary" @click="excelExport"><i style="font-size: 16px" class="el-icon-download"></i></el-button>
             </el-col>
           </el-row>
           <el-table style="margin-top: 20px" :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
