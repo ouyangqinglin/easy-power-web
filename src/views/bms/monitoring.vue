@@ -212,7 +212,6 @@ export default {
       cellTList: [],
       envTList: [],
       mosTList: [],
-      loading: null,
       flag: true
     }
   },
@@ -361,14 +360,6 @@ export default {
       if (this.dataList.length) {
         this.curSeries = [0]
       } else this.curSeries = []
-    },
-    requestLoading() {
-      this.loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
     },
     changeItem(k) {
       this.curItem = k
