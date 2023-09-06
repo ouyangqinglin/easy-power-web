@@ -38,7 +38,7 @@
             <dict-tag :options="dict.type.file_type" :value="row.fileType"></dict-tag>
           </template>
         </el-table-column>
-        <el-table-column label="Version" prop="versionNum"></el-table-column>
+        <el-table-column label="Version" prop="versionNum" min-width="130"></el-table-column>
         <el-table-column label="Firmware Name" prop="name" show-overflow-tooltip min-width="140"></el-table-column>
         <el-table-column label="Firmware package" prop="name" show-overflow-tooltip min-width="140">
           <template slot-scope="{ row }">
@@ -54,10 +54,11 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="Upload by" prop="updateBy" min-width="150"></el-table-column>
-        <el-table-column fixed="right" label="Operation" width="100">
+        <el-table-column label="Upload by" prop="updateBy" min-width="100"></el-table-column>
+        <el-table-column fixed="right" label="Operation" min-width="130">
           <template slot-scope="{ row }">
-            <router-link :to="`/remote/details/${row.id}`"><el-button type="text">Details</el-button></router-link>
+            <el-button type="text"><router-link :to="`/remote/details/${row.id}`">Details</router-link></el-button>
+            <el-button type="text" v-hasPermi="['ati:version:remove']" @click="handleDelete(row)">Delete</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -127,7 +128,7 @@
 </template>
 
 <script>
-import {uploadFile, versionList} from "@/api/remote";
+import {uploadFile, versionList, delRemote} from "@/api/remote";
 
 export default {
   name: "pages-remote",
@@ -206,6 +207,16 @@ export default {
     this.getList()
   },
   methods: {
+    handleDelete(row) {
+      const ids = row.id
+      this.$modal.confirm(`Please confirm whether to delete`).then(() => {
+        this.$modal.loading()
+        return delRemote(ids);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("Deleted!");
+      }).finally(() => this.$modal.closeLoading());
+    },
     changeFile() {
       this.fileItem = document.getElementById('file')
       let file = this.fileItem.files
