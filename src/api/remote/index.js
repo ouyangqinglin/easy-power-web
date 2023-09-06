@@ -95,3 +95,10 @@ export function addUpgradeTask(data) {
   })
 }
 
+export function delRemote(id) {
+  return request({
+    url: '/version/' + id,
+    method: 'delete'
+  })
+}
+

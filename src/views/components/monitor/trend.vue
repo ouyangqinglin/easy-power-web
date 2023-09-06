@@ -12,10 +12,20 @@
           value-format="yyyy-MM-dd"
           v-model="dateVal"
           type="date"
-          @change="getData('loading')"
+          @change="getData()"
         />
       </div>
-      <div class="canvas" id="charts"></div>
+      <el-skeleton style="width: 100%; height: 100%" :loading="charting" animated>
+        <template slot="template">
+          <el-skeleton-item
+            variant="rect"
+            style="width: 100%; height: 40vh;"
+          />
+        </template>
+        <template>
+          <div class="canvas" id="charts"></div>
+        </template>
+      </el-skeleton>
     </div>
   </el-dialog>
 </div>
@@ -154,6 +164,7 @@ export default {
       title: ['SOC', 'Power', 'Voltage', 'Current', 'Cell Highest_T', 'Cell Lowest_T'],
       dateVal,
       waitLoading: null,
+      charting: true,
       params: {
         sn: '',
         startTimeLong: 0,
@@ -186,37 +197,37 @@ export default {
       }
       option.series[0].data = arrY
       this.$nextTick(() => {
-        if (chartIns) chartIns.dispose()
-        chartIns = echarts.init(document.getElementById('charts'))
-        chartIns.setOption(option)
-        window.addEventListener('resize', this.changeSize)
+        if (chartIns) {
+          chartIns.dispose()
+          chartIns = null
+        }
+        this.$nextTick(() => {
+          chartIns = echarts.init(document.getElementById('charts'))
+          chartIns.setOption(option)
+          window.addEventListener('resize', this.changeSize)
+        })
       })
     },
     changeSize() {
-      chartIns.resize()
+      if (chartIns) chartIns.resize()
     },
     beforeClose() {
       this.$emit('update:show', false)
       window.removeEventListener('resize', this.changeSize)
     },
-    requestLoading() {
-      this.waitLoading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-    },
-    getData(v) {
-      if (v) this.requestLoading()
+    getData() {
+      if (chartIns) {
+        chartIns.dispose()
+        chartIns = null
+      }
+      this.charting = true
       let format = this.DATE_FORMAT('yyyy-MM-dd', this.dateVal)
       this.params.startTimeLong = (new Date(`${format} 00:00:00`).getTime()) / 1000
       this.params.endTimeLong = (new Date(`${format} 23:59:59`).getTime()) / 1000
       batHistoryData(this.params).then(res => {
+        this.charting = false
         dataList = res.data
         if(+this.dataKey >= 0) this.initChart(+this.dataKey)
-      }).finally(() => {
-        if (v) this.waitLoading.close()
       })
     },
   }

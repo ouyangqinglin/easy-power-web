@@ -175,7 +175,17 @@
           </el-date-picker>
         </common-flex>
       </common-flex>
-      <div id="batteryChart" class="batteryChart"></div>
+      <el-skeleton style="width: 100%; height: 45vh" :loading="loading" animated>
+        <template slot="template">
+          <el-skeleton-item
+            variant="rect"
+            style="width: 100%; height: 45vh;"
+          />
+        </template>
+        <template slot="default">
+          <div id="batteryChart" class="batteryChart"></div>
+        </template>
+      </el-skeleton>
     </common-flex>
   </div>
 </template>
@@ -185,7 +195,6 @@ import { batEnergy, stopCharge, batHistoryData, pvHistoryData, orderRes } from '
 import * as echarts from "echarts";
 let batteryInstance = null
 let arr = [], arr1 = [], arr5 = [], batData = []
-let timer = null
 for (let i = 1; i < 25; i++) {
   arr.push(i)
 }
@@ -366,9 +375,8 @@ export default {
   },
   data() {
     const that = this
-
     return {
-      waitLoading: '',
+      loading: false,
       batListInstance: [],
       batEnergy: {},
       batCur: '',
@@ -398,7 +406,6 @@ export default {
       handler(v) {
         if (v === 'first') {
           this.$nextTick(() => {
-            batteryInstance = echarts.init(document.getElementById('batteryChart'))
             this.getBatHisData()
             window.addEventListener('resize', this.changeSize)
           })
@@ -411,15 +418,11 @@ export default {
     this.getBatEnergy()
   },
   beforeDestroy() {
-    clearTimeout(timer)
     window.removeEventListener('resize', this.changeSize)
   },
   methods: {
     changeSize() {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-        if (batteryInstance) batteryInstance.resize()
-      }, 500)
+      if (batteryInstance) batteryInstance.resize()
     },
     initBatInstance() {
       this.batListInstance = []
@@ -434,14 +437,6 @@ export default {
         }
         this.batListInstance[i].setOption(optionBatSoc)
       }
-    },
-    requestLoading() {
-      this.waitLoading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
     },
     changeBatDate() {
       this.getBatHisData()
@@ -506,12 +501,21 @@ export default {
         optionBat.series.push(itemTwo)
       }
       optionBat.series.push(itemOne)
-      if (batteryInstance) batteryInstance.dispose()
-      batteryInstance = echarts.init(document.getElementById('batteryChart'))
-      batteryInstance.setOption(optionBat)
+      if (batteryInstance) {
+        batteryInstance.dispose()
+        batteryInstance= null
+      }
+      this.$nextTick(() => {
+        batteryInstance = echarts.init(document.getElementById('batteryChart'))
+        batteryInstance.setOption(optionBat)
+      })
     },
     getBatHisData() {
-      this.requestLoading()
+      this.loading = true
+      if (batteryInstance) {
+        batteryInstance.dispose()
+        batteryInstance= null
+      }
       let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.batteryHis.dateVal)
       let params = {
         sn: this.batCur,
@@ -520,6 +524,7 @@ export default {
         endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
       }
       batHistoryData(params).then(res => {
+        this.loading = false
         batData = res.data
         arr5 = []
         for(let i = 0; i < res.data.length; i++) {
@@ -527,8 +532,6 @@ export default {
         }
         optionBat.xAxis[0].data = arr5
         this.changeBatType()
-      }).finally(() => {
-        this.waitLoading.close()
       })
     },
     getBatEnergy() {

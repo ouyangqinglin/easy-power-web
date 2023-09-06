@@ -125,6 +125,12 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
+        <el-table-column v-if="+queryParams.recoveryStatus === 1" label="Recovery Time" prop="recoveryTime" min-width="160">
+          <template slot-scope="{ row }">
+            <span v-if="row.recoveryTime && row.recoveryTime !== '--'">{{ DATE_FORMAT('M/d/yyyy hh:mm', +row.recoveryTime*1000) }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"

@@ -18,7 +18,7 @@
             <el-input v-model="base[i.prop]"></el-input>
           </template>
         </el-form-item>
-        <el-form-item label="timeZone" prop="timeZone"><el-input v-model="base.timeZone"></el-input></el-form-item>
+        <el-form-item label="Time Zone" prop="timeZone"><el-input v-model="base.timeZone"></el-input></el-form-item>
       </el-form>
     </el-card>
     <el-card class="comp-site-info-card">
@@ -61,7 +61,7 @@
             <el-input :disabled="index > 0 && index < 5" v-model="copyBase[i.prop]"></el-input>
           </template>
         </el-form-item>
-        <el-form-item label="timeZone" style="margin-right: 60px" prop="timeZone">
+        <el-form-item label="Time Zone" style="margin-right: 60px" prop="timeZone">
           <el-select style="width: 100%" v-model="copyBase.timeZone">
             <el-option v-for="i of timeZoneArr" :label="i.label" :value="i.timeZone" :key="i.id"></el-option>
           </el-select>

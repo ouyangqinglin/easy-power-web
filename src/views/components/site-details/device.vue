@@ -105,7 +105,19 @@
               <div class="pvChart" v-if="!this.navBar['Inverter']">
                 <no-data />
               </div>
-              <div v-else id="pvChart" class="pvChart"></div>
+              <template v-else>
+                <el-skeleton style="width: 100%; height: 55vh" :loading="loading" animated>
+                  <template slot="template">
+                    <el-skeleton-item
+                      variant="rect"
+                      style="width: 100%; height: 55vh;"
+                    />
+                  </template>
+                  <template slot="default">
+                    <div id="pvChart" class="pvChart"></div>
+                  </template>
+                </el-skeleton>
+              </template>
             </div>
           </common-flex>
         </div>
@@ -742,6 +754,7 @@ export default {
       delSubType: '',
       localChangeList: {},
       waitLoading: '',
+      loading: true,
       addSubType: true,
       dynamicSoc: 0
     }
@@ -760,7 +773,6 @@ export default {
       if (v === 'second') {
         if (!this.navBar['Inverter']) return
         this.$nextTick(() => {
-          pvInstance = echarts.init(document.getElementById('pvChart'))
           this.getPvHisData()
           window.addEventListener('resize', this.changeSize)
         })
@@ -893,11 +905,23 @@ export default {
       optionPv.series[1].data = pv2
       optionPv.series[2].data = pv3
       optionPv.series[3].data = pv4
-      pvInstance.setOption(optionPv)
+      if (pvInstance) {
+        pvInstance.dispose()
+        pvInstance = null
+      }
+      this.$nextTick(() => {
+        pvInstance = echarts.init(document.getElementById('pvChart'))
+        pvInstance.setOption(optionPv)
+      })
+
       console.log('changePv')
     },
     getPvHisData() {
-      this.requestLoading()
+      this.loading = true
+      if (pvInstance) {
+        pvInstance.dispose()
+        pvInstance = null
+      }
       let formatTime = this.DATE_FORMAT('yyyy-MM-dd', this.pvHis.dateVal)
       let params = {
         sn: this.sn,
@@ -906,7 +930,7 @@ export default {
         endTimeLong: (this.ISD_TIMESTAMP(`${formatTime} 23:59:59`, this.base.timeZone)) / 1000,
       }
       pvHistoryData(params).then(res => {
-        // console.log('hisPv', res.data)
+        this.loading = false
         arrX2 = []
         pvData = res.data
         for(let i = 0; i < pvData.length; i++) {
@@ -914,8 +938,6 @@ export default {
         }
         optionPv.xAxis[0].data = arrX2
         this.changePvType()
-      }).finally(() => {
-        this.waitLoading.close()
       })
     },
     changeSize() {

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container pages-site">
     <el-card class="pages-site-header" >
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="120px">
-        <el-row type="flex" justify="space-between">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
+        <el-row>
           <el-col :span="6">
             <el-form-item label="Site Name：" prop="siteName">
               <el-input
@@ -14,6 +14,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
+            <el-form-item label="Site Code：" prop="siteCode">
+              <el-input
+                v-model="queryParams.siteCode"
+                placeholder="Please enter a name"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
             <el-form-item label="Local time：">
               <el-date-picker
                 clearable
@@ -25,10 +35,63 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="7">
             <el-form-item label="Communication Module：" prop="loggerExist" label-width="200px">
               <el-select v-model="queryParams.loggerExist" placeholder="All">
                 <el-option v-for="i of boundOption" :label="i.label" :value="i.value" :key="i.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <el-form :inline="true" size="small">
+        <el-row type="flex" justify="space-between">
+          <el-col :span="20">
+            <el-form-item class="region" label="Region：" prop="province">
+              <el-select
+                :disabled="!(queryParams.province && queryParams.country)"
+                v-model="queryParams.city"
+                placeholder="Please Select City"
+                clearable
+                @keyup.enter.native="handleQuery"
+              >
+                <el-option
+                  v-for="(item, index) in cityOption"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
+              <el-select
+                :disabled="!queryParams.country"
+                v-model="queryParams.province"
+                placeholder="Please Select province"
+                clearable
+                @keyup.enter.native="handleQuery"
+              >
+                <el-option
+                  v-for="(item, index) in provinceOption"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
+              <el-select
+                v-model="queryParams.country"
+                class="area-select"
+                placeholder="Please Select Country/Area"
+                clearable
+                @keyup.enter.native="handleQuery"
+              >
+                <el-option
+                  v-for="(item, index) in countryOption"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -39,55 +102,6 @@
             </common-flex>
           </el-col>
         </el-row>
-      </el-form>
-      <el-form :inline="true" size="small">
-        <el-form-item class="region" label="Region：" prop="province">
-          <el-select
-            :disabled="!(queryParams.province && queryParams.country)"
-            v-model="queryParams.city"
-            placeholder="Please Select City"
-            clearable
-            @keyup.enter.native="handleQuery"
-          >
-            <el-option
-              v-for="(item, index) in cityOption"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled">
-            </el-option>
-          </el-select>
-          <el-select
-            :disabled="!queryParams.country"
-            v-model="queryParams.province"
-            placeholder="Please Select province"
-            clearable
-            @keyup.enter.native="handleQuery"
-          >
-            <el-option
-              v-for="(item, index) in provinceOption"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled">
-            </el-option>
-          </el-select>
-          <el-select
-            v-model="queryParams.country"
-            class="area-select"
-            placeholder="Please Select Country/Area"
-            clearable
-            @keyup.enter.native="handleQuery"
-          >
-            <el-option
-              v-for="(item, index) in countryOption"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled">
-            </el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
     </el-card>
     <div style="height: 20px"></div>

@@ -241,7 +241,7 @@
         </div>
       </el-row>
       <el-table style="margin-top: 20px" :header-cell-style="{'text-align': 'center'}" :cell-style="{'text-align': 'center'}"
-                :data="siteList" @selection-change="addSelect" max-height="460px"
+                :data="siteList" @selection-change="addSelect" max-height="530"
       >
         <el-table-column
           v-if="deleteShow"
@@ -320,6 +320,7 @@ export default {
         pageSize: 10
       },
       queryParams: {
+        versionId: '',
         total: 0,
         name: '',
         pageNum: 1,
@@ -469,7 +470,7 @@ export default {
     },
     getUpgradeTaskList() {
       this.loading = true
-      upgradeTaskList(this.params).then(res => {
+      upgradeTaskList({...this.params, versionId: this.id }).then(res => {
         this.taskList = res.rows
         this.params.total = res.total
         this.loading = false
