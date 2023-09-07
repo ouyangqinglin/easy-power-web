@@ -431,9 +431,11 @@ export default {
         if (+res.code === 200) {
           this.$modal.msgSuccess('Succeed')
           this.getNumList()
-          this.getUpgradeNum()
         }
-      }).finally(() => this.$modal.closeLoading())
+      }).finally(() => {
+        this.getUpgradeNum()
+        this.$modal.closeLoading()
+      })
     },
     resetGetNumList() {
       this.numParams.name = ''
