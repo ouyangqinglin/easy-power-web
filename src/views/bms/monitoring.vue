@@ -714,6 +714,7 @@ export default {
     },
     changeType() {
       this.curSeries = [0]
+      option.yAxis.name = +this.dataType ? '°C' : 'V'
       if ([0,1].includes(+this.dataType)) this.initCanvas()
     },
     changeItem(k) {
