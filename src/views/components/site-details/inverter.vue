@@ -32,7 +32,7 @@
         <common-flex class="item-body" wrap="wrap">
           <div class="item-body-item">
             <div class="item-body-item-key">Software Version</div>
-            <div class="item-body-item-value">{{ inverterInfo.currentVersion || '--' }}</div>
+            <div class="item-body-item-value">{{ inverterInfo.version || '--' }}</div>
           </div>
           <div class="item-body-item">
             <div class="item-body-item-key">Hardware Version</div>

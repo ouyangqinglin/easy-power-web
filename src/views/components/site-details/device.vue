@@ -679,7 +679,7 @@ export default {
         {
           'title': 'Device Current Version',
           'info': {
-            'Software Version': 'currentVersion',
+            'Software Version': 'version',
             'Hardware Version': 'hardVersion',
             'Upgrade Time': 'upgradeTime',
           },
@@ -745,7 +745,7 @@ export default {
         {
           'title': 'Device Current Version',
           'info': {
-            'Software Version': 'currentVersion',
+            'Software Version': 'version',
             'Hardware Version': 'hardVersion',
             'Upgrade Time': 'upgradeTime',
           },
@@ -1369,7 +1369,7 @@ export default {
           [
             {
               key: 'Software Version',
-              value: 'currentVersion'
+              value: 'version'
             },      {
             key: 'Hardware Version',
             value: 'hardVersion'
@@ -1534,7 +1534,7 @@ export default {
           [
             {
               key: 'Software Version',
-              value: 'currentVersion'
+              value: 'version'
             },      {
               key: 'Hardware Version',
               value: 'hardVersion'

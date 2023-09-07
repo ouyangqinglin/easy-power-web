@@ -69,7 +69,7 @@
         <el-row :gutter="36">
           <el-col :span="6">
             <el-form-item label="Software Version" prop="currentVersion">
-              <el-input v-model="currentApk.currentVersion"></el-input>
+              <el-input v-model="currentApk.version"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
