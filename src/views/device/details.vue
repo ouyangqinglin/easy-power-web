@@ -68,12 +68,12 @@
       <el-form disabled :model="currentApk">
         <el-row :gutter="36">
           <el-col :span="6">
-            <el-form-item label="Software version" prop="currentVersion">
+            <el-form-item label="Software Version" prop="currentVersion">
               <el-input v-model="currentApk.currentVersion"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Hardware version" prop="hardVersion">
+            <el-form-item label="Hardware Version" prop="hardVersion">
               <el-input v-model="currentApk.hardVersion"></el-input>
             </el-form-item>
           </el-col>

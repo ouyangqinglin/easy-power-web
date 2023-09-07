@@ -172,7 +172,7 @@
             <el-form-item label="Upgrading:"><span style="color: #3EBCD4">{{ upgradingNum }}</span></el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item label="Fail:"><span style="color: #3EBCD4">{{ failNum }}</span>  <el-link @click="againUpgradeTask" type="primary" style="margin-bottom: 3px">  Click here to Upgrade again</el-link></el-form-item>
+            <el-form-item label="Fail:"><span style="color: #3EBCD4">{{ failNum }}</span>  <el-link :disabled="!failNum" @click="againUpgradeTask" type="primary" style="margin-bottom: 3px">  Click here to Upgrade again</el-link></el-form-item>
           </el-col>
         </el-row>
       </el-form>
