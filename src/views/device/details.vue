@@ -132,7 +132,7 @@ export default {
   data() {
     return {
       currentApk: {
-        currentVersion: '',
+        version: '',
         hardVersion: '',
         upgradeTime: ''
       },
@@ -174,7 +174,7 @@ export default {
       this.base = res.data
       this.getList()
       if (res.data.upgradeTime) this.currentApk.upgradeTime = this.DATE_FORMAT('M/d/yyyy hh:mm:ss', (+res.data.upgradeTime) * 1000)
-      this.currentApk.currentVersion = res.data.version
+      this.currentApk.version = res.data.version
       this.currentApk.hardVersion = res.data.hardVersion
     })
   },
