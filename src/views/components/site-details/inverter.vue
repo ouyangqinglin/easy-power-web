@@ -31,11 +31,11 @@
         <div class="item-title">Device Current Version</div>
         <common-flex class="item-body" wrap="wrap">
           <div class="item-body-item">
-            <div class="item-body-item-key">Software version</div>
+            <div class="item-body-item-key">Software Version</div>
             <div class="item-body-item-value">{{ inverterInfo.currentVersion || '--' }}</div>
           </div>
           <div class="item-body-item">
-            <div class="item-body-item-key">Hardware version</div>
+            <div class="item-body-item-key">Hardware Version</div>
             <div class="item-body-item-value">{{ ['', 'Yes', 'No'][inverterInfo.hardVersion] || '--' }}</div>
           </div>
           <div class="item-body-item">
