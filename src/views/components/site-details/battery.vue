@@ -195,7 +195,7 @@ import { batEnergy, stopCharge, batHistoryData, pvHistoryData, orderRes } from '
 import * as echarts from "echarts";
 let batteryInstance = null
 let arr = [], arr1 = [], arr5 = [], batData = []
-for (let i = 1; i < 25; i++) {
+for (let i = 0; i < 24; i++) {
   arr.push(i)
 }
 const optionBat = {

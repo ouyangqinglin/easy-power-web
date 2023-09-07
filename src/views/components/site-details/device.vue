@@ -312,7 +312,7 @@ let timer = null
 let arr = []
 let arrX1 = [], arrX2 = [], pv1 = [], pv2 = [], pv3 = [], pv4 = []
 let pvData = []
-for (let i = 1; i < 25; i++) {
+for (let i = 0; i < 24; i++) {
   arr.push(i)
   arrX1.push(i)
 }
@@ -1390,7 +1390,8 @@ export default {
                 resStr = `${+(this.curDevInfo.periodDay)} Days ${+(this.curDevInfo.periodMonth)} Months ${+(this.curDevInfo.periodYear)} Year`
                 this.batteryInfo[index]['info'][k.key] = resStr
               }
-            } else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
+            } else if (k.key === 'Upgrade Time') this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? this.DATE_FORMAT('M/d/yyyy hh:mm', this.curDevInfo[k.value] * 1000) : '--'
+            else this.batteryInfo[index]['info'][k.key] = this.curDevInfo[k.value]
           })
         })
       } else if (+this.active === 3) {
@@ -1545,7 +1546,8 @@ export default {
         ]
         arr.forEach((i, index) => {
           i.forEach(k => {
-            this.stickInfo[index]['info'][k.key] = this.curDevInfo[k.value]
+          if (k.key === 'Upgrade Time') this.stickInfo[index]['info'][k.key] = this.curDevInfo[k.value] ? this.DATE_FORMAT('M/d/yyyy hh:mm', this.curDevInfo[k.value] * 1000) : '--'
+          else this.stickInfo[index]['info'][k.key] = this.curDevInfo[k.value]
           })
         })
       } else if (+this.active === 1) {
