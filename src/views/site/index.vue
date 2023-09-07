@@ -7,7 +7,7 @@
             <el-form-item label="Site Name：" prop="siteName">
               <el-input
                 v-model="queryParams.siteName"
-                placeholder="Please enter a name"
+                placeholder="Please enter"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
@@ -17,7 +17,7 @@
             <el-form-item label="Site Code：" prop="siteCode">
               <el-input
                 v-model="queryParams.siteCode"
-                placeholder="Please enter a name"
+                placeholder="Please enter"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
@@ -216,24 +216,14 @@ export default {
       ],
       // 查询参数
       queryParams: {
+        startTime: '',
+        endTime: '',
         loggerExist: '',
         pageNum: 1,
         pageSize: 10,
         siteName: null,
         address: null,
-        cover: null,
-        dayProduce: null,
-        monthProduce: null,
-        yearProduce: null,
-        allProduce: null,
-        peakPower: null,
-        status: null,
-        uid: null,
-        installUid: null,
         siteCode: null,
-        latitude: null,
-        longitude: null,
-        taskId: null,
         nickName: null,
         country: null,
         city: null,
@@ -345,22 +335,7 @@ export default {
         id: null,
         siteName: null,
         address: null,
-        cover: null,
-        dayProduce: null,
-        monthProduce: null,
-        yearProduce: null,
-        allProduce: null,
-        updateTime: null,
-        peakPower: null,
-        status: 0,
-        uid: null,
-        installUid: null,
         siteCode: null,
-        latitude: null,
-        longitude: null,
-        delFlag: null,
-        taskId: null,
-        nickName: null,
         country: null,
         city: null,
         province: null

@@ -8,6 +8,15 @@
         <common-flex align="center">
           <div style="flex: 1">
             <el-date-picker
+              v-if="exportInfo"
+              format="MM-dd-yyyy"
+              value-format="yyyy-MM-dd"
+              v-model="dateVal"
+              type="date"
+              @change="changeExportDate"
+            />
+            <el-date-picker
+              v-if="exportCell"
               format="MM-dd-yyyy"
               value-format="yyyy-MM-dd"
               v-model="exportDateVal"
@@ -33,7 +42,8 @@
         </div>
         <common-flex justify="center" style="margin-top: 60px">
           <download-excel :data="excelData" :fields="excelHead" :name="excelName">
-            <el-button type="primary">Export</el-button>
+            <el-button type="primary" v-if="exportInfo" :disabled="!flag">Export</el-button>
+            <el-button type="primary" v-if="exportCell" :disabled="exportCellDisabled">Export</el-button>
           </download-excel>
           <el-button style="margin-left: 24px" @click="cancelExport">Cancel</el-button>
         </common-flex>
@@ -42,7 +52,7 @@
     <el-card>
       <common-flex slot="header" justify="space-between" align="center">
         <strong>Battery Info</strong>
-        <el-button type="primary" @click="drawerInfo" :disabled="!flag"><i style="font-size: 16px" class="el-icon-download"></i></el-button>
+        <el-button type="primary" @click="drawerInfo"><i style="font-size: 16px" class="el-icon-download"></i></el-button>
       </common-flex>
       <common-flex style="width: 100%">
         <common-flex align="center" class="left">
@@ -80,7 +90,7 @@
               <div class="value">{{ base.hardVersion || '--' }}</div>
             </el-col>
             <el-col :span="6">
-              <div class="label">software Version</div>
+              <div class="label">Software Version</div>
               <div class="value">{{ base.version || '--' }}</div>
             </el-col>
             <el-col :span="6">
@@ -105,7 +115,7 @@
     <el-card style="margin-top: 24px">
       <common-flex v-if="cellFlag" slot="header" justify="space-between" align="center">
         <strong>Battery cells monitoring</strong>
-        <el-button type="primary" @click="drawerCell" :disabled="exportCellDisabled"><i style="font-size: 16px" class="el-icon-download"></i></el-button>
+        <el-button type="primary" @click="drawerCell"><i style="font-size: 16px" class="el-icon-download"></i></el-button>
       </common-flex>
       <el-radio-group v-model="dataType" style="margin-bottom: 30px;" @change="changeType">
         <el-radio-button label="0">Voltage(V)</el-radio-button>
@@ -182,12 +192,11 @@ let viewH = window.innerHeight
 for (let i = 0; i < 24; i++) {
   arr.push(i)
 }
-const color = ['#f47226', '#4498ee', '#44c333', '#f31926']
+const color = ['#FFB968', '#3DAABF', '#8BEA91', '#638AE3']
 const option = {
   tooltip: {
     trigger: 'axis',
     position: function (pt, params) {
-      console.log(params)
       let xDis
       if (pt[0] > 960) {
         if (params[0].value === 'NaN') xDis = pt[0] - 100
@@ -377,25 +386,25 @@ export default {
         {
           label: 'Cell Highest_Voltage(V)',
           key: 'highVoltage',
-          value: 36.4,
+          value: 0,
           name: 'Highest_Voltage'
         },
         {
           label: 'Cell Lowest_Voltage(V)',
           key: 'lowVoltage',
-          value: 53.65,
+          value: 0,
           name: 'Lowest_Voltage'
         },
         {
           label: 'Cell Average_Voltage(V)',
           key: 'avgVoltage',
-          value: 36.4,
+          value: 0,
           name: 'Average_Voltage'
         },
         {
           label: 'Cell Dropout_Voltage(V)',
           key: 'differVoltage',
-          value: 36.4,
+          value: 0,
           name: 'Dropout_Voltage'
         },
       ],
@@ -403,19 +412,19 @@ export default {
         {
           label: 'Cell Highest_T (°C)',
           key: 'maxTemperature',
-          value: 36.4,
+          value: 0,
           name: 'Highest_T'
         },
         {
           label: 'Cell Lowest_T(°C)',
           key: 'minTemperature',
-          value: 53.65,
+          value: 0,
           name: 'Lowest_T'
         },
         {
           label: 'Cell Dropout_T(°C)',
           key: 'differTemplate',
-          value: 36.4,
+          value: 0,
           name: 'Dropout_T'
         }
       ],
@@ -467,6 +476,13 @@ export default {
       localStorage.setItem(`siteCode${this.$route.params.id}`, this.$route.params.siteCode)
     }
     let info = JSON.parse(localStorage.getItem(`info${this.$route.params.id}`))
+    let analyV = [info.highVoltage, info.lowVoltage, info.avgVoltage, info.differVoltage], analyT = [info.maxTemplate, info.minTemplate, info.differTemplate]
+    this.zooList.forEach((i, index) => {
+      i.value = analyV[index].toFixed(3)
+    })
+    this.oneList.forEach((i, index) => {
+      i.value = analyT[index].toFixed(3)
+    })
     this.voltageList = info.cellVList || []
     if (this.voltageList.length) {
       for(let i = 0; i < info.cellVList.length; i++) {
@@ -550,7 +566,7 @@ export default {
       }
       cellData(params).then(res => {
         let arr = res.data
-        if (!Object.keys(arr[0]).length) return this.exportCellDisabled = true
+        if (!arr.length || !Object.keys(arr[0]).length) return this.exportCellDisabled = true
         this.exportCellDisabled = false
         console.time('cellTimer')
         for(let i = 0; i < arr.length; i++) {
@@ -592,7 +608,7 @@ export default {
       batHistoryData(params).then(res => {
         dataList = res.data
         this.charting = false
-        if (!(Object.keys(dataList[0])).length) return this.flag = false
+        if (!dataList.length || !(Object.keys(dataList[0])).length) return this.flag = false
         this.flag = true
         dataList.forEach(i => {
           i.sn = params.sn
@@ -667,7 +683,6 @@ export default {
       this.exportInfo = false
       this.checkAll = false
       this.isIndeterminate = false
-      this.exportDateVal = new Date()
     },
     changeCheckInfo() {
       let chooseAll = [...this.checkedInfo, ...this.checkedCell]
