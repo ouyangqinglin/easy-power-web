@@ -1,3 +1,6 @@
 [submodule "sub-component"]
 	path = sub-component
 	url = http://192.168.3.10:8088/residential/power-ati-sub.git
+[submodule "power-ati-sub"]
+	path = power-ati-sub
+	url = http://192.168.3.10:8088/residential/power-ati-sub.git
