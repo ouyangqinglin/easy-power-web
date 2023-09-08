@@ -57,7 +57,7 @@ module.exports = {
       alias: {
         '@': resolve('src'),
         '@assets': resolve('src/assets'),
-        '@subComp': resolve('sub-component/component'),
+        '@subComp': resolve('power-ati-sub/component'),
         '@img': resolve('src/assets/images')
       }
     },
