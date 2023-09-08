@@ -81,7 +81,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/site/details/:id',
-        component: () => import('@/views/site/details'),
+        component: () => import('@subComp/site/details'),
         name: 'Site-view',
         meta: { title: 'View', icon: 'site' }
       }
@@ -94,7 +94,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/device/details/:id',
-        component: () => import('@/views/device/details'),
+        component: () => import('@subComp/device/details.vue'),
         name: 'Details-view',
         meta: { title: 'Details', icon: 'site' }
       }
@@ -107,7 +107,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/bms/monitoring/:id',
-        component: () => import('@/views/bms/monitoring'),
+        component: () => import('@subComp/bms/monitoring.vue'),
         name: 'monitoring-view',
         meta: { title: 'monitoring', icon: 'site' }
       }
@@ -120,19 +120,19 @@ export const constantRoutes = [
     children: [
       {
         path: '/task/install/view/:id',
-        component: () => import('@/views/task/install/view'),
+        component: () => import('@subComp/task/install/view.vue'),
         name: 'Installation-view',
         meta: { title: 'View', icon: 'edit' }
       },
       {
         path: '/task/install/modify/:id',
-        component: () => import('@/views/task/install/modify'),
+        component: () => import('@subComp/task/install/modify.vue'),
         name: 'Modify',
         meta: { title: 'Modify', icon: 'education' }
       },
       {
         path: '/task/install/add/:id',
-        component: () => import('@/views/task/install/add'),
+        component: () => import('@subComp/task/install/add.vue'),
         name: 'Add',
         meta: { title: 'Add', icon: 'logininfor' }
       }
@@ -145,31 +145,31 @@ export const constantRoutes = [
     children: [
       {
         path: '/task/fault/view/:id',
-        component: () => import('@/views/task/faultRepair/view'),
+        component: () => import('@subComp/task/faultRepair/view.vue'),
         name: 'fault-repair-view',
         meta: { title: 'View', icon: 'site' }
       },
       {
         path: '/task/fault/toRepair/:id',
-        component: () => import('@/views/task/faultRepair/toRepair'),
+        component: () => import('@subComp/task/faultRepair/toRepair.vue'),
         name: 'fault-repair-toRepair',
         meta: { title: 'View', icon: 'site' }
       },
       {
         path: '/task/repair/add',
-        component: () => import('@/views/task/repair/add'),
+        component: () => import('@subComp/task/repair/add.vue'),
         name: 'Repair-add',
         meta: { title: 'Add', icon: 'site' }
       },
       {
         path: '/task/repair/view/:id',
-        component: () => import('@/views/task/repair/view'),
+        component: () => import('@subComp/task/repair/view.vue'),
         name: 'Repair-view',
         meta: { title: 'View', icon: 'site' }
       },
       {
         path: '/task/repair/modify/:id',
-        component: () => import('@/views/task/repair/modify'),
+        component: () => import('@subComp/task/repair/modify.vue'),
         name: 'Repair-modify',
         meta: { title: 'Modify', icon: 'site' }
       },
@@ -196,7 +196,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/remote/details/:id',
-        component: () => import('@/views/remote/details'),
+        component: () => import('@subComp/remote/details.vue'),
         name: 'Remote upgrade',
         meta: { title: 'Details', icon: 'site' }
       }

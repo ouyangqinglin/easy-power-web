@@ -41,9 +41,9 @@
 </template>
 
 <script>
-import AlarmStatistics from "@/views/components/analysis/fault/alarmStatistics.vue";
-import AlarmDistribute from "@/views/components/analysis/fault/alarmDistribute.vue";
-import AlarmRank from "@/views/components/analysis/fault/alarmRank.vue";
+import AlarmStatistics from "@subComp/analysis/fault/alarmStatistics.vue";
+import AlarmDistribute from "@subComp/analysis/fault/alarmDistribute.vue";
+import AlarmRank from "@subComp/analysis/fault/alarmRank.vue";
 import { getTotalNum } from '@/api/fault'
 import {mapState} from "vuex";
 export default {

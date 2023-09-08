@@ -57,6 +57,7 @@ module.exports = {
       alias: {
         '@': resolve('src'),
         '@assets': resolve('src/assets'),
+        '@subComp': resolve('sub-component/component'),
         '@img': resolve('src/assets/images')
       }
     },
