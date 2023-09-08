@@ -828,7 +828,6 @@ export default {
       }, 500)
     },
     initOption() {
-      const that = this
       this.bar = echarts.init(document.getElementById('barChart'))
       barOption.series[0].data = data1
       barOption.series[1].data = data2
