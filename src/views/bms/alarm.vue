@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Pages from '@subComp/bms/alarm.vue'
+import Pages from '@subComp/bms/alarm.vue';
 export default {
   name: "pages-alarm",
   components: {Pages}
