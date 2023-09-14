@@ -13,7 +13,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 import directive from './directive' // directive
-import plugins from './plugins' // plugins
+import plugins from '@sub/plugins' // plugins
 import { download } from '@/utils/request'
 
 import './assets/icons' // icon
@@ -44,7 +44,7 @@ import VueMeta from 'vue-meta'
 import DictData from '@/components/DictData'
 
 // 全局方法挂载
-import './plugins/mixin'
+import '@sub/plugins/mixin'
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime

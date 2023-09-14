@@ -138,3 +138,11 @@ export function batEnergy(params) {
     params
   })
 }
+
+export function updateDevice(data) {
+  return request({
+    url: '/device',
+    method: 'put',
+    data: data
+  })
+}

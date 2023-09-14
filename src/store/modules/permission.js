@@ -1,4 +1,4 @@
-import auth from '@/plugins/auth'
+import auth from '@sub/plugins/auth'
 import router, { constantRoutes, dynamicRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'

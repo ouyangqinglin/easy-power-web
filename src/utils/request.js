@@ -4,7 +4,7 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from "@/utils/ruoyi";
-import cache from '@/plugins/cache'
+import cache from '@sub/plugins/cache'
 import { saveAs } from 'file-saver'
 
 let downloadLoadingInstance;

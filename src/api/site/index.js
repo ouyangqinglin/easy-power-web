@@ -78,6 +78,14 @@ export function alarmList(params) {
   })
 }
 
+export function editAlarm(data) {
+  return request({
+    url: '/faultRecord',
+    method: 'put',
+    data,
+  })
+}
+
 // 错误列表
 export function warnList(params) {
   return request({
