@@ -23,7 +23,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/user/profile" v-if="userName !== 'white@163.com'">
+          <router-link to="/user/profile" v-if="userName !== 'demo@163.com'">
             <el-dropdown-item>My Details</el-dropdown-item>
           </router-link>
 <!--          <el-dropdown-item @click.native="setting = true">-->

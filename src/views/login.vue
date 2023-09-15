@@ -50,6 +50,18 @@
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
         </div>
       </el-form-item>
+      <el-form-item>
+        <el-button
+          :loading="demoLoading"
+          size="medium"
+          type="text"
+          style="width:100%;"
+          @click.native.prevent="handleLoginDemo"
+        >
+          <span v-if="!demoLoading">Demo Sites</span>
+          <span v-else>logining</span>
+        </el-button>
+      </el-form-item>
     </el-form>
 <!--    强制修改密码-->
     <el-form v-if="!modifyPas" ref="modifyForm" :model="modifyForm" :rules="modifyRules" class="login-form posr">
@@ -234,6 +246,7 @@ export default {
         // code: [{ required: true, trigger: "blur", message: "Please enter the verification code" }]
       },
       loading: false,
+      demoLoading: false,
       sendLoading: false,
       modifyForm: {
         pass: '',
@@ -445,6 +458,21 @@ export default {
             this.modifyLoading = false
           })
         }
+      })
+    },
+    handleLoginDemo() {
+      this.demoLoading = true
+      Cookies.remove("password")
+      Cookies.remove('rememberMe')
+      let data = {
+        username: 'demo@163.com',
+        password: 'Test123456',
+        rememberMe: false,
+      }
+      this.$store.dispatch("Login", data).then((res) => {
+        this.$router.push({ path: this.redirect || "/index" }).catch(()=>{})
+      }).finally(() => {
+        this.demoLoading = false
       })
     },
     handleLogin() {
