@@ -128,10 +128,10 @@
         <h3 class="title">Reset Password</h3>
       </common-flex>
       <el-form-item label="Account" prop="userName">
-        <el-input placeholder="Please enter" v-model="forgetForm.userName"></el-input>
+        <el-input placeholder="Please enter email" v-model="forgetForm.userName"></el-input>
       </el-form-item>
       <el-form-item label="Verification Code" class="posr" prop="code">
-        <el-input placeholder="Please enter" v-model="forgetForm.code"></el-input>
+        <el-input placeholder="Please enter" v-model.number="forgetForm.code" @input="verifyCode"></el-input>
         <div class="posa send-btn">
           <el-button :loading="sendLoading" type="text" :disabled="hasSend" @click="sendCode">{{ sendText }}</el-button>
         </div>
@@ -262,7 +262,7 @@ export default {
       },
       forgetForm: {
         userName: '',
-        code: '',
+        code: null,
         password: '',
         againPassword: '',
       },
@@ -272,7 +272,7 @@ export default {
           { type: 'email', message: 'The format is incorrect', trigger: ['blur', 'change'] }
         ],
         code: [
-          { required: true, message: 'Please enter', trigger: 'blur' },
+          { required: true, message: 'Please enter', trigger: 'blur' }
         ],
         password: [
           { required: true, validator: validatePass, trigger: 'blur'}
@@ -314,6 +314,9 @@ export default {
     this.getCookie()
   },
   methods: {
+    verifyCode(e) {
+      this.forgetForm.code = e.replace(/\D/g, '')
+    },
     verifyPsw(v, base, str) {
       this[base][str] = v.replace(/\s+/g,"")
     },
