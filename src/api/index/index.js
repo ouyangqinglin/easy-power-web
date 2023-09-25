@@ -19,7 +19,7 @@ export function homeChart(params) {
 
 export function wifiChart(params) {
   return request({
-    url: 'device/wifiStatistics',
+    url: '/device/wifiStatistics',
     method: 'get',
     params,
   })
