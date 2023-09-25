@@ -17,6 +17,14 @@ export function homeChart(params) {
   })
 }
 
+export function wifiChart(params) {
+  return request({
+    url: 'device/wifiStatistics',
+    method: 'get',
+    params,
+  })
+}
+
 // 首页发电排行
 export function rankChart(params) {
   return request({
