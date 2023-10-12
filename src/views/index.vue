@@ -246,7 +246,7 @@
                 <common-flex direction="column" justify="space-between" align="flex-end" class="benefit-item" style="padding-right: 25px">
                   <common-flex style="height: 100%" direction="column" justify="space-between" align="center">
                     <common-flex direction="column" align="center">
-                      <div class="des ellipsis" title="CO2 Emission Saved">CO2 Emission Saved</div>
+                      <div class="des ellipsis" title="CO₂ Emission Saved">CO₂ Emission Saved</div>
                       <div class="val">{{ homeData.emissionSaved || '-- ' }}<span> kg</span></div>
                     </common-flex>
                     <img class="benefit-left" :src="require('@img/home/benefit-left.svg')" alt="">

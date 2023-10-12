@@ -51,7 +51,7 @@
               <el-option v-for="i of countryList" :label="i.name" :value="i.name" :key="i.id"></el-option>
             </el-select>
           </template>
-          <template v-else-if="i.prop === 'siteName'">
+          <template v-else-if="['siteName', 'nickName'].includes(i.prop)">
             <el-input v-model="copyBase[i.prop]" maxlength="50"></el-input>
           </template>
           <template v-else-if="i.prop === 'address'">
@@ -451,7 +451,7 @@ export default {
         min-width: calc(100% / 3 - 80px);
         .region-select {
           margin-right: 2px;
-          width: calc(100% / 5 - 1px);
+          width: calc(100% / 4);
         }
       }
       >:nth-child(3n) {
