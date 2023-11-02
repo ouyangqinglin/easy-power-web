@@ -91,6 +91,15 @@ export function deviceSet(data) {
   })
 }
 
+// 总的电池报表
+export function batTotalHistoryData(params) {
+  return request({
+    url: `/device/totalBatteryInfoStatistics`,
+    method: 'get',
+    params
+  })
+}
+
 export function batHistoryData(params) {
   return request({
     url: `/device/dataBatteryInfoStatistics`,

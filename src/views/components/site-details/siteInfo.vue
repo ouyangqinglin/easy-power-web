@@ -77,7 +77,6 @@
 </template>
 
 <script>
-import countryList from '../../../../public/country.json'
 import { updateSite, timeZoneList } from "@/api/site"
 import { Loader } from "@googlemaps/js-api-loader"
 const loader = new Loader({
@@ -98,7 +97,7 @@ export default {
   },
   data() {
     return {
-      countryList,
+      countryList: [],
       cityList: [],
       proList: [],
       rules: {
@@ -179,44 +178,56 @@ export default {
   beforeDestroy() {
     clearInterval(this.timer)
   },
-
+  mounted() {
+    this.getCityJson().then(res => {
+      this.countryList = res
+    })
+  },
   methods: {
+    getCityJson() {
+      return new Promise((resolve, reject) => {
+        import('../../../../public/country.json').then(res => {
+          resolve(res.default)
+        })
+      })
+    },
     getRegion() {
       this.region.country = this.copyBase.country
       this.region.city = this.copyBase.city
       this.region.province = this.copyBase.province
-
     },
     select(type, e) {
-      if (type === 'country') {
-        let item = this.countryList.find(i => i.name === e)
-        this.region.country = item.name
-        this.region.province = this.region.city = ''
-        this.proList = item.state
-        this.searchMap(item.name).then(res => {
-          this.getDetailsInfo(res, 'select')
-        })
-      }
-      if (type === 'province') {
-        let proItem = this.proList.find(i => i.name === e)
-        this.cityList = proItem.city
-        this.region.province = proItem.name
-        this.region.city = ''
-        let searchText = `${this.region.country} ${proItem.name}`
-        this.searchMap(searchText).then(res => {
-          this.getDetailsInfo(res, 'select')
-        })
-      }
-      if (type === 'city') {
-        let cityItem = this.cityList.find(i => i.name === e)
-        this.region.city = cityItem.name
-        let searchText = `${this.region.country}${this.region.province}${cityItem.name}`
-        clearInterval(this.timer)
-        this.timer = setTimeout(() => {
+      if (this.countryList.length) {
+        if (type === 'country') {
+          let item = this.countryList.find(i => i.name === e)
+          this.region.country = item.name
+          this.region.province = this.region.city = ''
+          this.proList = item.state
+          this.searchMap(item.name).then(res => {
+            this.getDetailsInfo(res, 'select')
+          })
+        }
+        if (type === 'province') {
+          let proItem = this.proList.find(i => i.name === e)
+          this.cityList = proItem.city
+          this.region.province = proItem.name
+          this.region.city = ''
+          let searchText = `${this.region.country} ${proItem.name}`
           this.searchMap(searchText).then(res => {
             this.getDetailsInfo(res, 'select')
           })
-        }, 500)
+        }
+        if (type === 'city') {
+          let cityItem = this.cityList.find(i => i.name === e)
+          this.region.city = cityItem.name
+          let searchText = `${this.region.country}${this.region.province}${cityItem.name}`
+          clearInterval(this.timer)
+          this.timer = setTimeout(() => {
+            this.searchMap(searchText).then(res => {
+              this.getDetailsInfo(res, 'select')
+            })
+          }, 500)
+        }
       }
     },
     modify() {
