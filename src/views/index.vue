@@ -676,7 +676,7 @@ export default {
         rankOption.tooltip.textStyle.fontSize = 10
         rankOption.yAxis.axisLabel.formatter = function(value) {
           let label = ''
-          if (value.length > 10) label = value.slice(0, 8) + '...'
+          if (value.length > 8) label = value.slice(0, 8) + '\n' + value.slice(8)
           else label = value
           return label
         }
@@ -688,7 +688,7 @@ export default {
         rankOption.yAxis.axisLabel.textStyle.fontSize = rankOption.xAxis.axisLabel.textStyle.fontSize = lineOption.xAxis.axisLabel.textStyle.fontSize = lineOption.yAxis.axisLabel.textStyle.fontSize = barOption.xAxis.axisLabel.textStyle.fontSize = barOption.yAxis.axisLabel.textStyle.fontSize = 14
         rankOption.yAxis.axisLabel.formatter = function(value) {
           let label = ''
-          if (value.length > 15) label = value.slice(0, 15) + '...'
+          if (value.length > 12) label = value.slice(0, 12) + '\n' + value.slice(12)
           else label = value
           return label
         }
