@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/bms/index.vue'
 export default {
-  name: "pages-bms",
+  name: "Monitor-index",
   components: {Pages}
 }
 </script>

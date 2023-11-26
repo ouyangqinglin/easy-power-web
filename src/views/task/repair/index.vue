@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/task/repair'
 export default {
-  name: "pages-task-repair",
+  name: "Repair",
   components: {Pages}
 }
 </script>

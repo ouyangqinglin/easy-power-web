@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/site/index.vue'
 export default {
-  name: "pages-site",
+  name: "Site-index",
   components: {Pages}
 }
 </script>

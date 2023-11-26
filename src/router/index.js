@@ -76,8 +76,10 @@ export const constantRoutes = [
   // },
   {
     path: '',
+    redirect: '/site/site-index',
     component: Layout,
     hidden: true,
+    meta: { title: 'Site Management' },
     children: [
       {
         path: '/site/details/:id',
@@ -89,90 +91,113 @@ export const constantRoutes = [
   },
   {
     path: '',
+    redirect: '/device/device-index',
     component: Layout,
     hidden: true,
+    meta: { title: 'Device Management' },
     children: [
       {
         path: '/device/details/:id',
         component: () => import('@subComp/device/details.vue'),
         name: 'Details-view',
-        meta: { title: 'Details', icon: 'site' }
+        meta: { title: 'Details', icon: 'site', activeMenu: '/device/device-index' }
       }
     ]
   },
   {
     path: '',
     component: Layout,
+    redirect: '/bms/monitor-index',
+    meta: { title: 'BMS' },
     hidden: true,
     children: [
       {
         path: '/bms/monitoring/:id',
         component: () => import('@subComp/bms/monitoring.vue'),
         name: 'monitoring-view',
-        meta: { title: 'monitoring', icon: 'site' }
+        meta: { title: 'monitoring', icon: 'site', activeMenu: '/bms/monitor-index' }
       }
     ]
   },
   {
     path: '',
+    redirect: '/task/install',
     component: Layout,
     hidden: true,
+    meta: {
+      title: 'Installation Task'
+    },
     children: [
       {
         path: '/task/install/view/:id',
         component: () => import('@subComp/task/install/view.vue'),
         name: 'Installation-view',
-        meta: { title: 'View', icon: 'edit' }
+        meta: { title: 'View', icon: 'edit', activeMenu: '/task/install' }
       },
       {
         path: '/task/install/modify/:id',
         component: () => import('@subComp/task/install/modify.vue'),
         name: 'Modify',
-        meta: { title: 'Modify', icon: 'education' }
+        meta: { title: 'Modify', icon: 'education', activeMenu: '/task/install' }
       },
       {
         path: '/task/install/add/:id',
         component: () => import('@subComp/task/install/add.vue'),
         name: 'Add',
-        meta: { title: 'Add', icon: 'logininfor' }
+        meta: { title: 'Add', icon: 'logininfor', activeMenu: '/task/install' }
       }
     ]
   },
   {
+    redirect: '/task/repair',
     path: '',
     component: Layout,
     hidden: true,
+    meta: {
+      title: 'Repair Task'
+    },
     children: [
-      {
-        path: '/task/fault/view/:id',
-        component: () => import('@subComp/task/faultRepair/view.vue'),
-        name: 'fault-repair-view',
-        meta: { title: 'View', icon: 'site' }
-      },
-      {
-        path: '/task/fault/toRepair/:id',
-        component: () => import('@subComp/task/faultRepair/toRepair.vue'),
-        name: 'fault-repair-toRepair',
-        meta: { title: 'View', icon: 'site' }
-      },
       {
         path: '/task/repair/add',
         component: () => import('@subComp/task/repair/add.vue'),
         name: 'Repair-add',
-        meta: { title: 'Add', icon: 'site' }
+        meta: { title: 'Add', icon: 'site', activeMenu: '/task/repair' }
       },
       {
         path: '/task/repair/view/:id',
         component: () => import('@subComp/task/repair/view.vue'),
         name: 'Repair-view',
-        meta: { title: 'View', icon: 'site' }
+        meta: { title: 'View', icon: 'site', activeMenu: '/task/repair' }
       },
       {
         path: '/task/repair/modify/:id',
         component: () => import('@subComp/task/repair/modify.vue'),
         name: 'Repair-modify',
-        meta: { title: 'Modify', icon: 'site' }
+        meta: { title: 'Modify', icon: 'site', activeMenu: '/task/repair' }
       },
+    ]
+  },
+  {
+    redirect: '/task/faultRepair',
+    path: '',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: 'User Fault Repair'
+    },
+    children: [
+      {
+        path: '/task/fault/view/:id',
+        component: () => import('@subComp/task/faultRepair/view.vue'),
+        name: 'fault-repair-view',
+        meta: { title: 'View', icon: 'site', activeMenu: '/task/fault' }
+      },
+      {
+        path: '/task/fault/toRepair/:id',
+        component: () => import('@subComp/task/faultRepair/toRepair.vue'),
+        name: 'fault-repair-toRepair',
+        meta: { title: 'View', icon: 'site', activeMenu: '/task/fault' }
+      }
     ]
   },
   {
@@ -191,6 +216,8 @@ export const constantRoutes = [
   },
   {
     path: '',
+    redirect: '/remote/upgrade-index',
+    meta: { title: 'Remote Upgrade' },
     component: Layout,
     hidden: true,
     children: [
@@ -198,7 +225,7 @@ export const constantRoutes = [
         path: '/remote/details/:id',
         component: () => import('@subComp/remote/details.vue'),
         name: 'Remote upgrade',
-        meta: { title: 'Details', icon: 'site' }
+        meta: { title: 'Details', icon: 'site', activeMenu: '/remote/upgrade-index' }
       }
     ]
   }

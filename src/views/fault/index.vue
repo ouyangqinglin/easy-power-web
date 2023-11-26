@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/fault'
 export default {
-  name: "pages-fault",
+  name: "Fault-index",
   components: {
     Pages
   }

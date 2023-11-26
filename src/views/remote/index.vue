@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/remote/index.vue'
 export default {
-  name: "pages-remote",
+  name: "Remote",
   components: {Pages}
 }
 </script>

@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/user/authority.vue'
 export default {
-  name: "pages-user-authority",
+  name: "Authority",
   components: {Pages}
 }
 </script>

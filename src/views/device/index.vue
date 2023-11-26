@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/device'
 export default {
-  name: "pages-device",
+  name: "Device-index",
   components: {
     Pages
   }

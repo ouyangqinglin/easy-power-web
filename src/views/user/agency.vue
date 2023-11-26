@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/user/agency.vue'
 export default {
-  name: "pages-user-agency",
+  name: "Agency",
   components: {Pages}
 }
 </script>

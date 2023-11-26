@@ -5,7 +5,7 @@
 <script>
 import Pages from '@subComp/user/account.vue'
 export default {
-  name: "pages-user-account",
+  name: "Account",
   components: {Pages}
 }
 </script>

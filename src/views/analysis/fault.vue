@@ -47,7 +47,7 @@ import AlarmRank from "@subComp/analysis/fault/alarmRank.vue";
 import { getTotalNum } from '@/api/fault'
 import {mapState} from "vuex";
 export default {
-  name: "analysis-fault",
+  name: "Analysis-index",
   components: {
     AlarmStatistics,
     AlarmDistribute,
