@@ -1,7 +1,7 @@
 <template>
   <el-form ref="form" :model="user" :rules="rules">
     <el-form-item label="User Nickname" prop="nickName">
-      <el-input v-model="user.nickName" maxlength="50" />
+      <el-input v-model.trim="user.nickName" maxlength="50" />
     </el-form-item>
     <el-form-item label="Phone Number" prop="phonenumber">
       <el-input v-model.trim="user.phonenumber" @input="checkPhone" maxlength="20" />
