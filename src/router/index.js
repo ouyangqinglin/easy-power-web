@@ -190,7 +190,7 @@ export const constantRoutes = [
         path: '/task/fault/view/:id',
         component: () => import('@subComp/task/faultRepair/view.vue'),
         name: 'fault-repair-view',
-        meta: { title: 'View', icon: 'site', activeMenu: '/task/fault' }
+        meta: { title: 'View', icon: 'site', activeMenu: '/task/faultRepair' }
       },
       {
         path: '/task/fault/toRepair/:id',
