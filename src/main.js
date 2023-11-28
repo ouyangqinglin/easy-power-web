@@ -1,12 +1,10 @@
 import Vue from 'vue'
-
 import Cookies from 'js-cookie'
-
 import JsonExcel from 'vue-json-excel'
-import Element from 'element-ui'
-import locale from 'element-ui/lib/locale/lang/en'
-import './assets/styles/element-variables.scss'
 
+import './assets/styles/element-variables.scss'
+import Element from 'element-ui'
+import i18n from "@/i18n";
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
 import App from './App'
@@ -66,7 +64,6 @@ Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
 Vue.component('ImagePreview', ImagePreview)
 Vue.component('NoData', NoData)
-
 Vue.use(directive)
 Vue.use(plugins)
 Vue.use(VueMeta)
@@ -82,8 +79,7 @@ DictData.install()
  */
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium', // set element-ui default size
-  locale
+  size: Cookies.get('size') || 'medium'
 })
 
 Vue.config.productionTip = false
@@ -92,5 +88,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })

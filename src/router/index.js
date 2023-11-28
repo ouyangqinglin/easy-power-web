@@ -61,19 +61,20 @@ export const constantRoutes = [
     component: () => import('@/views/error/401'),
     hidden: true
   },
-  // {
-  //   path: '',
-  //   component: Layout,
-  //   redirect: 'index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/index'),
-  //       name: 'Index',
-  //       meta: { title: 'HomePage', icon: 'homeIcon' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/index'),
+        name: 'Index',
+        meta: { title: 'HomePage', icon: 'homeIcon' }
+      }
+    ]
+  },
   {
     path: '',
     redirect: '/site/site-index',
@@ -85,7 +86,7 @@ export const constantRoutes = [
         path: '/site/details/:id',
         component: () => import('@subComp/site/details'),
         name: 'Site-view',
-        meta: { title: 'View', icon: 'site' }
+        meta: { title: 'View', activeMenu: '/site/site-index' }
       }
     ]
   },
@@ -100,7 +101,7 @@ export const constantRoutes = [
         path: '/device/details/:id',
         component: () => import('@subComp/device/details.vue'),
         name: 'Details-view',
-        meta: { title: 'Details', icon: 'site', activeMenu: '/device/device-index' }
+        meta: { title: 'Details', activeMenu: '/device/device-index' }
       }
     ]
   },
@@ -190,13 +191,13 @@ export const constantRoutes = [
         path: '/task/fault/view/:id',
         component: () => import('@subComp/task/faultRepair/view.vue'),
         name: 'fault-repair-view',
-        meta: { title: 'View', icon: 'site', activeMenu: '/task/faultRepair' }
+        meta: { title: 'View', activeMenu: '/task/faultRepair' }
       },
       {
         path: '/task/fault/toRepair/:id',
         component: () => import('@subComp/task/faultRepair/toRepair.vue'),
         name: 'fault-repair-toRepair',
-        meta: { title: 'View', icon: 'site', activeMenu: '/task/faultRepair' }
+        meta: { title: 'View', activeMenu: '/task/faultRepair' }
       }
     ]
   },
@@ -225,7 +226,7 @@ export const constantRoutes = [
         path: '/remote/details/:id',
         component: () => import('@subComp/remote/details.vue'),
         name: 'Remote upgrade',
-        meta: { title: 'Details', icon: 'site', activeMenu: '/remote/upgrade-index' }
+        meta: { title: 'Details', activeMenu: '/remote/upgrade-index' }
       }
     ]
   }

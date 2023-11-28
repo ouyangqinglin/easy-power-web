@@ -4,20 +4,17 @@
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
     <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
-<!--    <div class="right-menu">-->
+    <div class="right-menu">
 <!--      <template v-if="device!=='mobile'">-->
-<!--&lt;!&ndash;        <search id="header-search" class="right-menu-item" />&ndash;&gt;-->
-
-
+<!--        <search id="header-search" class="right-menu-item" />-->
 <!--        <screenfull id="screenfull" class="right-menu-item hover-effect" />-->
-
 <!--        <el-tooltip content="布局大小" effect="dark" placement="bottom">-->
 <!--          <size-select id="size-select" class="right-menu-item hover-effect" />-->
 <!--        </el-tooltip>-->
 <!--      </template>-->
-<!--    </div>-->
+    </div>
     <div class="right-menu">
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item hover-effect">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
@@ -35,6 +32,23 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+<!--    <div class="right-menu">-->
+<!--      <el-dropdown @command="handleCommand">-->
+<!--        <span class="el-dropdown-link">-->
+<!--          <common-flex align="center">-->
+<!--          <img :src="require('@subImg/locale.svg')" alt="" style="width: 20px;" class="mr-1">-->
+<!--          {{ $t('common.test') }}-->
+<!--          <i class="el-icon-caret-bottom" />-->
+<!--        </common-flex>-->
+<!--        </span>-->
+<!--        <template #dropdown>-->
+<!--          <el-dropdown-menu class="lang-item">-->
+<!--            <el-dropdown-item command="zh_CN" :disabled="activeLang === 'zh_CN'">cn-简体中文</el-dropdown-item>-->
+<!--            <el-dropdown-item command="en_US" :disabled="activeLang === 'en_US'">us-English</el-dropdown-item>-->
+<!--          </el-dropdown-menu>-->
+<!--        </template>-->
+<!--      </el-dropdown>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -60,6 +74,11 @@ export default {
     RuoYiGit,
     RuoYiDoc
   },
+  data() {
+    return {
+      activeLang: 'en_US'
+    }
+  },
   computed: {
     ...mapState({
       'userName': (state) => state.user.name
@@ -84,9 +103,17 @@ export default {
       get() {
         return this.$store.state.settings.topNav
       }
-    }
+    },
+  },
+  created() {
+    this.activeLang = localStorage.getItem("lang") || 'en_US'
   },
   methods: {
+    handleCommand(value) {
+      this.$i18n.locale = value
+      localStorage.setItem("lang", value)
+      this.activeLang = localStorage.getItem("lang")
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -105,7 +132,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -189,6 +216,16 @@ export default {
           font-size: 12px;
         }
       }
+    }
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+  }
+  .el-dropdown-menu {
+    .is-disabled {
+      cursor: default;
+      color: $commonColor !important;
+      pointer-events: none;
     }
   }
 }
