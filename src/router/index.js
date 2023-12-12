@@ -116,7 +116,7 @@ export const constantRoutes = [
         path: '/bms/monitoring/:id',
         component: () => import('@subComp/bms/monitoring.vue'),
         name: 'monitoring-view',
-        meta: { title: 'monitoring', icon: 'site', activeMenu: '/bms/monitor-index' }
+        meta: { title: 'monitoring', activeMenu: '/bms/monitor-index' }
       }
     ]
   },
@@ -162,19 +162,19 @@ export const constantRoutes = [
         path: '/task/repair/add',
         component: () => import('@subComp/task/repair/add.vue'),
         name: 'Repair-add',
-        meta: { title: 'Add', icon: 'site', activeMenu: '/task/repair' }
+        meta: { title: 'Add', activeMenu: '/task/repair' }
       },
       {
         path: '/task/repair/view/:id',
         component: () => import('@subComp/task/repair/view.vue'),
         name: 'Repair-view',
-        meta: { title: 'View', icon: 'site', activeMenu: '/task/repair' }
+        meta: { title: 'View', activeMenu: '/task/repair' }
       },
       {
         path: '/task/repair/modify/:id',
         component: () => import('@subComp/task/repair/modify.vue'),
         name: 'Repair-modify',
-        meta: { title: 'Modify', icon: 'site', activeMenu: '/task/repair' }
+        meta: { title: 'Modify', activeMenu: '/task/repair' }
       },
     ]
   },
