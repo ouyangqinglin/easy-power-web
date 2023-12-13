@@ -1,5 +1,5 @@
 import auth from '@sub/plugins/auth'
-import router, { constantRoutes, dynamicRoutes } from '@/router'
+import router, { constantRoutes, dynamicRoutes, localeMenu } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
@@ -34,8 +34,10 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          const sdata = JSON.parse(JSON.stringify(res.data))
-          const rdata = JSON.parse(JSON.stringify(res.data))
+          let data = addRouteLocale(res.data)
+          console.log(data)
+          const sdata = JSON.parse(JSON.stringify(data))
+          const rdata = JSON.parse(JSON.stringify(data))
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
@@ -53,6 +55,21 @@ const permission = {
       })
     }
   }
+}
+
+// 给路由添加locale属性
+function addRouteLocale(data) {
+  for(let i = 0; i < data.length; i++) {
+    const item = localeMenu.find(item => item.path === data[i].path)
+    if (item) {
+      data[i].locale = item.locale
+      if (item.path === '/') data[i].meta = {
+        locale: item.locale
+      }
+    }
+    if (data[i].children) data[i].children = addRouteLocale(data[i].children)
+  }
+  return data
 }
 
 // 遍历后台传来的路由字符串，转换为组件对象

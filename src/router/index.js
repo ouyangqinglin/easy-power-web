@@ -27,6 +27,88 @@ import Layout from '@/layout'
     activeMenu: '/system/user'      // 当路由设置了该属性，则会高亮相对应的侧边栏。
   }
  */
+// 侧边栏路由切换语言
+export const localeMenu = [
+  {
+    path: '/',
+    locale: 'menu.home'
+  },  {
+    path: 'index',
+    locale: 'menu.home'
+  },  {
+    path: '/site',
+    locale: 'menu.siteManage'
+  },  {
+    path: 'site-index',
+    locale: 'menu.siteManage'
+  },  {
+    path: '/device',
+    locale: 'menu.deviceManage'
+  },  {
+    path: 'device-index',
+    locale: 'menu.deviceManage'
+  },  {
+    path: '/fault',
+    locale: 'menu.faultManage'
+  },  {
+    path: 'fault-index',
+    locale: 'menu.faultManage'
+  },  {
+    path: '/analysis',
+    locale: 'menu.analysisManage'
+  },  {
+    path: 'analysis-index',
+    locale: 'menu.analysisFault'
+  },  {
+    path: '/user',
+    locale: 'menu.analysisFault'
+  },  {
+    path: 'agency',
+    locale: 'menu.agencyManage'
+  },  {
+    path: 'authority',
+    locale: 'menu.authorityManage'
+  },  {
+    path: 'account',
+    locale: 'menu.accountManage'
+  },  {
+    path: 'about',
+    locale: 'menu.accountManage'
+  },  {
+    path: '/remote',
+    locale: 'menu.remoteUpgrade'
+  },  {
+    path: 'upgrade-index',
+    locale: 'menu.remoteUpgrade'
+  },  {
+    path: '/datacenter',
+    locale: 'menu.dataCenter'
+  },  {
+    path: 'data-index',
+    locale: 'menu.dataCenter'
+  },  {
+    path: '/bms',
+    locale: 'menu.bms'
+  },  {
+    path: 'monitor-index',
+    locale: 'menu.monitoring'
+  },  {
+    path: 'alarm-index',
+    locale: 'menu.monitoring'
+  },  {
+    path: '/task',
+    locale: 'menu.taskManage'
+  },  {
+    path: 'install',
+    locale: 'menu.installationTask'
+  },  {
+    path: 'repair',
+    locale: 'menu.repairTask'
+  },  {
+    path: 'faultRepair',
+    locale: 'menu.userRepairTask'
+  },
+]
 
 // 公共路由
 export const constantRoutes = [
@@ -71,7 +153,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/index'),
         name: 'Index',
-        meta: { title: 'HomePage', icon: 'homeIcon' }
+        meta: { title: 'HomePage', icon: 'homeIcon', locale: 'menu.home' }
       }
     ]
   },

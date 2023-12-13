@@ -13,7 +13,7 @@
         @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
         @contextmenu.prevent.native="openMenu(tag,$event)"
       >
-        {{ tag.title }}
+        {{ $t(tag.meta.locale) }}
         <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
@@ -45,6 +45,7 @@ export default {
   },
   computed: {
     visitedViews() {
+      console.log('visitedViews', this.$store.state.tagsView.visitedViews)
       return this.$store.state.tagsView.visitedViews
     },
     routes() {
