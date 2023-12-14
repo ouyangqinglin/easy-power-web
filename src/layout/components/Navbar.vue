@@ -113,7 +113,7 @@ export default {
       this.$i18n.locale = value
       localStorage.setItem("lang", value)
       this.activeLang = localStorage.getItem("lang")
-      this.$modal.msgSuccess(this.$t('common.operateSuccess'))
+      this.$modal.msgSuccess(this.$t('common.succeeded'))
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')

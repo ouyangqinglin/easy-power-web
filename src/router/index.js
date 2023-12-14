@@ -61,11 +61,17 @@ export const localeMenu = [
     locale: 'menu.analysisFault'
   },  {
     path: '/user',
-    locale: 'menu.analysisFault'
+    locale: 'menu.userManage'
+  },    {
+    path: 'user',
+    locale: 'menu.userManage'
   },  {
     path: 'agency',
     locale: 'menu.agencyManage'
   },  {
+    path: 'role',
+    locale: 'menu.roleManage'
+  },    {
     path: 'authority',
     locale: 'menu.authorityManage'
   },  {
@@ -73,7 +79,7 @@ export const localeMenu = [
     locale: 'menu.accountManage'
   },  {
     path: 'about',
-    locale: 'menu.accountManage'
+    locale: 'menu.about'
   },  {
     path: '/remote',
     locale: 'menu.remoteUpgrade'
@@ -107,6 +113,66 @@ export const localeMenu = [
   },  {
     path: 'faultRepair',
     locale: 'menu.userRepairTask'
+  },  {
+    path: '/tool',
+    locale: 'menu.toolManage'
+  },  {
+    path: 'build',
+    locale: 'menu.buildForm'
+  },  {
+    path: 'gen',
+    locale: 'menu.codeGenera'
+  },  {
+    path: 'swagger',
+    locale: 'menu.swagger'
+  },  {
+    path: '/system',
+    locale: 'menu.systemManage'
+  },  {
+    path: 'system/menu',
+    locale: 'menu.menuManage'
+  },  {
+    path: 'dept',
+    locale: 'menu.deptManage'
+  },  {
+    path: 'post',
+    locale: 'menu.postManage'
+  },  {
+    path: 'dict',
+    locale: 'menu.dictManage'
+  },  {
+    path: 'config',
+    locale: 'menu.configParams'
+  },  {
+    path: 'log',
+    locale: 'menu.log'
+  },  {
+    path: '/monitor',
+    locale: 'menu.systemMonitor'
+  },  {
+    path: 'online',
+    locale: 'menu.onlineUser'
+  },  {
+    path: 'job',
+    locale: 'menu.jobTimed'
+  },  {
+    path: 'druid',
+    locale: 'menu.dataMonitor'
+  },  {
+    path: 'server',
+    locale: 'menu.serverMonitor'
+  },  {
+    path: 'cache',
+    locale: 'menu.cacheMonitor'
+  },  {
+    path: 'cacheList',
+    locale: 'menu.cacheList'
+  },  {
+    path: 'operlog',
+    locale: 'menu.operationLog'
+  },  {
+    path: 'logininfor',
+    locale: 'menu.operationLog'
   },
 ]
 
@@ -162,13 +228,13 @@ export const constantRoutes = [
     redirect: '/site/site-index',
     component: Layout,
     hidden: true,
-    meta: { title: 'Site Management' },
+    meta: { title: 'Site Management', locale: 'menu.siteManage' },
     children: [
       {
         path: '/site/details/:id',
         component: () => import('@subComp/site/details'),
         name: 'Site-view',
-        meta: { title: 'View', activeMenu: '/site/site-index' }
+        meta: { title: 'View', activeMenu: '/site/site-index', locale: 'menu.siteDetails' }
       }
     ]
   },
@@ -177,13 +243,13 @@ export const constantRoutes = [
     redirect: '/device/device-index',
     component: Layout,
     hidden: true,
-    meta: { title: 'Device Management' },
+    meta: { title: 'Device Management', locale: 'menu.deviceManage' },
     children: [
       {
         path: '/device/details/:id',
         component: () => import('@subComp/device/details.vue'),
         name: 'Details-view',
-        meta: { title: 'Details', activeMenu: '/device/device-index' }
+        meta: { title: 'Details', activeMenu: '/device/device-index', locale: 'menu.deviceDetails' }
       }
     ]
   },
@@ -191,14 +257,14 @@ export const constantRoutes = [
     path: '',
     component: Layout,
     redirect: '/bms/monitor-index',
-    meta: { title: 'BMS' },
+    meta: { title: 'BMS', locale: 'menu.bms' },
     hidden: true,
     children: [
       {
         path: '/bms/monitoring/:id',
         component: () => import('@subComp/bms/monitoring.vue'),
         name: 'monitoring-view',
-        meta: { title: 'monitoring', activeMenu: '/bms/monitor-index' }
+        meta: { title: 'monitoring', activeMenu: '/bms/monitor-index', locale: 'menu.bmsDetails' }
       }
     ]
   },
@@ -208,26 +274,27 @@ export const constantRoutes = [
     component: Layout,
     hidden: true,
     meta: {
-      title: 'Installation Task'
+      title: 'Installation Task',
+      locale: 'menu.installationTask'
     },
     children: [
       {
         path: '/task/install/view/:id',
         component: () => import('@subComp/task/install/view.vue'),
         name: 'Installation-view',
-        meta: { title: 'View', icon: 'edit', activeMenu: '/task/install' }
+        meta: { title: 'View', activeMenu: '/task/install', locale: 'menu.taskDetails' }
       },
       {
         path: '/task/install/modify/:id',
         component: () => import('@subComp/task/install/modify.vue'),
         name: 'Modify',
-        meta: { title: 'Modify', icon: 'education', activeMenu: '/task/install' }
+        meta: { title: 'Modify', activeMenu: '/task/install', locale: 'menu.taskEdit' }
       },
       {
         path: '/task/install/add/:id',
         component: () => import('@subComp/task/install/add.vue'),
         name: 'Add',
-        meta: { title: 'Add', icon: 'logininfor', activeMenu: '/task/install' }
+        meta: { title: 'Add', activeMenu: '/task/install', locale: 'menu.taskAdd' }
       }
     ]
   },
@@ -237,26 +304,27 @@ export const constantRoutes = [
     component: Layout,
     hidden: true,
     meta: {
-      title: 'Repair Task'
+      title: 'Repair Task',
+      locale: 'menu.repairTask'
     },
     children: [
       {
         path: '/task/repair/add',
         component: () => import('@subComp/task/repair/add.vue'),
         name: 'Repair-add',
-        meta: { title: 'Add', activeMenu: '/task/repair' }
+        meta: { title: 'Add', activeMenu: '/task/repair', locale: 'menu.taskAdd' }
       },
       {
         path: '/task/repair/view/:id',
         component: () => import('@subComp/task/repair/view.vue'),
         name: 'Repair-view',
-        meta: { title: 'View', activeMenu: '/task/repair' }
+        meta: { title: 'View', activeMenu: '/task/repair', locale: 'menu.taskDetails' }
       },
       {
         path: '/task/repair/modify/:id',
         component: () => import('@subComp/task/repair/modify.vue'),
         name: 'Repair-modify',
-        meta: { title: 'Modify', activeMenu: '/task/repair' }
+        meta: { title: 'Modify', activeMenu: '/task/repair', locale: 'menu.taskEdit' }
       },
     ]
   },
@@ -266,20 +334,21 @@ export const constantRoutes = [
     component: Layout,
     hidden: true,
     meta: {
-      title: 'User Fault Repair'
+      title: 'User Fault Repair',
+      locale: 'menu.userRepairTask'
     },
     children: [
       {
         path: '/task/fault/view/:id',
         component: () => import('@subComp/task/faultRepair/view.vue'),
         name: 'fault-repair-view',
-        meta: { title: 'View', activeMenu: '/task/faultRepair' }
+        meta: { title: 'View', activeMenu: '/task/faultRepair', locale: 'menu.taskDetails' }
       },
       {
         path: '/task/fault/toRepair/:id',
         component: () => import('@subComp/task/faultRepair/toRepair.vue'),
         name: 'fault-repair-toRepair',
-        meta: { title: 'View', activeMenu: '/task/faultRepair' }
+        meta: { title: 'View', activeMenu: '/task/faultRepair', locale: 'menu.taskEdit' }
       }
     ]
   },
@@ -293,14 +362,14 @@ export const constantRoutes = [
         path: 'profile',
         component: () => import('@/views/system/user/profile/index'),
         name: 'Profile',
-        meta: { title: 'My Details', icon: 'user' }
+        meta: { title: 'My Details', icon: 'user', locale: 'menu.profile' }
       }
     ]
   },
   {
     path: '',
     redirect: '/remote/upgrade-index',
-    meta: { title: 'Remote Upgrade' },
+    meta: { title: 'Remote Upgrade', locale: 'menu.remoteUpgrade' },
     component: Layout,
     hidden: true,
     children: [
@@ -308,7 +377,7 @@ export const constantRoutes = [
         path: '/remote/details/:id',
         component: () => import('@subComp/remote/details.vue'),
         name: 'Remote upgrade',
-        meta: { title: 'Details', activeMenu: '/remote/upgrade-index' }
+        meta: { title: 'Details', activeMenu: '/remote/upgrade-index', locale: 'menu.remoteUpgrade' }
       }
     ]
   }

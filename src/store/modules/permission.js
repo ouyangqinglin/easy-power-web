@@ -34,8 +34,8 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          let data = addRouteLocale(res.data)
-          console.log(data)
+          const data = addRouteLocale(res.data)
+          // console.log(data)
           const sdata = JSON.parse(JSON.stringify(data))
           const rdata = JSON.parse(JSON.stringify(data))
           const sidebarRoutes = filterAsyncRouter(sdata)
@@ -63,9 +63,11 @@ function addRouteLocale(data) {
     const item = localeMenu.find(item => item.path === data[i].path)
     if (item) {
       data[i].locale = item.locale
-      if (item.path === '/') data[i].meta = {
-        locale: item.locale
-      }
+      if (item.path === '/') {
+        data[i].meta = {
+          locale: item.locale
+        }
+      } else data[i].meta.locale = item.locale
     }
     if (data[i].children) data[i].children = addRouteLocale(data[i].children)
   }

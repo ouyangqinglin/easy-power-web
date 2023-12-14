@@ -3,22 +3,22 @@
     <img class="login-bg posa" :src="require('@assets/logo/login-bg.webp')" alt="">
     <el-form v-show="modifyPas && forgetShow" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form posr">
       <h2 class="title">EasyPower<br>Management System</h2>
-      <el-form-item prop="username" label="Account">
+      <el-form-item prop="username" :label="$t('login.account')">
         <el-input
           v-model="loginForm.username"
           type="text"
           auto-complete="off"
-          placeholder="Please enter"
+          :placeholder="this.$t('common.pleaseEnter') + this.$t('login.account')"
         >
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item prop="password" label="Password">
+      <el-form-item prop="password" :label="$t('login.password')">
         <el-input
           v-model="loginForm.password"
           :type="inputType"
           auto-complete="off"
-          placeholder="Please enter"
+          :placeholder="this.$t('common.pleaseEnter') + this.$t('login.password')"
           @input="verifyPsw($event,'loginForm', 'password')"
           @keyup.enter.native="handleLogin"
           @paste.native.capture.prevent
@@ -32,8 +32,8 @@
         </el-input>
       </el-form-item>
       <common-flex justify="space-between">
-        <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0">Remember password</el-checkbox>
-        <span class="forget-pas" @click="forgetShow = false">Forgot your password?</span>
+        <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0">{{ $t('login.rememberPsw')}}</el-checkbox>
+        <span class="forget-pas" @click="forgetShow = false">{{ $t('login.forgotPsw')}}</span>
       </common-flex>
       <el-form-item style="width:100%;">
         <el-button
@@ -43,8 +43,8 @@
           style="width:100%;"
           @click.native.prevent="handleLogin"
         >
-          <span v-if="!loading">Log in</span>
-          <span v-else>logining</span>
+          <span v-if="!loading">{{ $t('login.loginIn')}}</span>
+          <span v-else>{{ $t('login.loginIn')}}...</span>
         </el-button>
         <div style="float: right;" v-if="register">
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
@@ -58,22 +58,22 @@
           style="width:100%;"
           @click.native.prevent="handleLoginDemo"
         >
-          <span v-if="!demoLoading">Demo Sites</span>
-          <span v-else>logining</span>
+          <span v-if="!demoLoading">{{ $t('login.demoSites') }}</span>
+          <span v-else>{{ $t('login.loginIn')}}...</span>
         </el-button>
       </el-form-item>
     </el-form>
 <!--    强制修改密码-->
     <el-form v-if="!modifyPas" ref="modifyForm" :model="modifyForm" :rules="modifyRules" class="login-form posr">
-      <h3 class="title">Login Succeeded!</h3>
+      <h3 class="title">{{ $t('login.loginSuccess') }}</h3>
       <p style="font-size: 12px; color: #ec6240">Change the password before use please</p>
-      <el-form-item prop="pass" label="New Password">
+      <el-form-item prop="pass" :label="$t('login.newPassword')">
         <el-input
           v-model="modifyForm.pass"
           @input="verifyPsw($event,'modifyForm', 'pass')"
           :type="inputNew"
           auto-complete="off"
-          placeholder="Please enter"
+          :placeholder="$t('common.pleaseEnter')"
           @paste.native.capture.prevent
           @copy.native.capture.prevent
         >
@@ -83,13 +83,13 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="checkPass" label="Password Again">
+      <el-form-item prop="checkPass" :label="$t('login.confirmPassword')">
         <el-input
           v-model="modifyForm.checkPass"
           @input="verifyPsw($event,'modifyForm', 'checkPass')"
           :type="inputAgain"
           auto-complete="off"
-          placeholder="Please enter"
+          :placeholder="$t('common.pleaseEnter')"
           @paste.native.capture.prevent
           @copy.native.capture.prevent
           @keyup.enter.native="handleLogin"
@@ -108,7 +108,7 @@
           style="width:100%;"
           @click.native.prevent="handleModify"
         >
-          <span v-if="!modifyLoading">Submit</span>
+          <span v-if="!modifyLoading">{{ $t('common.submit')}}</span>
         </el-button>
       </el-form-item>
       <el-form-item style="width:100%;">
@@ -117,7 +117,7 @@
           style="width:100%;"
           @click.native.prevent="cancelModify"
         >
-          Log out
+          {{ $t('login.logOut') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -125,22 +125,22 @@
     <el-form v-if="!forgetShow" class="login-form posr" :model="forgetForm" ref="forgetForm" :rules="forgetRules">
       <common-flex class="posr">
         <i class="el-icon-back posa back-icon" @click="backLogin"></i>
-        <h3 class="title">Reset Password</h3>
+        <h3 class="title">{{ $t('login.resetPsw') }}</h3>
       </common-flex>
-      <el-form-item label="Account" prop="userName">
-        <el-input placeholder="Please enter email" v-model="forgetForm.userName"></el-input>
+      <el-form-item :label="$t('login.account')" prop="userName">
+        <el-input :placeholder="$t('common.pleaseEnter') + $t('login.email')" v-model="forgetForm.userName"></el-input>
       </el-form-item>
-      <el-form-item label="Verification Code" class="posr" prop="code">
-        <el-input placeholder="Please enter" v-model.number="forgetForm.code" @input="verifyCode"></el-input>
+      <el-form-item :label="$t('login.verificationCode')" class="posr" prop="code">
+        <el-input :placeholder="$t('common.pleaseEnter')" v-model.number="forgetForm.code" @input="verifyCode"></el-input>
         <div class="posa send-btn">
           <el-button :loading="sendLoading" type="text" :disabled="hasSend" @click="sendCode">{{ sendText }}</el-button>
         </div>
       </el-form-item>
-      <el-form-item label="New Password" prop="password">
+      <el-form-item :label="$t('login.newPassword')" prop="password">
         <el-input :type="inputNew"
                   @copy.native.capture.prevent
                   @paste.native.capture.prevent
-                  placeholder="Please enter"
+                  :placeholder="$t('common.pleaseEnter')"
                   @input="verifyPsw($event,'forgetForm', 'password')"
                   v-model="forgetForm.password">
           <template #suffix>
@@ -151,9 +151,9 @@
       </el-form-item>
       <el-form-item @paste.native.capture.prevent
                     @copy.native.capture.prevent
-                    label="Password Again"
+                    :label="$t('login.confirmPassword')"
                     prop="againPassword">
-        <el-input :type="inputAgain" placeholder="Please enter"
+        <el-input :type="inputAgain" :placeholder="$t('common.pleaseEnter')"
                   @input="verifyPsw($event,'forgetForm', 'againPassword')"
                   v-model="forgetForm.againPassword">
           <template #suffix>
@@ -163,7 +163,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-button :loading="loading" style="width: 100%" type="primary" @click="reset">Reset</el-button>
+        <el-button :loading="loading" style="width: 100%" type="primary" @click="reset">{{ $t('common.reset') }}</el-button>
       </el-form-item>
     </el-form>
     <el-dialog
@@ -183,14 +183,14 @@
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
-import {resetUserPwd, updateUserPwd, forgetResetPas, sendCode } from "@/api/system/user";
+import { updateUserPwd, forgetResetPas, sendCode } from "@/api/system/user";
 
 export default {
   name: "Login",
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please enter'));
+        callback(new Error(this.$t('common.pleaseEnter')));
       } else {
         const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)(?![^a-zA-Z0-9]+$)[^\u4e00-\u9fa5]{8,16}$/
         if (reg.test(value)) {
@@ -200,18 +200,18 @@ export default {
     }
     const validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please enter again'));
+        callback(new Error(this.$t('login.pleaseEnterAgain')));
       } else if (value !== this.modifyForm.pass) {
-        callback(new Error('The two input passwords are inconsistent!'));
+        callback(new Error(this.$t('login.passwordInconsistent')));
       } else {
         callback();
       }
     }
     const validatePass3 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please enter again'));
+        callback(new Error(this.$t('login.pleaseEnterAgain')));
       } else if (value !== this.forgetForm.password) {
-        callback(new Error('The two input passwords are inconsistent!'));
+        callback(new Error(this.$t('login.passwordInconsistent')));
       } else {
         callback();
       }
@@ -224,7 +224,7 @@ export default {
       second: 3,
       dialogShow: false,
       timer: null,
-      sendText: 'Send',
+      sendText: this.$t('login.send'),
       hasSend: false,
       modifyPas: true,
       forgetShow: true,
@@ -238,10 +238,10 @@ export default {
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", message: "Please enter your account" }
+          { required: true, trigger: "blur", message: this.$t('common.pleaseEnter') + this.$t('login.account') }
         ],
         password: [
-          { required: true, trigger: "blur", message: "Please enter your password" }
+          { required: true, trigger: "blur", message: this.$t('common.pleaseEnter') + this.$t('login.password') }
         ],
         // code: [{ required: true, trigger: "blur", message: "Please enter the verification code" }]
       },
@@ -262,17 +262,17 @@ export default {
       },
       forgetForm: {
         userName: '',
-        code: null,
+        code: '',
         password: '',
         againPassword: '',
       },
       forgetRules: {
         userName: [
-          { required: true, message: 'Please enter', trigger: 'blur' },
-          { type: 'email', message: 'The format is incorrect', trigger: ['blur', 'change'] }
+          { required: true, message: this.$t('common.pleaseEnter'), trigger: 'blur' },
+          { type: 'email', message: this.$t('login.formatIncorrect'), trigger: ['blur', 'change'] }
         ],
         code: [
-          { required: true, message: 'Please enter', trigger: 'blur' }
+          { required: true, message: this.$t('common.pleaseEnter'), trigger: 'blur' }
         ],
         password: [
           { required: true, validator: validatePass, trigger: 'blur'}
@@ -352,7 +352,7 @@ export default {
             if (+res.code === 200) {
               this.$message({
                 type: 'success',
-                message: 'Succeeded!'
+                message: this.$t('common.succeeded')
               })
               setTimeout(() => {
                 this.openDialog()
@@ -377,7 +377,7 @@ export default {
             if (+res.code === 200) {
               this.$message({
                 type: 'success',
-                message: 'Succeeded!'
+                message: this.$t('common.succeeded')
               })
               this.sendLoading = false
               let count = 60
@@ -386,7 +386,7 @@ export default {
                 count--
                 if (count < 1) {
                   clearInterval(this.timer)
-                  this.sendText = 'Send'
+                  this.sendText = this.$t('login.send')
                   this.hasSend = false
                   return
                 }
@@ -435,7 +435,7 @@ export default {
               this.modifyLoading = false
               this.$message({
                 type: 'success',
-                message: 'Succeeded!'
+                message: this.$t('common.succeeded')
               })
               if (this.loginForm.rememberMe) {
                 Cookies.set("username", this.loginForm.username, { expires: 30 });
