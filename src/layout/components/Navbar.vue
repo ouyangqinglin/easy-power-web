@@ -32,23 +32,23 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div class="right-menu">
-      <el-dropdown @command="handleCommand">
-        <span class="el-dropdown-link">
-          <common-flex align="center">
-          <img :src="require('@subImg/locale.svg')" alt="" style="width: 20px;" class="mr-1">
-          {{ $t('common.language') }}
-          <i class="el-icon-caret-bottom" />
-        </common-flex>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu class="lang-item">
-            <el-dropdown-item command="zh_CN" :disabled="activeLang === 'zh_CN'">cn-简体中文</el-dropdown-item>
-            <el-dropdown-item command="en_US" :disabled="activeLang === 'en_US'">us-English</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </div>
+<!--    <div class="right-menu">-->
+<!--      <el-dropdown @command="handleCommand">-->
+<!--        <span class="el-dropdown-link">-->
+<!--          <common-flex align="center">-->
+<!--          <img :src="require('@subImg/locale.svg')" alt="" style="width: 20px;" class="mr-1">-->
+<!--          {{ $t('common.language') }}-->
+<!--          <i class="el-icon-caret-bottom" />-->
+<!--        </common-flex>-->
+<!--        </span>-->
+<!--        <template #dropdown>-->
+<!--          <el-dropdown-menu class="lang-item">-->
+<!--            <el-dropdown-item command="zh_CN" :disabled="activeLang === 'zh_CN'">cn-简体中文</el-dropdown-item>-->
+<!--            <el-dropdown-item command="en_US" :disabled="activeLang === 'en_US'">us-English</el-dropdown-item>-->
+<!--          </el-dropdown-menu>-->
+<!--        </template>-->
+<!--      </el-dropdown>-->
+<!--    </div>-->
   </div>
 </template>
 
