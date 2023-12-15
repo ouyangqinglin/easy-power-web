@@ -1,10 +1,9 @@
 <template>
   <common-flex class="comp-date-type-picker" wrap="wrap">
     <el-radio-group v-model="dateType" style="margin-right: 5px" size="small">
-      <el-radio-button label="date">Day</el-radio-button>
-      <el-radio-button label="week">Week</el-radio-button>
-      <el-radio-button label="month">Month</el-radio-button>
-      <el-radio-button label="year">Year</el-radio-button>
+      <template v-for="item of dateRadioBtn">
+        <el-radio-button :label="item.value">{{ item.label }}</el-radio-button>
+      </template>
     </el-radio-group>
     <el-date-picker
       :key="timeType"
@@ -23,7 +22,8 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapState} from "vuex"
+import { dateRadioBtn } from '@sub/utils/dict'
 
 export default {
   name: 'comp-date-type-picker',
@@ -89,6 +89,7 @@ export default {
   data() {
     const that = this
     return {
+      dateRadioBtn,
       closePicker: {
         onPick(a) {
           that.$refs.dataEnd.handleClose()
