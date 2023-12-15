@@ -1,11 +1,12 @@
 <template>
   <div>
     <template v-for="item in options">
-      <template v-if="item.value === +value">
+      <template v-if="values.includes(item.value)">
         <span :key="item.value">{{ item.label }}</span>
       </template>
     </template>
   </div>
+
 </template>
 
 <script>
@@ -14,14 +15,19 @@ export default {
   props: {
     options: {
       type: Array,
-      default: () => [],
+      default: null,
     },
-    value: [Number, String],
+    value: [Number, String, Array],
   },
+  computed: {
+    values() {
+      if (this.value !== null && typeof this.value !== 'undefined') {
+        return Array.isArray(this.value) ? this.value : [+this.value];
+      } else {
+        return [];
+      }
+    },
+  },
+
 };
 </script>
-<style scoped>
-.el-tag + .el-tag {
-  margin-left: 10px;
-}
-</style>
