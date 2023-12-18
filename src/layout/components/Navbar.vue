@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from 'vuex'
+import {mapGetters, mapState, mapMutations} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
@@ -62,6 +62,7 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import {setStorage} from "@sub/utils/language";
 
 export default {
   components: {
@@ -74,11 +75,6 @@ export default {
     RuoYiGit,
     RuoYiDoc
   },
-  data() {
-    return {
-      activeLang: 'en_US'
-    }
-  },
   computed: {
     ...mapState({
       'userName': (state) => state.user.name
@@ -88,6 +84,9 @@ export default {
       'avatar',
       'device'
     ]),
+    ...mapGetters({
+      activeLang: 'language'
+    }),
     setting: {
       get() {
         return this.$store.state.settings.showSettings
@@ -105,15 +104,16 @@ export default {
       }
     },
   },
-  created() {
-    this.activeLang = localStorage.getItem("lang") || 'en_US'
-  },
   methods: {
+    ...mapMutations({
+      setLanguage: 'language/setLanguage'
+    }),
     handleCommand(value) {
       this.$i18n.locale = value
-      localStorage.setItem("lang", value)
-      this.activeLang = localStorage.getItem("lang")
+      this.setLanguage(value)
+      setStorage('lang', value)
       this.$modal.msgSuccess(this.$t('common.succeeded'))
+      location.reload()
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
