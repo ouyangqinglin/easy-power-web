@@ -298,4 +298,10 @@
      width: 0;
    }
  }
+ .el-table--border .el-table__cell {
+   border-color: rgba(0,0,0, .04) !important;
+ }
+ .el-table td.el-table__cell {
+   border-color: rgba(0,0,0, .04) !important;
+ }
 
