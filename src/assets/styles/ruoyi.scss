@@ -292,4 +292,10 @@
  .themeBorderColor {
    color: #3EBCD4
  }
+ .el-table--border {
+   border: none;
+   &:after {
+     width: 0;
+   }
+ }
 
