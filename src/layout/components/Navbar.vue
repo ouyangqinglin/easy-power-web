@@ -21,13 +21,13 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/user/profile" v-if="userName !== 'demo@163.com'">
-            <el-dropdown-item>My Details</el-dropdown-item>
+            <el-dropdown-item>{{ $t('menu.profile') }}</el-dropdown-item>
           </router-link>
 <!--          <el-dropdown-item @click.native="setting = true">-->
 <!--            <span>Layout Settings</span>-->
 <!--          </el-dropdown-item>-->
           <el-dropdown-item divided @click.native="logout">
-            <span>Log out</span>
+            <span>{{ $t('login.logOut') }}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

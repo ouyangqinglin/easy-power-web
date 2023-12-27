@@ -173,7 +173,7 @@
       :before-close="beforeClose"
       :close-on-click-modal ="false"
       center>
-      <span style="line-height: 24px">Password changed successfully! Please log in again with the new password! ({{ second }}s return to the login page)</span>
+      <span style="line-height: 24px">{{ $t('login.changePswSuccess') }} ({{ second }}s {{ $t('login.backLoginPage') }})</span>
       <span slot="footer" class="dialog-footer"><el-button type="primary" @click="beforeClose">OK</el-button></span>
     </el-dialog>
   </div>
