@@ -66,7 +66,7 @@
 <!--    强制修改密码-->
     <el-form v-if="!modifyPas" ref="modifyForm" :model="modifyForm" :rules="modifyRules" class="login-form posr">
       <h3 class="title">{{ $t('login.loginSuccess') }}</h3>
-      <p style="font-size: 12px; color: #ec6240">Change the password before use please</p>
+      <p style="font-size: 12px; color: #ec6240">{{ $t('login.pleaseChangePassword') }}</p>
       <el-form-item prop="pass" :label="$t('login.newPassword')">
         <el-input
           v-model="modifyForm.pass"
