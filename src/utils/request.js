@@ -6,6 +6,7 @@ import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from "@/utils/ruoyi";
 import cache from '@sub/plugins/cache'
 import { saveAs } from 'file-saver'
+import I18n from "@/i18n"
 
 let downloadLoadingInstance;
 // 是否显示重新登录
@@ -51,7 +52,7 @@ service.interceptors.request.use(config => {
       const s_time = sessionObj.time;                // 请求时间
       const interval = 1000;                         // 间隔时间(ms)，小于此时间视为重复提交
       if (s_data === requestObj.data && requestObj.time - s_time < interval && s_url === requestObj.url) {
-        const message = 'Data is being processed, please do not repeat submission';
+        const message = I18n.t('user.dataProcessed')
         console.warn(`[${s_url}]: ` + message)
         return Promise.reject(new Error(message))
       } else {
@@ -78,9 +79,9 @@ service.interceptors.response.use(res => {
     if (code === 401) {
       if (!isRelogin.show) {
         isRelogin.show = true;
-        MessageBox.confirm('The login status has expired. You can stay on the page or log in again', 'tips', {
-          confirmButtonText: 'Log in again',
-          cancelButtonText: 'Cancel',
+        MessageBox.confirm(I18n.t('user.loginStatusExpired'), I18n.t('user.Tips'), {
+          confirmButtonText: I18n.t('user.loginAgain'),
+          cancelButtonText: I18n.t('common.cancel'),
           type: 'warning'
         }
       ).then(() => {
@@ -92,7 +93,7 @@ service.interceptors.response.use(res => {
         isRelogin.show = false;
       });
     }
-      return Promise.reject('The session is invalid or has expired. Please log in again')
+      return Promise.reject(I18n.t('user.sessionExpired'))
     } else if (code === 500) {
       console.log('err', msg)
       Message({
