@@ -161,7 +161,7 @@ export default {
   data() {
     let dateVal = new Date()
     return {
-      title: ['SOC', 'Power', 'Voltage', 'Current', 'Cell Highest_T', 'Cell Lowest_T'],
+      title: ['SOC', this.$t('common.power'), this.$t('common.voltage'), this.$t('common.current')],
       dateVal,
       waitLoading: null,
       charting: true,
