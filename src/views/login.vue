@@ -1,5 +1,22 @@
 <template>
   <div class="login posr">
+    <div class="posa language">
+      <el-dropdown @command="handleCommand">
+        <span class="el-dropdown-link">
+          <common-flex align="center">
+          <img :src="require('@subImg/locale.svg')" alt="" style="width: 20px;" class="mr-1">
+          {{ $t('common.language') }}
+          <i class="el-icon-caret-bottom" />
+        </common-flex>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu class="lang-item">
+            <el-dropdown-item command="zh_CN" :disabled="activeLang === 'zh_CN'">cn-简体中文</el-dropdown-item>
+            <el-dropdown-item command="en_US" :disabled="activeLang === 'en_US'">us-English</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
     <img class="login-bg posa" :src="require('@assets/logo/login-bg.webp')" alt="">
     <el-form v-show="modifyPas && forgetShow" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form posr">
       <h2 class="title">EasyPower<br>Management System</h2>
@@ -184,6 +201,8 @@ import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import { updateUserPwd, forgetResetPas, sendCode } from "@/api/system/user";
+import {mapGetters, mapMutations} from "vuex";
+import {setStorage} from "@sub/utils/language";
 
 export default {
   name: "Login",
@@ -299,6 +318,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      activeLang: 'language'
+    }),
     inputType() {
       return this.eyes ? 'password' : 'text'
     },
@@ -314,6 +336,16 @@ export default {
     this.getCookie()
   },
   methods: {
+    ...mapMutations({
+      setLanguage: 'language/setLanguage'
+    }),
+    handleCommand(value) {
+      this.$i18n.locale = value
+      this.setLanguage(value)
+      setStorage('lang', value)
+      this.$modal.msgSuccess(this.$t('common.succeeded'))
+      location.reload()
+    },
     verifyCode(e) {
       this.forgetForm.code = e.replace(/\D/g, '')
     },
@@ -542,6 +574,20 @@ export default {
   }
   .el-dialog:not(.is-fullscreen) {
     margin-top: 40vh !important;
+  }
+  .language {
+    top: 12px;
+    right: 12px;
+    .el-dropdown-link {
+      cursor: pointer;
+    }
+    .el-dropdown-menu {
+      .is-disabled {
+        cursor: default;
+        color: $commonColor !important;
+        pointer-events: none;
+      }
+    }
   }
 }
 .title {
