@@ -146,10 +146,8 @@ export function filterDynamicRoutes(routes) {
 export const loadView = (view) => {
   if (process.env.NODE_ENV === 'development') {
     return (resolve) => require([`@/views/${view}`], resolve)
-  } else {
-    // 使用 import 实现生产环境的路由懒加载
-    return () => import(`@/views/${view}`)
-  }
+  } else return () => import(`@/views/${view}`)
+  // 使用 import 实现生产环境的路由懒加载
 }
 
 export default permission
