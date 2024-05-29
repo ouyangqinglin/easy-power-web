@@ -68,6 +68,22 @@ export function orderRes(data) {
   })
 }
 
+export function chargeSet(data) {
+  return request({
+    url: `/device/pile/setting`,
+    method: 'post',
+    data
+  })
+}
+
+export function getChargeSet(data) {
+  return request({
+    url: `/device/pile/querySetting`,
+    method: 'post',
+    data
+  })
+}
+
 export function setRecodeList(params) {
   return request({
     url: `/siteSettingRecord/list`,
