@@ -1,0 +1,3 @@
+[submodule "power-ati-sub"]
+	path = power-ati-sub
+	url = https://github.com/ouyangqinglin/power-ati-sub.git
