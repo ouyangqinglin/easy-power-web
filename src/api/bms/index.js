@@ -5,6 +5,6 @@ export function getList(query) {
   return request({
     url: '/faultRecord/list',
     method: 'get',
-    params: query
+    params: query,
   })
 }
